@@ -1,0 +1,537 @@
+page 7 (
+    name: "Organization Profile"
+    alias: ORGANIZATION-PROFILE
+    title: "&P7_LEGAL_NAME. — DonorLink"
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigationMenu {
+        overrideUserInterfaceLevel: true
+        list: @navbar
+        listPosition: top
+        listTemplate: @/top-navigation-menu
+        templateOptions: #DEFAULT#
+    }
+    css {
+        inline: ```css
+        /* Dynamic Upwork-style NPO Profile Portal Styling */
+        
+        .profile-hero-card {
+            background-color: #ffffff;
+            border: 1px solid #E5E7EB;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 24px;
+        }
+
+        .profile-cover-wrap {
+            width: 100%;
+            height: 200px;
+            background-color: #1B5B8A;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-cover-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-header-body {
+            padding: 0 28px 24px 28px;
+            position: relative;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 20px;
+        }
+
+        .profile-avatar-wrap {
+            width: 110px;
+            height: 110px;
+            border-radius: 16px;
+            background-color: #ffffff;
+            border: 4px solid #ffffff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+            margin-top: -55px;
+            overflow: hidden;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        .profile-avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-identity-info {
+            flex-grow: 1;
+            padding-top: 12px;
+        }
+
+        .profile-title-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .profile-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #111827;
+            margin: 0;
+        }
+
+        .profile-verified-badge {
+            background-color: #0072CE;
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .profile-tagline {
+            font-size: 15px;
+            color: #4B5563;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        .profile-meta-pills {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+            font-size: 13px;
+            color: #6B7280;
+        }
+
+        .profile-cta-group {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        /* Impact Metric Ticker Cards */
+        .impact-ticker-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .impact-stat-card {
+            background: #ffffff;
+            border: 1px solid #E5E7EB;
+            border-radius: 10px;
+            padding: 18px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            text-align: center;
+        }
+
+        .impact-stat-val {
+            font-size: 26px;
+            font-weight: 800;
+            color: #1B5B8A;
+            line-height: 1.1;
+        }
+
+        .impact-stat-lbl {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6B7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 6px;
+        }
+        ```
+    }
+    security {
+        authentication: public
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region hidden-items (
+        name: "Hidden Items"
+        type: staticContent
+        layout {
+            sequence: 5
+            slot: body
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    pageItem P7_CHARITY_ID (
+        type: hidden
+        layout {
+            sequence: 10
+            region: @hidden-items
+            slot: regionBody
+        }
+    )
+
+    pageItem P7_LEGAL_NAME (
+        type: hidden
+        layout {
+            sequence: 20
+            region: @hidden-items
+            slot: regionBody
+        }
+    )
+
+    process fetch-charity-defaults (
+        name: "Fetch Charity Defaults"
+        type: executeCode
+        execution {
+            sequence: 10
+            point: beforeHeader
+        }
+        source {
+            plsqlCode:
+                ```plsql
+                BEGIN
+                    IF :P7_CHARITY_ID IS NULL THEN
+                        SELECT charity_id INTO :P7_CHARITY_ID
+                          FROM dl_charity_profiles
+                         WHERE ROWNUM = 1;
+                    END IF;
+
+                    SELECT NVL(trading_name, legal_name)
+                      INTO :P7_LEGAL_NAME
+                      FROM dl_charity_profiles
+                     WHERE charity_id = :P7_CHARITY_ID;
+                EXCEPTION
+                    WHEN OTHERS THEN
+                        :P7_LEGAL_NAME := 'Organization Profile';
+                END;
+                ```
+        }
+    )
+
+    region hero-profile-header (
+        name: "Hero Profile Header"
+        type: staticContent
+        source {
+            htmlCode:
+                ```html
+                <div class="profile-hero-card">
+                    <div class="profile-cover-wrap">
+                        <img src="#APP_IMAGES#landing_page_banner.png" alt="Cover Photo" class="profile-cover-img">
+                    </div>
+                    <div class="profile-header-body">
+                        <div class="profile-avatar-wrap">
+                            <img src="https://via.placeholder.com/150?text=Logo" alt="Charity Logo" class="profile-avatar-img">
+                        </div>
+                        <div class="profile-identity-info">
+                            <div class="profile-title-row">
+                                <h1 class="profile-title">&P7_LEGAL_NAME.</h1>
+                                <span class="profile-verified-badge">Verified NPO</span>
+                            </div>
+                            <div class="profile-tagline">Connecting donors directly with verified charitable needs.</div>
+                            <div class="profile-meta-pills">
+                                <span>📍 501(c)(3) Tax-Exempt Non-Profit</span>
+                                <span>🛡️ Verified Partner Organization</span>
+                            </div>
+                        </div>
+                        <div class="profile-cta-group">
+                            <a href="#wishlist-catalog-tab" class="t-Button t-Button--hot t-Button--large" style="background-color: #0072CE; border-color: #0072CE; font-weight: bold;">
+                                View Wishlist Needs
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                ```
+        }
+        layout {
+            sequence: 10
+            slot: body
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region dynamic-impact-ticker (
+        name: "Impact & Trust Ticker"
+        type: staticContent
+        source {
+            htmlCode:
+                ```html
+                <div class="impact-ticker-grid">
+                    <div class="impact-stat-card">
+                        <div class="impact-stat-val">$12,450</div>
+                        <div class="impact-stat-lbl">Total Funds Raised</div>
+                    </div>
+                    <div class="impact-stat-card">
+                        <div class="impact-stat-val">142</div>
+                        <div class="impact-stat-lbl">Unique Donors</div>
+                    </div>
+                    <div class="impact-stat-card">
+                        <div class="impact-stat-val">28</div>
+                        <div class="impact-stat-lbl">Items Fully Funded</div>
+                    </div>
+                    <div class="impact-stat-card">
+                        <div class="impact-stat-val">8</div>
+                        <div class="impact-stat-lbl">Active Wishlist Needs</div>
+                    </div>
+                </div>
+                ```
+        }
+        layout {
+            sequence: 20
+            slot: body
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region profile-tab-container (
+        name: "Profile Navigation Tabs"
+        type: staticContent
+        layout {
+            sequence: 30
+            slot: body
+        }
+        appearance {
+            template: @/tabs-container
+            templateOptions: [
+                #DEFAULT#
+                t-TabsRegion-mod--pill
+            ]
+        }
+    )
+
+    region wishlist-catalog-tab (
+        name: "Active Needs Wishlist"
+        type: cards
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                SELECT 
+                    wi.item_id,
+                    wi.product_title,
+                    NVL(wi.product_image_url, 'https://via.placeholder.com/300x200?text=No+Image') AS product_image_url,
+                    wi.target_price,
+                    wi.pledged_amount,
+                    wi.target_quantity,
+                    wi.funded_quantity,
+                    wi.priority_level,
+                    wi.item_status,
+                    ROUND((wi.pledged_amount / NULLIF(wi.target_price * wi.target_quantity, 0)) * 100) AS percent_funded
+                FROM dl_charity_wishlist_items wi
+                WHERE wi.charity_id = :P7_CHARITY_ID
+                  AND wi.item_status = 'ACTIVE'
+                ORDER BY wi.priority_level DESC, wi.item_id DESC
+                ```
+        }
+        layout {
+            sequence: 10
+            parentRegion: @profile-tab-container
+            slot: regionBody
+        }
+        appearance {
+            template: @/cards-container
+            templateOptions: [
+                #DEFAULT#
+                t-CardsRegion--hideHeader js-addHiddenHeadingRoleDesc
+                t-CardsRegion--styleA
+            ]
+        }
+        componentAppearance {
+            gridColumns: 3
+        }
+        card {
+            primaryKeyColumn1: ITEM_ID
+        }
+        title {
+            column: PRODUCT_TITLE
+        }
+        subtitle {
+            column: PRIORITY_LEVEL
+        }
+        body {
+            advancedFormatting: true
+            htmlExpression:
+                ```html
+                <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+                    <div style="flex-grow: 1; background-color: #E5E7EB; height: 6px; border-radius: 3px; overflow: hidden;">
+                        <div style="width: &PERCENT_FUNDED.%; background-color: #1B5B8A; height: 100%; border-radius: 3px;"></div>
+                    </div>
+                    <span style="color: #4B5563; font-weight: 600; font-size: 12px; white-space: nowrap;">&PERCENT_FUNDED.% Funded</span>
+                </div>
+                ```
+        }
+        secondaryBody {
+            advancedFormatting: true
+            htmlExpression: "$&TARGET_PRICE."
+        }
+
+        action item_donate_action (
+            type: button
+            label: "Fund This Need"
+            layout {
+                position: primary
+                sequence: 10
+            }
+            behavior {
+                type: redirectUrl
+                targetUrl: "#"
+            }
+            appearance {
+                cssClasses: card-cta-donate
+            }
+        )
+    )
+
+    region portfolio-stories-tab (
+        name: "Impact & Success Stories"
+        type: cards
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                SELECT 
+                    story_id,
+                    title,
+                    story_narrative,
+                    NVL(media_url, 'https://via.placeholder.com/400x250?text=Impact+Story') AS media_url,
+                    impact_metric,
+                    TO_CHAR(event_date, 'Mon DD, YYYY') AS formatted_event_date
+                FROM dl_charity_portfolio_stories
+                WHERE charity_id = :P7_CHARITY_ID
+                ORDER BY display_order ASC, story_id DESC
+                ```
+        }
+        layout {
+            sequence: 20
+            parentRegion: @profile-tab-container
+            slot: regionBody
+        }
+        appearance {
+            template: @/cards-container
+            templateOptions: [
+                #DEFAULT#
+                t-CardsRegion--hideHeader js-addHiddenHeadingRoleDesc
+                t-CardsRegion--styleB
+            ]
+        }
+        componentAppearance {
+            gridColumns: 2
+        }
+        card {
+            primaryKeyColumn1: STORY_ID
+        }
+        title {
+            column: TITLE
+        }
+        subtitle {
+            column: FORMATTED_EVENT_DATE
+        }
+        body {
+            column: STORY_NARRATIVE
+        }
+        secondaryBody {
+            column: IMPACT_METRIC
+        }
+    )
+
+    region leadership-team-tab (
+        name: "Leadership & Team"
+        type: cards
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                SELECT 
+                    member_id,
+                    full_name,
+                    role_title,
+                    bio_summary,
+                    NVL(photo_url, 'https://via.placeholder.com/150?text=Team+Member') AS photo_url
+                FROM dl_charity_team
+                WHERE charity_id = :P7_CHARITY_ID
+                ORDER BY display_order ASC, member_id ASC
+                ```
+        }
+        layout {
+            sequence: 30
+            parentRegion: @profile-tab-container
+            slot: regionBody
+        }
+        appearance {
+            template: @/cards-container
+            templateOptions: [
+                #DEFAULT#
+                t-CardsRegion--hideHeader js-addHiddenHeadingRoleDesc
+                t-CardsRegion--styleC
+            ]
+        }
+        componentAppearance {
+            gridColumns: 3
+        }
+        card {
+            primaryKeyColumn1: MEMBER_ID
+        }
+        title {
+            column: FULL_NAME
+        }
+        subtitle {
+            column: ROLE_TITLE
+        }
+        body {
+            column: BIO_SUMMARY
+        }
+    )
+
+    region about-and-gallery-tab (
+        name: "About & Community Gallery"
+        type: staticContent
+        source {
+            htmlCode:
+                ```html
+                <div style="background-color: #ffffff; padding: 28px; border-radius: 12px; border: 1px solid #E5E7EB;">
+                    <h3 style="font-size: 20px; font-weight: 700; color: #111827; margin-top: 0;">Our Mission & Story</h3>
+                    <p style="font-size: 15px; color: #4B5563; line-height: 1.6;">
+                        Dedicated to creating lasting community impact through transparent giving and direct support.
+                    </p>
+                    <hr style="border: none; border-top: 1px solid #E5E7EB; margin: 20px 0;">
+                    <h4 style="font-size: 16px; font-weight: 600; color: #111827;">Contact & Social Connections</h4>
+                    <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-top: 10px; font-size: 14px; color: #1B5B8A;">
+                        <span>📧 Contact Support</span>
+                        <span>🌐 Official Website</span>
+                    </div>
+                </div>
+                ```
+        }
+        layout {
+            sequence: 40
+            parentRegion: @profile-tab-container
+            slot: regionBody
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+    )
+)
