@@ -1,0 +1,225 @@
+page 7 (
+    name: &P7_LEGAL_NAME.
+    alias: PROFILE-P6-CHARITY-NAME
+    title: &P7_LEGAL_NAME.
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region branding-image-gallery (
+        name: Branding & Image Gallery
+        type: staticContent
+        layout {
+            sequence: 20
+            parentRegion: @region-display
+            slot: tabs
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--scrollBody
+            ]
+        }
+    )
+
+    region contacts-delivery-addressesk (
+        name: Contacts & Delivery Addressesk
+        type: staticContent
+        layout {
+            sequence: 70
+            parentRegion: @region-display
+            slot: tabs
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--scrollBody
+            ]
+        }
+    )
+
+    region details (
+        name: Details
+        type: staticContent
+        layout {
+            sequence: 10
+            parentRegion: @region-display
+            slot: tabs
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--scrollBody
+            ]
+        }
+    )
+
+    region donation-tracking (
+        name: Donation Tracking
+        type: staticContent
+        layout {
+            sequence: 50
+            parentRegion: @region-display
+            slot: tabs
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--scrollBody
+            ]
+        }
+    )
+
+    region hidden-items (
+        name: Hidden Items
+        type: staticContent
+        layout {
+            sequence: 10
+            slot: body
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region needs-registry-catalog (
+        name: Needs Registry / Catalog
+        type: staticContent
+        layout {
+            sequence: 30
+            parentRegion: @region-display
+            slot: tabs
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--scrollBody
+            ]
+        }
+    )
+
+    region order-tracking (
+        name: Order Tracking
+        type: staticContent
+        layout {
+            sequence: 40
+            parentRegion: @region-display
+            slot: tabs
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--scrollBody
+            ]
+        }
+    )
+
+    region profile-name (
+        name: Profile Name
+        title: &P7_LEGAL_NAME.
+        type: staticContent
+        layout {
+            sequence: 20
+            slot: body
+        }
+        appearance {
+            template: @/hero
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region region-display (
+        name: Region Display
+        type: regionDisplaySelector
+        layout {
+            sequence: 30
+            slot: body
+        }
+        appearance {
+            template: @/tabs-container
+            templateOptions: [
+                #DEFAULT#
+                t-TabsRegion-mod--large
+                t-TabsRegion-mod--simple
+            ]
+        }
+    )
+
+    region stipe-account (
+        name: Stipe Account
+        type: staticContent
+        layout {
+            sequence: 60
+            parentRegion: @region-display
+            slot: tabs
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--scrollBody
+            ]
+        }
+    )
+
+    pageItem P7_CHARITY_ID (
+        type: hidden
+        layout {
+            sequence: 10
+            region: @hidden-items
+            slot: regionBody
+        }
+    )
+
+    pageItem P7_LEGAL_NAME (
+        type: hidden
+        layout {
+            sequence: 20
+            region: @hidden-items
+            slot: regionBody
+        }
+    )
+
+    process set-default-values (
+        name: Set Default Values
+        type: executeCode
+        source {
+            plsqlCode:
+                ```plsql
+                Declare
+                	l_legal_name	varchar2(500);
+                begin
+                	select legal_name
+                	into l_legal_name
+                	from dl_charity_profiles
+                	where charity_id = :P7_CHARITY_ID; 
+                	:P7_LEGAL_NAME := l_legal_name;
+                end;
+                ```
+        }
+        execution {
+            sequence: 10
+            point: beforeHeader
+        }
+        advanced {
+            executionMappingIdentifier: 20477317422224608
+        }
+    )
+
+)
+

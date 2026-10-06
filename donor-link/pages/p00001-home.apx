@@ -1,0 +1,480 @@
+page 1 (
+    name: Home
+    alias: HOME
+    title: "Donor Link"
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigationMenu {
+        overrideUserInterfaceLevel: true
+        list: @navbar
+        listPosition: top
+        listTemplate: @/top-navigation-menu
+        templateOptions: #DEFAULT#
+    }
+    css {
+        inline: ```css
+        /* Modern Marketplace Card Container Polish */
+        .a-CardView {
+            background-color: #ffffff !important;
+            border: 1px solid #E5E7EB !important;
+            border-radius: 12px !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Subtle brand accent top border on hover/default */
+        .a-CardView::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background-color: #1B5B8A;
+        }
+        
+        /* Hover lift effect for modern e-commerce feel */
+        .a-CardView:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 
+                        0 4px 6px -2px rgba(0, 0, 0, 0.04) !important;
+        }
+        
+        /* Typography refinement for the primary card title */
+        .a-CardView-title {
+            font-size: 15px !important;
+            font-weight: 600 !important;
+            color: #111827 !important;
+            line-height: 1.4 !important;
+        }
+        
+        /* Typography refinement for the charity subtitle */
+        .a-CardView-subtitle {
+            font-size: 13px !important;
+            color: #4B5563 !important;
+            margin-top: 4px !important;
+        }
+        
+        /* Category Badge Styling */
+        .a-CardView-badge {
+            background-color: #1B5B8A !important;
+            color: #ffffff !important;
+            font-weight: 600 !important;
+            font-size: 11px !important;
+            padding: 4px 10px !important;
+            border-radius: 4px !important;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* --- Navigation / Navbar Styling --- */
+        
+        /* Hide the navigation menu strip */
+        .t-Header-nav,
+        .t-NavigationMenu {
+          display: none !important;
+        }
+        
+        /* Hide the logo strip if you don't want it */
+        .t-Header-logo {
+          display: none !important;
+        }
+        
+        /* Eliminate header padding and margins to flush-mount the navbar */
+        .t-Header,
+        .t-Header-branding,
+        .t-Header-inner {
+          padding-top: 0 !important;
+          padding-bottom: 0 !important;
+          margin-bottom: 0 !important;
+        }
+        
+        /* Full-width navbar background matched to client logo icon hex */
+        .t-Header-navBar {
+          background-color: #0072CE !important; 
+          width: 100% !important;
+          border: none !important;
+          margin: 0 !important;
+          padding: 0.5rem 1rem !important; 
+        }
+        
+        /* Navbar items alignment and spacing */
+        .t-NavigationBar {
+          background: none !important; 
+          margin-top: 0 !important;
+          padding-top: 0 !important;
+          padding-bottom: 0 !important;
+          justify-content: flex-start; 
+        }
+        
+        /* High-contrast white link styling for low-vision legibility */
+        .t-Header-navBar .t-Button, 
+        .t-Header-navBar a, 
+        .t-NavigationBar .t-Button {
+          color: #ffffff !important;
+          font-weight: 600 !important;
+          font-size: 14px !important;
+        }
+        
+        .t-Header-navBar .t-Button:hover, 
+        .t-Header-navBar a:hover, 
+        .t-NavigationBar .t-Button:hover {
+          color: #E5E7EB !important;
+          background-color: rgba(255, 255, 255, 0.1) !important;
+          border-radius: 4px;
+        }
+        
+        /* Sticky Hero Banner Styling */
+        #home-hero-banner,
+        .t-Body-top,
+        .t-Region--banner {
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 1000 !important;
+            margin-bottom: 0 !important;
+            padding-bottom: 0 !important;
+        }
+        
+        /* Ensure the wrapper region itself has no gap */
+        #home-hero-banner.t-Region {
+            margin: 0 !important;
+            border: none !important;
+        }
+
+        /* --- Card Actions Styling --- */
+        
+        /* Container alignment for card actions */
+        .a-CardView-buttonList {
+            display: flex !important;
+            gap: 10px !important;
+            align-items: center !important;
+            padding: 12px 16px 16px 16px !important;
+            background-color: transparent !important;
+            border-top: 1px solid #F3F4F6 !important;
+        }
+        
+        /* Primary CTA: "Donate" (Solid Vibrant Blue Button) */
+        .a-CardView-buttonList .card-cta-donate {
+            background-color: #0072CE !important;
+            color: #ffffff !important;
+            font-weight: 600 !important;
+            font-size: 13px !important;
+            padding: 8px 16px !important;
+            border-radius: 6px !important;
+            text-align: center !important;
+            flex: 1 !important;
+            border: none !important;
+            transition: background-color 0.2s ease;
+        }
+        
+        .a-CardView-buttonList .card-cta-donate:hover {
+            background-color: #005bb5 !important;
+            color: #ffffff !important;
+        }
+        
+        /* Secondary CTA: "Discover more" / "More" (Outlined / Subtle Link Style) */
+        .a-CardView-buttonList .card-cta-secondary {
+            background-color: transparent !important;
+            color: #1B5B8A !important;
+            font-weight: 600 !important;
+            font-size: 13px !important;
+            padding: 8px 12px !important;
+            border-radius: 6px !important;
+            text-align: center !important;
+            border: 1px solid #D1D5DB !important;
+            flex: 1 !important;
+            transition: all 0.2s ease;
+        }
+        
+        .a-CardView-buttonList .card-cta-secondary:hover {
+            background-color: #F9FAFB !important;
+            border-color: #1B5B8A !important;
+            color: #1B5B8A !important;
+        }
+        ```
+    }
+    security {
+        authentication: public
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region home-hero-banner (
+        name: Banner
+        type: staticContent
+        source {
+            htmlCode:
+                ```html
+                <div style="width: 100%; height: 270px; overflow: hidden; margin: 0; display: block;">
+                    <img src="#APP_IMAGES#landing_page_banner.png" alt="Donor Link Hero Banner" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                </div>
+                ```
+        }
+        layout {
+            sequence: 10
+            slot: banner
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: [
+                #DEFAULT#
+                margin-bottom-none
+            ]
+        }
+
+    )
+
+    region landing-cta-bar (
+        name: "Landing CTA Bar"
+        type: staticContent
+        source {
+            htmlCode:
+                ```html
+                <div style="background-color: #1B5B8A; padding: 24px 20px; width: 100%; box-sizing: border-box; text-align: center;">
+                    <div style="max-width: 900px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;">
+                        <div style="color: #ffffff; text-align: left; font-size: 16px; font-weight: 500;">
+                            Ready to make a difference? Explore active wish lists and partner non-profit organizations.
+                        </div>
+                        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                            <a href="f?p=&APP_ID.:2:&SESSION." class="t-Button t-Button--hot t-Button--large" style="background-color: #ffffff; color: #1B5B8A; border-color: #ffffff; font-weight: bold;">
+                                Browse Wish Lists
+                            </a>
+                            <a href="f?p=&APP_ID.:3:&SESSION." class="t-Button t-Button--outline t-Button--large" style="color: #ffffff; border-color: #ffffff;">
+                                Explore Non-Profits
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                ```
+        }
+        layout {
+            sequence: 20
+            slot: body
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+        serverSideCondition {
+            type: never
+        }
+    )
+
+    region description (
+        name: Description
+        type: staticContent
+        source {
+            htmlCode:
+                ```html
+                <div style="background-color: #ffffff; padding: 10px 20px 60px 20px; width: 100%; box-sizing: border-box;">
+                    <div style="max-width: 760px; margin: 0 auto; text-align: center;">
+                        
+                        <!-- Eyebrow Tag -->
+                        <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #1B5B8A; margin-bottom: 12px;">
+                            Community-Powered Giving
+                        </div>
+                        
+                        <!-- Main Headline -->
+                        <h2 style="font-size: 30px; font-weight: 700; color: #111827; line-height: 1.25; margin: 0 0 16px 0;">
+                            Turn your generosity into tangible support for non-profit organizations.
+                        </h2>
+                        
+                        <!-- Narrative Body -->
+                        <p style="font-size: 17px; font-weight: 400; color: #4B5563; line-height: 1.6; margin: 0;">
+                            Giving to charity shouldn't feel like dropping money into a black box. With Donor Link, non-profit organizations share specific, everyday items they urgently need. You choose exactly what to fund, watch it get ordered, and see the real difference you made.
+                        </p>
+                
+                    </div>
+                </div>
+                ```
+        }
+        layout {
+            sequence: 40
+            slot: body
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: [
+                #DEFAULT#
+                margin-top-none
+                margin-bottom-lg
+            ]
+        }
+    )
+
+    region featured (
+        name: Featured
+        type: cards
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                SELECT 
+                    wi.item_id,
+                    wi.product_title,
+                    NVL(wi.product_image_url, 'https://via.placeholder.com/300x200?text=No+Image') AS product_image_url,
+                    wi.target_price,
+                    wi.pledged_amount,
+                    wi.target_quantity,
+                    wi.funded_quantity,
+                    wi.priority_level,
+                    wi.item_status,
+                    cp.charity_id,
+                    cp.legal_name AS charity_name,
+                    cp.public_slug AS charity_slug,
+                    addr.city,
+                    st.state_code,
+                    cc.category_name,
+                    ROUND((wi.pledged_amount / NULLIF(wi.target_price * wi.target_quantity, 0)) * 100) AS percent_funded
+                FROM dl_charity_wishlist_items wi
+                JOIN dl_charity_profiles cp ON wi.charity_id = cp.charity_id
+                LEFT JOIN dl_charity_addresses addr ON cp.charity_id = addr.charity_id AND addr.is_primary = 'Y'
+                LEFT JOIN dl_us_states st ON addr.state_id = st.state_id
+                LEFT JOIN dl_charity_category_map ccm ON cp.charity_id = ccm.charity_id
+                LEFT JOIN dl_cause_categories cc ON ccm.category_id = cc.category_id
+                WHERE wi.item_status = 'ACTIVE'
+                ```
+        }
+        layout {
+            sequence: 50
+            slot: body
+        }
+        appearance {
+            template: @/cards-container
+            templateOptions: [
+                #DEFAULT#
+                t-CardsRegion--hideHeader js-addHiddenHeadingRoleDesc
+                t-CardsRegion--styleA
+                margin-top-lg
+            ]
+        }
+        componentAppearance {
+            gridColumns: 3
+        }
+        card {
+            primaryKeyColumn1: CHARITY_ID
+            primaryKeyColumn2: ITEM_ID
+        }
+        title {
+            column: PRODUCT_TITLE
+        }
+        subtitle {
+            advancedFormatting: true
+            htmlExpression: "&CHARITY_NAME. — &CITY., &STATE_CODE."
+        }
+        body {
+            advancedFormatting: true
+            htmlExpression:
+                ```html
+                <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+                    <!-- Progress Bar Track -->
+                    <div style="flex-grow: 1; background-color: #E5E7EB; height: 6px; border-radius: 3px; overflow: hidden;">
+                        <div style="width: &PERCENT_FUNDED.%; background-color: #1B5B8A; height: 100%; border-radius: 3px;"></div>
+                    </div>
+                    <!-- Percentage Text -->
+                    <span style="color: #4B5563; font-weight: 600; font-size: 12px; white-space: nowrap;">&PERCENT_FUNDED.% Funded</span>
+                </div>
+                ```
+        }
+        secondaryBody {
+            advancedFormatting: true
+            htmlExpression: "$&TARGET_PRICE."
+        }
+        iconAndBadge {
+            badgeColumn: CATEGORY_NAME
+        }
+
+        action card_full_card_action (
+            type: fullCard
+            layout {
+                sequence: 10
+            }
+            behavior {
+                type: redirectUrl
+                targetUrl: "#"
+            }
+        )
+
+        action card_donate_action (
+            type: button
+            label: Donate
+            layout {
+                position: primary
+                sequence: 20
+            }
+            behavior {
+                type: redirectThisApp
+                target: {
+                    page: 1
+                }
+            }
+            appearance {
+                cssClasses: card-cta-donate
+            }
+        )
+
+        action card_more_action (
+            type: button
+            label: More
+            layout {
+                position: secondary
+                sequence: 30
+            }
+            behavior {
+                type: redirectUrl
+                targetUrl: "#"
+            }
+            appearance {
+                cssClasses: card-cta-secondary
+            }
+        )
+
+    )
+
+    region login-to-donor-link (
+        name: "Login To Donor Link"
+        type: staticContent
+        layout {
+            sequence: 20
+            slot: dialogsDrawersAndPopups
+        }
+        appearance {
+            template: @/inline-drawer
+            templateOptions: [
+                #DEFAULT#
+                js-dialog-class-t-Drawer--pullOutEnd
+            ]
+        }
+    )
+
+    region welcome-back-message (
+        name: "Welcome Back Message"
+        type: staticContent
+        source {
+            htmlCode:
+                ```html
+                <p style="font-size:16px; font-family:Arial, sans-serif;">
+                  <strong>Welcome back to Donor Link.</strong><br><br>
+                  To log in, please enter your username or email address and password below.<br><br>
+                  Be sure to check out our latest news and featured non-profit organizations.
+                </p>
+                ```
+        }
+        layout {
+            sequence: 60
+            parentRegion: @login-to-donor-link
+            slot: regionBody
+            column: 2
+            columnSpan: 8
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+    )
+)
