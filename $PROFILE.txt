@@ -1,0 +1,6 @@
+function start-qwen {
+    $env:ANTHROPIC_AUTH_TOKEN="ollama"
+    $env:ANTHROPIC_BASE_URL="http://localhost:11434"
+    $env:OLLAMA_CONTEXT_LENGTH="16384"
+    claude --model qwen2.5-coder:7b --ax-screen-reader
+}
