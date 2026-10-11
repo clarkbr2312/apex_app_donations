@@ -5,8 +5,7 @@ page 9 (
 
     appearance {
         pageMode: modalDialog
-        dialogTemplate: @/modal-dialog
-        templateOptions: #DEFAULT#
+        dialogTemplate: @/dialogs/modal-dialog
     }
     security {
         authentication: public
@@ -19,11 +18,10 @@ page 9 (
         type: staticContent
         layout {
             sequence: 10
-            slot: BODY
+            slot: contentBody
         }
         appearance {
-            template: @/blank-with-attributes
-            templateOptions: #DEFAULT#
+            template: @/standard
         }
     )
 
@@ -38,10 +36,10 @@ page 9 (
         layout {
             sequence: 10
             region: @main-form-region
-            slot: regionBody
+            slot: body
         }
         appearance {
-                    template: @/optional-above
+            template: @/required-above
         }
     )
 
@@ -50,14 +48,13 @@ page 9 (
         layout {
             sequence: 5
             region: @main-form-region
-            slot: regionBody
         }
     )
 
     pageItem P9_EIN_NUMBER (
         type: textField
         label {
-        label: "EIN / Tax ID Number"
+            label: "EIN / Tax ID Number"
         }
         validation {
             valueRequired: true
@@ -65,10 +62,10 @@ page 9 (
         layout {
             sequence: 20
             region: @main-form-region
-            slot: regionBody
+            slot: body
         }
         appearance {
-            template: @/optional
+            template: @/optional-floating
             valuePlaceholder: "e.g. 12-3456789"
         }
     )
@@ -76,72 +73,70 @@ page 9 (
     pageItem P9_PUBLIC_EMAIL (
         type: textField
         label {
-label: "Public Contact Email"
-
+            label: "Public Contact Email"
         }
-        
-        
-        value {
+        validation {
             valueRequired: true
         }
         layout {
             sequence: 30
             region: @main-form-region
-            slot: regionBody
+            slot: body
         }
         appearance {
-            template: @/optional
-valuePlaceholder: "contact@organization.org"
+            template: @/optional-floating
+            valuePlaceholder: "contact@organization.org"
         }
     )
 
     pageItem P9_CITY (
         type: textField
         label {
-label: "City"
+            label: "City"
         }
-     
-validation {
-valueRequired: true
-} 
+        validation {
+            valueRequired: true
+        }
         layout {
             sequence: 40
             region: @main-form-region
-            slot: regionBody
+            slot: body
         }
         appearance {
-            template: @/optional
-valuePlaceholder: "e.g. Austin"
+            template: @/optional-floating
+            valuePlaceholder: "e.g. Austin"
         }
     )
 
     pageItem P9_STATE_ID (
-        type: selectList
+    type: selectList
+    label {
         label: "State"
-        value {
-            valueRequired: true
-        }
-        listSource {
-            location: localDatabase
-            type: ssqlQuery
-            sqlQuery:
-                ```
-                SELECT state_name || ' (' || state_code || ')' AS d, state_id AS r
-                  FROM dl_us_states
-                 ORDER BY state_name
-                ```
-            displayNullValue: true
-            nullValueDisplay: "- Select State -"
-        }
-        layout {
-            sequence: 50
-            region: @main-form-region
-            slot: regionBody
-        }
-        appearance {
-            template: @/optional
-        }
-    )
+    }
+    validation {
+        valueRequired: true
+    }
+    lov {
+        type: sqlQuery
+                sqlQuery:
+            ```sql
+            SELECT state_name || ' (' || state_code || ')' AS d, state_id AS r
+              FROM dl_us_states
+             ORDER BY state_name
+            ```
+        displayNullValue: true
+        nullValueDisplay: "- Select State -"
+    }
+    layout {
+        sequence: 50
+        region: @main-form-region
+        slot: regionBody
+    }
+    appearance {
+        template: @/optional-above
+        templateOptions: #DEFAULT#
+    }
+)
 
     region footer-buttons-region (
         name: "Buttons"
