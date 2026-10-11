@@ -2,11 +2,11 @@ page 9 (
     name: "Register Organization"
     alias: REGISTER-ORGANIZATION
     title: "Register Your Charity" 
-
     appearance {
         pageMode: modalDialog
-        dialogTemplate: @/modal-dialog
-}
+                dialogTemplate: @/modal-dialog
+        templateOptions: #DEFAULT#
+    }
     security {
         authentication: public
         pageAccessProtection: argumentsMustHaveChecksum
@@ -14,15 +14,12 @@ page 9 (
     }
 
 
-    region form region  {
+    region form (
         name: "Organization Registration"
         type: staticContent
-                layout {
-            sequence: 10
-slot: BODY
-        }
-        appearance {
-            template: @/standard
+        layout {
+            sequence: 20
+            slot: afterHeader
         }
     )
 
@@ -36,11 +33,8 @@ slot: BODY
         }
         layout {
             sequence: 10
-            region: @main-form-region
+            region: @form
             slot: regionBody
-        }
-        appearance {
-            template: @/required-above
         }
     )
 
@@ -48,7 +42,7 @@ slot: BODY
         type: hidden
         layout {
             sequence: 5
-            region: @main-form-region
+            region: @form
         }
     )
 
@@ -62,11 +56,10 @@ slot: BODY
         }
         layout {
             sequence: 20
-            region: @main-form-region
-            slot: regionBody
+            region: @form
+            slot: regionBody        
         }
         appearance {
-            template: @/optional-floating
             valuePlaceholder: "e.g. 12-3456789"
         }
     )
@@ -81,11 +74,10 @@ slot: BODY
         }
         layout {
             sequence: 30
-            region: @main-form-region
+            region: @form
             slot: regionBody
         }
         appearance {
-            template: @/optional-floating
             valuePlaceholder: "contact@organization.org"
         }
     )
@@ -100,11 +92,10 @@ slot: BODY
         }
         layout {
             sequence: 40
-            region: @main-form-region
+            region: @form
             slot: regionBody
         }
         appearance {
-            template: @/optional-floating
             valuePlaceholder: "e.g. Austin"
         }
     )
@@ -126,16 +117,13 @@ slot: BODY
                  ORDER BY state_name
                 ```
             displayNullValue: true
-            nullValueDisplay: "- Select State -"
-        }
+                    }
         layout {
             sequence: 50
-            region: @main-form-region
+            region: @form
             slot: regionBody
         }
         appearance {
-            template: @/optional-above
-            templateOptions: #DEFAULT#
         }
     )
 
@@ -144,50 +132,44 @@ slot: BODY
         type: staticContent
         layout {
             sequence: 20
-            slot: REGION_POSITION_03
+            slot: beforeFooter
         }
         appearance {
-            template: @/buttons-container
-            templateOptions: #DEFAULT#
+            template: buttons
         }
     )
 
-    button cancel_button (
+    gbutton cancel_button (
+        name: CANCEL 
         label: "Cancel"
-        layout {
+                layout {
             sequence: 10
             region: @footer-buttons-region
-            slot: regionBody
+            slot: previous 
         }
         behavior {
-            type: triggerAction
+            type: button
+            closeDialog: true
         }
         appearance {
-            template: @/text
+            buttonTemplate: "Text"
         }
-        action cancel_dialog_action (
-            type: triggerAction
-            event {
-                type: click
-            }
-            actions {
-                cancelDialog cancel_dlg ()
-            }
-        )
     )
 
     button submit_button (
+        name: SUBMIT
         label: "Complete Registration & Build Profile"
-        layout {
+                layout {
             sequence: 20
             region: @footer-buttons-region
-            slot: regionBody
+            slot: next
         }
         behavior {
-            type: submitPage
+            type: button
+            submitPage: true
         }
         appearance {
-            template: @/hot
+            hot: true
         }
     )
 
@@ -200,7 +182,7 @@ slot: BODY
         }
         source {
             plsqlCode:
-                ```
+                ```plsql
                 DECLARE
                     v_charity_id NUMBER;
                     v_slug       VARCHAR2(255);
@@ -256,7 +238,7 @@ slot: BODY
         }
         target {
             page: 7
-            setItems {
+            arguments {
                 P7_CHARITY_ID: "&P9_NEW_CHARITY_ID."
             }
         }

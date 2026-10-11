@@ -1,0 +1,92 @@
+breadcrumb breadcrumb (
+    name: Breadcrumb
+
+    entry administration (
+        name: Administration
+        pageNumber: 10000
+        execution {
+            sequence: 10
+        }
+        link {
+            target: {
+                page: 10000
+            }
+        }
+    )
+
+    entry donor-link-dashboard (
+        name: Donor Link Dashboard
+        pageNumber: 3
+        execution {
+            sequence: 10
+        }
+        link {
+            target: {
+                page: 3
+            }
+        }
+    )
+
+    entry donors (
+        name: Donors
+        pageNumber: 5
+        execution {
+            sequence: 10
+        }
+        appearance {
+            parentEntry: @donor-link-dashboard
+        }
+        link {
+            target: {
+                page: 5
+            }
+        }
+    )
+
+    entry home (
+        name: Home
+        pageNumber: 1
+        execution {
+            sequence: 10
+        }
+        link {
+            target: {
+                page: 1
+            }
+        }
+    )
+
+    entry non-profit-oranizations (
+        name: Non-profit Organizations
+        pageNumber: 4
+        execution {
+            sequence: 10
+        }
+        appearance {
+            parentEntry: @donor-link-dashboard
+        }
+        link {
+            target: {
+                page: 4
+            }
+        }
+    )
+
+    entry stripe-payments (
+        name: Stripe Payments
+        pageNumber: 8
+        execution {
+            sequence: 10
+        }
+        appearance {
+            parentEntry: @donor-link-dashboard
+        }
+        link {
+            target: {
+                page: 8
+            }
+        }
+    )
+
+)
+

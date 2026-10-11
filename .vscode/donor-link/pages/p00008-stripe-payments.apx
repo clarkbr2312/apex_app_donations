@@ -1,0 +1,441 @@
+page 8 (
+    name: Stripe Payments
+    alias: STRIPE-PAYMENTS
+    title: Stripe Payments
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region breadcrumb (
+        name: Breadcrumb
+        type: breadcrumb
+        source {
+            breadcrumb: @breadcrumb
+        }
+        layout {
+            sequence: 10
+            slot: breadcrumbBar
+        }
+        appearance {
+            template: @/title-bar
+            templateOptions: [
+                #DEFAULT#
+                t-BreadcrumbRegion--useBreadcrumbTitle
+            ]
+        }
+        componentAppearance {
+            breadcrumbTemplate: @/breadcrumb
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region stripe-payments (
+        name: Stripe Payments
+        type: interactiveGrid
+        source {
+            location: localDatabase
+            tableName: DL_DONATIONS_LOG
+        }
+        layout {
+            sequence: 10
+            slot: body
+        }
+        appearance {
+            template: @/interactive-report
+            templateOptions: [
+                #DEFAULT#
+                t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc
+            ]
+        }
+        toolbar {
+            controls: [
+                searchCol
+                searchField
+                actionsMenu
+                resetButton
+                saveButton
+            ]
+        }
+        download {
+            formats: [
+                csv
+                html
+                excel
+                pdf
+            ]
+        }
+        advanced {
+            savedReportMappingIdentifier: 20478042197224615
+        }
+
+        savedReport primary (
+            visibility: primary
+            view {
+                default: grid
+            }
+            singleRowView {
+                displayedColumns: true
+            }
+
+            displayColumn (
+                column: @DONATION_ID
+                layout {
+                    sequence: 1
+                }
+            )
+
+            displayColumn (
+                column: @ITEM_ID
+                layout {
+                    sequence: 2
+                }
+            )
+
+            displayColumn (
+                column: @DONOR_ID
+                layout {
+                    sequence: 3
+                }
+            )
+
+            displayColumn (
+                column: @PAYMENT_TYPE_ID
+                layout {
+                    sequence: 4
+                }
+            )
+
+            displayColumn (
+                column: @FULFILLMENT_STATUS_ID
+                layout {
+                    sequence: 5
+                }
+            )
+
+            displayColumn (
+                column: @DONATION_AMOUNT
+                layout {
+                    sequence: 6
+                }
+            )
+
+            displayColumn (
+                column: @CURRENCY
+                layout {
+                    sequence: 7
+                }
+            )
+
+            displayColumn (
+                column: @STRIPE_PAYMENT_INTENT
+                layout {
+                    sequence: 8
+                }
+            )
+
+            displayColumn (
+                column: @STRIPE_CHARGE_ID
+                layout {
+                    sequence: 9
+                }
+            )
+
+            displayColumn (
+                column: @RECEIPT_URL
+                layout {
+                    sequence: 10
+                }
+            )
+
+            displayColumn (
+                column: @CREATED_AT
+                layout {
+                    sequence: 11
+                }
+            )
+
+        )
+
+        column CREATED_AT (
+            type: datePicker
+            heading {
+                heading: Created At
+            }
+            layout {
+                sequence: 110
+            }
+            validation {
+                valueRequired: true
+            }
+            source {
+                databaseColumn: CREATED_AT
+                dataType: date
+            }
+        )
+
+        column CURRENCY (
+            type: textField
+            heading {
+                heading: Currency
+            }
+            layout {
+                sequence: 70
+            }
+            validation {
+                valueRequired: true
+                maxLength: 3
+            }
+            source {
+                databaseColumn: CURRENCY
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column DONATION_AMOUNT (
+            type: numberField
+            heading {
+                heading: Donation Amount
+                alignment: end
+            }
+            layout {
+                sequence: 60
+                columnAlignment: end
+            }
+            validation {
+                valueRequired: true
+            }
+            source {
+                databaseColumn: DONATION_AMOUNT
+                dataType: number
+            }
+            columnFilter {
+                lovType: none
+            }
+        )
+
+        column DONATION_ID (
+            type: hidden
+            layout {
+                sequence: 10
+            }
+            source {
+                databaseColumn: DONATION_ID
+                dataType: number
+                queryOnly: true
+                primaryKey: true
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column DONOR_ID (
+            type: numberField
+            heading {
+                heading: Donor Id
+                alignment: end
+            }
+            layout {
+                sequence: 30
+                columnAlignment: end
+            }
+            source {
+                databaseColumn: DONOR_ID
+                dataType: number
+            }
+            columnFilter {
+                lovType: none
+            }
+        )
+
+        column FULFILLMENT_STATUS_ID (
+            type: selectList
+            heading {
+                heading: Fulfillment Status
+            }
+            lov {
+                type: sqlQuery
+                sqlQuery:
+                    ```sql
+                    select status_name d, status_id r
+                    from dl_fulfillment_status_lookup; 
+                    ```
+            }
+            layout {
+                sequence: 50
+            }
+            validation {
+                valueRequired: true
+            }
+            source {
+                databaseColumn: FULFILLMENT_STATUS_ID
+                dataType: number
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+                lovType: useLov
+            }
+        )
+
+        column ITEM_ID (
+            type: numberField
+            heading {
+                heading: Item Id
+                alignment: end
+            }
+            layout {
+                sequence: 20
+                columnAlignment: end
+            }
+            source {
+                databaseColumn: ITEM_ID
+                dataType: number
+            }
+            columnFilter {
+                lovType: none
+            }
+        )
+
+        column PAYMENT_TYPE_ID (
+            type: selectList
+            heading {
+                heading: Payment Type
+            }
+            lov {
+                type: sqlQuery
+                sqlQuery:
+                    ```sql
+                    select type_name d, type_id r
+                    from dl_payment_type_lookup; 
+                    
+                    ```
+            }
+            layout {
+                sequence: 40
+            }
+            validation {
+                valueRequired: true
+            }
+            source {
+                databaseColumn: PAYMENT_TYPE_ID
+                dataType: number
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+                lovType: useLov
+            }
+        )
+
+        column RECEIPT_URL (
+            type: textarea
+            heading {
+                heading: Receipt Url
+            }
+            layout {
+                sequence: 100
+            }
+            validation {
+                maxLength: 500
+            }
+            source {
+                databaseColumn: RECEIPT_URL
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+                lovType: none
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column STRIPE_CHARGE_ID (
+            type: textField
+            heading {
+                heading: Stripe Charge Id
+            }
+            layout {
+                sequence: 90
+            }
+            validation {
+                maxLength: 250
+            }
+            source {
+                databaseColumn: STRIPE_CHARGE_ID
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column STRIPE_PAYMENT_INTENT (
+            type: textField
+            heading {
+                heading: Stripe Payment Intent
+            }
+            layout {
+                sequence: 80
+            }
+            validation {
+                maxLength: 250
+            }
+            source {
+                databaseColumn: STRIPE_PAYMENT_INTENT
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        page {
+            borderWidth: 0.5
+            borderColor: #666666
+        }
+    )
+
+)
+

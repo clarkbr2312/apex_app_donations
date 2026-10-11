@@ -1,0 +1,100 @@
+theme universal-theme (
+    name: Universal Theme
+    themeNumber: 42
+    baseTheme: ut-26.1
+    style {
+        currentThemeStyle: @/vita-slate
+    }
+    javaScript {
+        fileUrls: [
+            #APEX_FILES#libraries/apex/#MIN_DIRECTORY#widget.stickyWidget#MIN#.js?v=#APEX_VERSION#
+            #THEME_FILES#js/theme42#MIN#.js?v=#APEX_VERSION#
+        ]
+    }
+    css {
+        fileUrls: #THEME_FILES#css/Core#MIN#.css?v=#APEX_VERSION#
+    }
+    componentDefaults {
+        page: @/standard
+        navigationBarList: @/navigation-bar
+        navigationMenuListPosition: side
+        navigationMenuListTop: @/top-navigation-menu
+        navigationMenuListSide: @/side-navigation-menu
+        loginPage: @/login
+        errorPage: @/login
+        printerFriendlyPage: @/standard
+        breadcrumb: @/breadcrumb
+        button: @/text
+        defaultLabel: @/optional-floating
+        optionalLabel: @/optional-floating
+        requiredLabel: @/required-floating
+        list: @/links-list
+        region: @/standard
+        classicReport: @/standard
+    }
+    regionDefaults {
+        breadcrumbs: @/title-bar
+        charts: @/standard
+        forms: @/standard
+        lists: @/standard
+        reports: @/standard
+        wizards: @/standard
+        interactiveReports: @/interactive-report
+    }
+    dialogDefaults {
+        dialogContentRegion: @/blank-with-attributes
+        dialogButtonRegion: @/buttons-container
+        dialogPage: @/modal-dialog
+    }
+    icons {
+        library: fontApex
+    }
+    advanced {
+        filePrefix: #APEX_FILES#themes/theme_42/26.1/
+        identifier: UNIVERSAL_THEME
+    }
+
+    style redwood-light-copy-1 (
+        name: hRedwood Light (copy_1)
+        css {
+            fileUrls: [
+                #APEX_FILES#libraries/oracle-fonts/oraclesans-apex#MIN#.css?v=#APEX_VERSION#
+                #THEME_FILES#css/Redwood#MIN#.css?v=#APEX_VERSION#
+            ]
+        }
+        themeRollerAttributes {
+            inputParameterFileUrls: #THEME_FILES#less/theme/Redwood-Theme.less
+            outputCssFileUrl: #THEME_DB_FILES#20418443330001606.css
+            jsonConfig:
+                ```json
+                {"classes":[],"vars":{},"{
+                  "vars": {
+                    "color-primary": "#512D81",
+                    "color-accent": "#CBA052",
+                    "color-background": "#F9F8F7",
+                    "color-surface": "#FDFDFD",
+                    "color-nav-top": "#512D81",
+                    "color-nav-side-bg": "#1D1D1B",
+                    "color-nav-side-text": "#CBA052"
+                  },
+                  "classes": [
+                    {
+                      "selector": ".t-Header-branding",
+                      "properties": {
+                        "background-color": "#512D81 !important",
+                        "border-bottom": "3px solid #CBA052 !important"
+                      }
+                    }
+                  ],
+                  "customCSS": ":root {\n  /* Overriding the default UT Primary Blue */\n  --u-color-1: #512D81 !important;\n  --a-header-background-color: #512D81 !important;\n  --a-header-text-color: #FDFDFD !important;\n  --js-header-bg-color: #512D81 !important;\n}\n\n/* Force the Header and its sub-containers */\n.t-Header,\n.t-Header-branding,\n.t-Header-nav,\n.t-Header-controls {\n  background-color: #512D81 !important;\n  background: #512D81 !important;\n  color: #FDFDFD !important;\n}\n\n/* Apply the Gold Border to the bottom of the Header */\n.t-Header {\n  border-bottom: 3px solid #CBA052 !important;\n}\n\n/* Ensure the Logo/App Name isn't inheriting a blue tint */\n.t-Header-logo-link, \n.t-Header-appName-link {\n  color: #FDFDFD !important;\n}\n\n/* Keep the Side Nav consistent */\n.t-Body-nav,\n.t-Body-nav .t-NavTree,\n.t-Body-nav .a-TreeView {\n  background-color: #1D1D1B !important;\n}\n\n.t-Body-nav .a-TreeView-label,\n.t-Body-nav .a-TreeView-icon {\n  color: #CBA052 !important;\n}\n\n.t-Body-nav .a-TreeView-content:hover {\n  background-color: #CBA052 !important;\n  color: #1D1D1B !important;\n}",
+                  "useCustomLess": "Y"
+                }customCSS":"","useCustomLess":"N"}
+                ```
+        }
+        advanced {
+            endUserCanPick: true
+        }
+    )
+
+)
+

@@ -1,0 +1,104 @@
+page 3 (
+    name: Donor Link Dashboard
+    alias: DONOR-LINK-DASHBOARD
+    title: Donor Link Dashboard
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region logo (
+        name: Logo
+        type: staticContent
+        source {
+            htmlCode:
+                ```html
+                <div class="logo-container" style="text-align: center; padding: 10px;">
+                    <img src="#APP_FILES#Donor link updated logo.png" alt="Donor Link Logo" style="max-width: 100%; height: auto;" />
+                </div>
+                
+                
+                
+                
+                ```
+        }
+        layout {
+            sequence: 10
+            slot: body
+            columnSpan: 3
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region monthly-donations-ytd-chart (
+        name: Monthly Donations (YTD $)  Chart
+        title: "<span style=\"color:#0072CE\">Monthly Donations (YTD $)  Chart</span> "
+        type: staticContent
+        source {
+            htmlCode: "This is the placeholder for chart of donation totals per month showing categories and total spend. "
+        }
+        layout {
+            sequence: 40
+            slot: body
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--scrollBody
+            ]
+        }
+    )
+
+    region non-profits-pending-verification (
+        name: Non-profit Organizations Pending Verification
+        title: "<span style=\"color:#0072CE\">Non-profit Organizations Pending Verification</span> "
+        type: staticContent
+        source {
+            htmlCode: This will be an action list of non-profit organizations that have requested registration.
+        }
+        layout {
+            sequence: 20
+            slot: body
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--scrollBody
+            ]
+        }
+    )
+
+    region orders-pending-fulfillment (
+        name: Orders Pending Fulfillment
+        title: "<span style=\"color:#0072CE\">Orders Pending Fulfillment</span> "
+        type: staticContent
+        source {
+            htmlCode: This is the placeholder for a report of all orders not yet fulfilled (pending completion).
+        }
+        layout {
+            sequence: 30
+            slot: body
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--scrollBody
+            ]
+        }
+    )
+
+)
+
