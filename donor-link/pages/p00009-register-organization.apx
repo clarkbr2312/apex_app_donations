@@ -1,7 +1,8 @@
-    page 9 (
+page 9 (
     name: "Register Organization"
     alias: REGISTER-ORGANIZATION
-    title: "Register Your Charity"
+    title: "Register Your Charity" 
+
     appearance {
         pageMode: modalDialog
         dialogTemplate: @/modal-dialog
@@ -26,6 +27,24 @@
         }
     )
 
+    pageItem P9_LEGAL_NAME (
+        type: textField
+        label {
+            label: "Legal Organization Name"
+        }
+        validation {
+            valueRequired: true
+        }
+        layout {
+            sequence: 10
+            region: @main-form-region
+            slot: regionBody
+        }
+        appearance {
+                    template: @/optional-above
+        }
+    )
+
     pageItem P9_NEW_CHARITY_ID (
         type: hidden
         layout {
@@ -35,27 +54,12 @@
         }
     )
 
-    pageItem P9_LEGAL_NAME (
-        type: textField
-        label: "Legal Organization Name"
-        value {
-            valueRequired: true
-        }
-        layout {
-            sequence: 10
-            region: @main-form-region
-            slot: regionBody
-        }
-        appearance {
-            template: @/optional
-        }
-    )
-
     pageItem P9_EIN_NUMBER (
         type: textField
+        label {
         label: "EIN / Tax ID Number"
-        placeholder: "e.g. 12-3456789"
-        value {
+        }
+        validation {
             valueRequired: true
         }
         layout {
@@ -65,13 +69,18 @@
         }
         appearance {
             template: @/optional
+            valuePlaceholder: "e.g. 12-3456789"
         }
     )
 
     pageItem P9_PUBLIC_EMAIL (
         type: textField
-        label: "Public Contact Email"
-        placeholder: "contact@organization.org"
+        label {
+label: "Public Contact Email"
+
+        }
+        
+        
         value {
             valueRequired: true
         }
@@ -82,16 +91,19 @@
         }
         appearance {
             template: @/optional
+valuePlaceholder: "contact@organization.org"
         }
     )
 
     pageItem P9_CITY (
         type: textField
-        label: "City"
-        placeholder: "e.g. Austin"
-        value {
-            valueRequired: true
+        label {
+label: "City"
         }
+     
+validation {
+valueRequired: true
+} 
         layout {
             sequence: 40
             region: @main-form-region
@@ -99,6 +111,7 @@
         }
         appearance {
             template: @/optional
+valuePlaceholder: "e.g. Austin"
         }
     )
 
@@ -110,7 +123,7 @@
         }
         listSource {
             location: localDatabase
-            type: sqlQuery
+            type: ssqlQuery
             sqlQuery:
                 ```
                 SELECT state_name || ' (' || state_code || ')' AS d, state_id AS r
