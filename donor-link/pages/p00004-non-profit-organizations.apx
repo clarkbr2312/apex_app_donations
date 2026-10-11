@@ -1,0 +1,698 @@
+page 4 (
+    name: Non-profit Organizations
+    alias: NON-PROFIT-ORGANIZATIONS
+    title: Non-profit Organizations
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    css {
+        inline:
+            ```css
+            /* Full-width navbar background matched to client logo icon hex */
+            .t-Header-navBar {
+              background-color: #0072CE !important; 
+              width: 100% !important;
+              border: none !important;
+              margin: 0 !important;
+              padding: 0.5rem 1rem !important; 
+            }
+            
+            /* Navbar items alignment and spacing */
+            .t-NavigationBar {
+              background: none !important; 
+              margin-top: 0 !important;
+              padding-top: 0 !important;
+              padding-bottom: 0 !important;
+              justify-content: flex-start; 
+            }
+            
+            /* High-contrast white link styling for low-vision legibility */
+            .t-Header-navBar .t-Button, 
+            .t-Header-navBar a, 
+            .t-NavigationBar .t-Button {
+              color: #ffffff !important;
+              font-weight: 600 !important;
+              font-size: 14px !important;
+            }
+            
+            .t-Header-navBar .t-Button:hover, 
+            .t-Header-navBar a:hover, 
+            .t-NavigationBar .t-Button:hover {
+              color: #E5E7EB !important;
+              background-color: rgba(255, 255, 255, 0.1) !important;
+              border-radius: 4px;
+            }
+            ```
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region breadcrumb (
+        name: Breadcrumb
+        type: breadcrumb
+        source {
+            breadcrumb: @breadcrumb
+        }
+        layout {
+            sequence: 10
+            slot: breadcrumbBar
+        }
+        appearance {
+            template: @/title-bar
+            templateOptions: [
+                #DEFAULT#
+                t-BreadcrumbRegion--useBreadcrumbTitle
+            ]
+        }
+        componentAppearance {
+            breadcrumbTemplate: @/breadcrumb
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region registered-non-profit-organizations (
+        name: Registered Non-profit Organizations
+        title: <span style="color:#0072CE">Registered Non-profit Organizations</span>
+        type: interactiveGrid
+        source {
+            location: localDatabase
+            tableName: DL_CHARITY_PROFILES
+        }
+        layout {
+            sequence: 10
+            slot: body
+        }
+        appearance {
+            template: @/interactive-report
+            templateOptions: [
+                #DEFAULT#
+                t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc
+            ]
+        }
+        toolbar {
+            controls: [
+                searchCol
+                searchField
+                actionsMenu
+                resetButton
+                saveButton
+            ]
+        }
+        download {
+            formats: [
+                csv
+                html
+                excel
+                pdf
+            ]
+        }
+        advanced {
+            savedReportMappingIdentifier: 19810680362012422
+        }
+
+        savedReport primary (
+            visibility: primary
+            view {
+                default: grid
+            }
+            singleRowView {
+                displayedColumns: true
+            }
+
+            displayColumn (
+                column: @CHARITY_ID
+                layout {
+                    sequence: 1
+                }
+            )
+
+            displayColumn (
+                column: @OWNER_USER_ID
+                layout {
+                    show: false
+                    sequence: 2
+                }
+            )
+
+            displayColumn (
+                column: @LEGAL_NAME
+                layout {
+                    sequence: 3
+                }
+            )
+
+            displayColumn (
+                column: @TRADING_NAME
+                layout {
+                    sequence: 4
+                }
+            )
+
+            displayColumn (
+                column: @REGISTRATION_NUMBER
+                layout {
+                    sequence: 5
+                }
+            )
+
+            displayColumn (
+                column: @TAX_EXEMPT_STATUS
+                layout {
+                    sequence: 6
+                }
+            )
+
+            displayColumn (
+                column: @PROFILE_STATUS_ID
+                layout {
+                    sequence: 7
+                }
+            )
+
+            displayColumn (
+                column: @TAGLINE
+                layout {
+                    sequence: 8
+                }
+            )
+
+            displayColumn (
+                column: @ABOUT_US_NARRATIVE
+                layout {
+                    show: false
+                    sequence: 9
+                }
+            )
+
+            displayColumn (
+                column: @LOGO_URL
+                layout {
+                    show: false
+                    sequence: 10
+                }
+            )
+
+            displayColumn (
+                column: @COVER_PHOTO_URL
+                layout {
+                    show: false
+                    sequence: 11
+                }
+            )
+
+            displayColumn (
+                column: @WEBSITE_URL
+                layout {
+                    sequence: 12
+                }
+            )
+
+            displayColumn (
+                column: @PUBLIC_SLUG
+                layout {
+                    show: false
+                    sequence: 13
+                }
+            )
+
+            displayColumn (
+                column: @CREATION_DATE
+                layout {
+                    sequence: 14
+                }
+            )
+
+            displayColumn (
+                column: @CREATED_BY
+                layout {
+                    show: false
+                    sequence: 15
+                }
+            )
+
+            displayColumn (
+                column: @LAST_UPDATED_DATE
+                layout {
+                    sequence: 16
+                }
+            )
+
+            displayColumn (
+                column: @LAST_UPDATED_BY
+                layout {
+                    show: false
+                    sequence: 17
+                }
+            )
+
+            sort (
+                column: @LEGAL_NAME
+                sort {
+                    nulls: last
+                    sequence: 1
+                }
+            )
+
+        )
+
+        column ABOUT_US_NARRATIVE (
+            type: textarea
+            heading {
+                heading: About Us Narrative
+            }
+            layout {
+                sequence: 90
+            }
+            source {
+                databaseColumn: ABOUT_US_NARRATIVE
+                dataType: clob
+            }
+            sessionState {
+                dataType: clob
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+                lovType: none
+            }
+        )
+
+        column CHARITY_ID (
+            type: hidden
+            layout {
+                sequence: 10
+            }
+            source {
+                databaseColumn: CHARITY_ID
+                dataType: number
+                queryOnly: true
+                primaryKey: true
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column COVER_PHOTO_URL (
+            type: textarea
+            heading {
+                heading: Cover Photo Url
+            }
+            layout {
+                sequence: 110
+            }
+            validation {
+                maxLength: 500
+            }
+            source {
+                databaseColumn: COVER_PHOTO_URL
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+                lovType: none
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column CREATED_BY (
+            type: textField
+            heading {
+                heading: Created By
+            }
+            layout {
+                sequence: 150
+            }
+            validation {
+                valueRequired: true
+                maxLength: 150
+            }
+            source {
+                databaseColumn: CREATED_BY
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column CREATION_DATE (
+            type: datePicker
+            heading {
+                heading: Creation Date
+            }
+            layout {
+                sequence: 140
+            }
+            validation {
+                valueRequired: true
+            }
+            source {
+                databaseColumn: CREATION_DATE
+                dataType: date
+            }
+        )
+
+        column LAST_UPDATED_BY (
+            type: textField
+            heading {
+                heading: Last Updated By
+            }
+            layout {
+                sequence: 170
+            }
+            validation {
+                maxLength: 150
+            }
+            source {
+                databaseColumn: LAST_UPDATED_BY
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column LAST_UPDATED_DATE (
+            type: datePicker
+            heading {
+                heading: Last Updated Date
+            }
+            layout {
+                sequence: 160
+            }
+            source {
+                databaseColumn: LAST_UPDATED_DATE
+                dataType: date
+            }
+        )
+
+        column LEGAL_NAME (
+            type: link
+            heading {
+                heading: Legal Name
+            }
+            layout {
+                sequence: 30
+            }
+            link {
+                target: {
+                    page: 7
+                    items: {
+                        P7_CHARITY_ID: &CHARITY_ID.
+                    }
+                }
+                linkText: &LEGAL_NAME.
+            }
+            source {
+                databaseColumn: LEGAL_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column LOGO_URL (
+            type: textarea
+            heading {
+                heading: Logo Url
+            }
+            layout {
+                sequence: 100
+            }
+            validation {
+                maxLength: 500
+            }
+            source {
+                databaseColumn: LOGO_URL
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+                lovType: none
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column OWNER_USER_ID (
+            type: numberField
+            heading {
+                heading: Owner User Id
+                alignment: end
+            }
+            layout {
+                sequence: 20
+                columnAlignment: end
+            }
+            validation {
+                valueRequired: true
+            }
+            source {
+                databaseColumn: OWNER_USER_ID
+                dataType: number
+            }
+            columnFilter {
+                lovType: none
+            }
+        )
+
+        column PROFILE_STATUS_ID (
+            type: selectList
+            heading {
+                heading: Profile Status
+            }
+            lov {
+                type: sqlQuery
+                sqlQuery:
+                    ```sql
+                    select name d, id r
+                    from dl_profile_statuses
+                    ```
+            }
+            layout {
+                sequence: 70
+            }
+            validation {
+                valueRequired: true
+            }
+            source {
+                databaseColumn: PROFILE_STATUS_ID
+                dataType: number
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+                lovType: useLov
+            }
+        )
+
+        column PUBLIC_SLUG (
+            type: textField
+            heading {
+                heading: Public Slug
+            }
+            layout {
+                sequence: 130
+            }
+            validation {
+                maxLength: 150
+            }
+            source {
+                databaseColumn: PUBLIC_SLUG
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column REGISTRATION_NUMBER (
+            type: textField
+            heading {
+                heading: Registration Number
+            }
+            layout {
+                sequence: 50
+            }
+            validation {
+                valueRequired: true
+                maxLength: 100
+            }
+            source {
+                databaseColumn: REGISTRATION_NUMBER
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column TAGLINE (
+            type: textField
+            heading {
+                heading: Tagline
+            }
+            layout {
+                sequence: 80
+            }
+            validation {
+                maxLength: 250
+            }
+            source {
+                databaseColumn: TAGLINE
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column TAX_EXEMPT_STATUS (
+            type: textField
+            heading {
+                heading: Tax Exempt Status
+            }
+            layout {
+                sequence: 60
+            }
+            validation {
+                maxLength: 50
+            }
+            source {
+                databaseColumn: TAX_EXEMPT_STATUS
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column TRADING_NAME (
+            type: textField
+            heading {
+                heading: Trading Name
+            }
+            layout {
+                sequence: 40
+            }
+            validation {
+                maxLength: 250
+            }
+            source {
+                databaseColumn: TRADING_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column WEBSITE_URL (
+            type: textarea
+            heading {
+                heading: Website Url
+            }
+            layout {
+                sequence: 120
+            }
+            validation {
+                maxLength: 500
+            }
+            source {
+                databaseColumn: WEBSITE_URL
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+                lovType: none
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        page {
+            borderWidth: 0.5
+            borderColor: #666666
+        }
+        pageHeader {
+            pageHeaderText: <span style="color:#0072CE">Registered Non-profit Organizations</span>
+        }
+    )
+
+)
+

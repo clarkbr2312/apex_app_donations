@@ -1,0 +1,369 @@
+page 2 (
+    name: Login To Donor Link
+    alias: LOGIN-TO-DONOR-LINK
+    title: Login To Donor Link
+    appearance {
+        pageMode: modalDialog
+        dialogTemplate: @/drawer
+        templateOptions: [
+            #DEFAULT#
+            js-dialog-class-t-Drawer--pullOutEnd
+            js-dialog-class-t-Drawer--sm
+        ]
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    css {
+        inline:
+            ```css
+            /* Style only the login button on this specific page to match the navbar blue */
+            .custom-login-btn {
+                background-color: #0072CE !important;
+                color: #ffffff !important;
+                border: none !important;
+                font-weight: 600 !important;
+            }
+            
+            .custom-login-btn:hover {
+                background-color: #005bb5 !important;
+                color: #ffffff !important;
+            }
+            ```
+    }
+    security {
+        authentication: public
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region featured (
+        name: Featured
+        type: cards
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                SELECT 
+                    wi.item_id,
+                    wi.product_title,
+                    NVL(wi.product_image_url, 'https://via.placeholder.com/300x200?text=No+Image') AS product_image_url,
+                    wi.target_price,
+                    wi.pledged_amount,
+                    wi.target_quantity,
+                    wi.funded_quantity,
+                    wi.priority_level,
+                    wi.item_status,
+                    cp.charity_id,
+                    cp.legal_name AS charity_name,
+                    cp.public_slug AS charity_slug,
+                    addr.city,
+                    st.state_code,
+                    cc.category_name,
+                    ROUND((wi.pledged_amount / NULLIF(wi.target_price * wi.target_quantity, 0)) * 100) AS percent_funded
+                FROM dl_charity_wishlist_items wi
+                JOIN dl_charity_profiles cp ON wi.charity_id = cp.charity_id
+                LEFT JOIN dl_charity_addresses addr ON cp.charity_id = addr.charity_id AND addr.is_primary = 'Y'
+                LEFT JOIN dl_us_states st ON addr.state_id = st.state_id
+                LEFT JOIN dl_charity_category_map ccm ON cp.charity_id = ccm.charity_id
+                LEFT JOIN dl_cause_categories cc ON ccm.category_id = cc.category_id
+                WHERE wi.item_status = 'ACTIVE'
+                ```
+        }
+        layout {
+            sequence: 30
+            slot: contentBody
+        }
+        appearance {
+            template: @/cards-container
+            templateOptions: [
+                #DEFAULT#
+                t-CardsRegion--hideHeader js-addHiddenHeadingRoleDesc
+                t-CardsRegion--styleA
+                margin-top-lg
+            ]
+        }
+        componentAppearance {
+            gridColumns: 3
+        }
+        card {
+            primaryKeyColumn1: CHARITY_ID
+            primaryKeyColumn2: ITEM_ID
+        }
+        title {
+            column: PRODUCT_TITLE
+        }
+        subtitle {
+            advancedFormatting: true
+            htmlExpression: &CHARITY_NAME. — &CITY., &STATE_CODE.
+        }
+        body {
+            advancedFormatting: true
+            htmlExpression:
+                ```html
+                <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+                    <!-- Progress Bar Track -->
+                    <div style="flex-grow: 1; background-color: #E5E7EB; height: 6px; border-radius: 3px; overflow: hidden;">
+                        <div style="width: &PERCENT_FUNDED.%; background-color: #1B5B8A; height: 100%; border-radius: 3px;"></div>
+                    </div>
+                    <!-- Percentage Text -->
+                    <span style="color: #4B5563; font-weight: 600; font-size: 12px; white-space: nowrap;">&PERCENT_FUNDED.% Funded</span>
+                </div>
+                ```
+        }
+        secondaryBody {
+            advancedFormatting: true
+            htmlExpression: $&TARGET_PRICE.
+        }
+        iconAndBadge {
+            badgeColumn: CATEGORY_NAME
+        }
+
+        action action (
+            label: Donate
+            layout {
+                sequence: 10
+            }
+            behavior {
+                target: {
+                    page: 2
+                }
+            }
+            appearance {
+                cssClasses: card-cta-donate
+            }
+        )
+
+        action action_1 (
+            label: Discover more
+            layout {
+                sequence: 20
+            }
+            behavior {
+                target: {
+                    page: 2
+                }
+            }
+            appearance {
+                cssClasses: card-cta-secondary
+            }
+        )
+
+    )
+
+    region login-items (
+        name: Login Items
+        type: staticContent
+        layout {
+            sequence: 20
+            slot: contentBody
+            column: 2
+            columnSpan: 8
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region welcome-back-message (
+        name: Welcome Back Message
+        type: staticContent
+        source {
+            htmlCode:
+                ```html
+                <p style="font-size:16px; font-family:Arial, sans-serif;">
+                  <strong>Welcome back to Donor Link.</strong><br><br>
+                  To log in, please enter your username or email address and password below.<br><br>
+                  Be sure to check out our latest news and featured non-profit organizations.
+                </p>
+                
+                ```
+        }
+        layout {
+            sequence: 10
+            slot: contentBody
+            column: 2
+            columnSpan: 8
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    pageItem P2PASSWORD_ (
+        type: password
+        label {
+            label: Password
+            alignment: left
+        }
+        layout {
+            sequence: 20
+            region: @login-items
+            slot: regionBody
+            alignment: left
+            labelColumnSpan: 0
+        }
+        appearance {
+            template: @/hidden
+            templateOptions: #DEFAULT#
+            icon: fa-key
+            width: 40
+            valuePlaceholder: Password
+        }
+        validation {
+            maxLength: 100
+        }
+        advanced {
+            customAttributes: autocomplete="current-password"
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    pageItem P2_REMEMBER (
+        type: checkbox
+        label {
+            label: Remember username
+            alignment: left
+        }
+        layout {
+            sequence: 30
+            region: @login-items
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/hidden
+            templateOptions: #DEFAULT#
+        }
+        serverSideCondition {
+            type: expression
+            plsqlExpression: apex_authentication.persistent_cookies_enabled
+        }
+    )
+
+    pageItem P2_USERNAME (
+        type: textField
+        label {
+            label: Username or email address
+            alignment: left
+        }
+        layout {
+            sequence: 10
+            region: @login-items
+            slot: regionBody
+            alignment: left
+            labelColumnSpan: 0
+        }
+        appearance {
+            template: @/hidden
+            templateOptions: #DEFAULT#
+            icon: fa-user
+            width: 40
+            valuePlaceholder: Username
+        }
+        validation {
+            maxLength: 100
+        }
+        advanced {
+            customAttributes: autocomplete="username"
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    button login (
+        buttonName: LOGIN
+        label: Login
+        layout {
+            sequence: 40
+            region: @login-items
+            slot: next
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+            templateOptions: [
+                #DEFAULT#
+                t-Button--stretch
+            ]
+            cssClasses: custom-login-btn
+        }
+        behavior {
+            warnOnUnsavedChanges: doNotCheck
+        }
+    )
+
+    process check-cookie (
+        name: Check Cookie
+        type: executeCode
+        source {
+            plsqlCode:
+                ```plsql
+                :P2_USERNAME := APEX_AUTHENTICATION.GET_LOGIN_USERNAME_COOKIE;
+                :P2_REMEMBER := CASE WHEN :P2_USERNAME IS NOT NULL THEN 'Y' ELSE 'N' END;
+                ```
+        }
+        execution {
+            sequence: 10
+            point: beforeHeader
+        }
+        advanced {
+            executionMappingIdentifier: 19808666958012402
+        }
+    )
+
+    process redirect-for-admin (
+        name: Login
+        type: executeCode
+        source {
+            plsqlCode:
+                ```plsql
+                BEGIN
+                   -- 1. Perform standard APEX authentication
+                   APEX_AUTHENTICATION.LOGIN(
+                      p_username => :P2_USERNAME,
+                      p_password => :P2_PASSWORD
+                   );
+                
+                   -- 2. Handle 'Remember Me' cookie
+                   APEX_AUTHENTICATION.SEND_LOGIN_USERNAME_COOKIE (
+                      p_username  => :P2_USERNAME,
+                      p_consent   => (:P2_REMEMBER = 'Y')
+                   );
+                END;
+                
+                ```
+        }
+        execution {
+            sequence: 30
+        }
+        advanced {
+            executionMappingIdentifier: 52882100273327550
+        }
+        serverSideCondition {
+            whenButtonPressed: @login
+        }
+    )
+
+    branch (
+        name: Set request for login
+        execution {
+            sequence: 10
+            point: afterSubmit
+        }
+        behavior {
+            target: {
+                page: 1
+                request: LOGIN_SUCCESS)
+            }
+        }
+    )
+
+)
+
