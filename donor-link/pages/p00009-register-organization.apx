@@ -5,20 +5,21 @@ page 9 (
 
     appearance {
         pageMode: modalDialog
-        dialogTemplate: @/dialogs/modal-dialog
-    }
+        dialogTemplate: @/modal-dialog
+}
     security {
         authentication: public
         pageAccessProtection: argumentsMustHaveChecksum
         formAutoComplete: false
     }
 
-    region main-form-region (
+
+    region form region  {
         name: "Organization Registration"
         type: staticContent
-        layout {
+                layout {
             sequence: 10
-            slot: contentBody
+slot: BODY
         }
         appearance {
             template: @/standard
@@ -36,7 +37,7 @@ page 9 (
         layout {
             sequence: 10
             region: @main-form-region
-            slot: body
+            slot: regionBody
         }
         appearance {
             template: @/required-above
@@ -62,7 +63,7 @@ page 9 (
         layout {
             sequence: 20
             region: @main-form-region
-            slot: body
+            slot: regionBody
         }
         appearance {
             template: @/optional-floating
@@ -81,7 +82,7 @@ page 9 (
         layout {
             sequence: 30
             region: @main-form-region
-            slot: body
+            slot: regionBody
         }
         appearance {
             template: @/optional-floating
@@ -100,7 +101,7 @@ page 9 (
         layout {
             sequence: 40
             region: @main-form-region
-            slot: body
+            slot: regionBody
         }
         appearance {
             template: @/optional-floating
@@ -109,34 +110,34 @@ page 9 (
     )
 
     pageItem P9_STATE_ID (
-    type: selectList
-    label {
-        label: "State"
-    }
-    validation {
-        valueRequired: true
-    }
-    lov {
-        type: sqlQuery
-                sqlQuery:
-            ```sql
-            SELECT state_name || ' (' || state_code || ')' AS d, state_id AS r
-              FROM dl_us_states
-             ORDER BY state_name
-            ```
-        displayNullValue: true
-        nullValueDisplay: "- Select State -"
-    }
-    layout {
-        sequence: 50
-        region: @main-form-region
-        slot: regionBody
-    }
-    appearance {
-        template: @/optional-above
-        templateOptions: #DEFAULT#
-    }
-)
+        type: selectList
+        label {
+            label: "State"
+        }
+        validation {
+            valueRequired: true
+        }
+        lov {
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                SELECT state_name || ' (' || state_code || ')' AS d, state_id AS r
+                  FROM dl_us_states
+                 ORDER BY state_name
+                ```
+            displayNullValue: true
+            nullValueDisplay: "- Select State -"
+        }
+        layout {
+            sequence: 50
+            region: @main-form-region
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+            templateOptions: #DEFAULT#
+        }
+    )
 
     region footer-buttons-region (
         name: "Buttons"
@@ -157,7 +158,6 @@ page 9 (
             sequence: 10
             region: @footer-buttons-region
             slot: regionBody
-            position: create
         }
         behavior {
             type: triggerAction
@@ -182,7 +182,6 @@ page 9 (
             sequence: 20
             region: @footer-buttons-region
             slot: regionBody
-            position: create
         }
         behavior {
             type: submitPage
@@ -201,7 +200,7 @@ page 9 (
         }
         source {
             plsqlCode:
-                ```plsql
+                ```
                 DECLARE
                     v_charity_id NUMBER;
                     v_slug       VARCHAR2(255);
