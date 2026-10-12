@@ -31,7 +31,7 @@ page 9 (
             valueRequired: true
         }
         layout {
-            sequence: 10
+        sequence: 10
             region: @form
             slot: regionBody
         }
@@ -56,7 +56,6 @@ page 9 (
         }
         layout {
             sequence: 20
-            region: @form
             slot: regionBody        
         }
         appearance {
