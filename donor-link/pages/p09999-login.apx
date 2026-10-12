@@ -428,7 +428,7 @@ page 9999 (
         execution {
             sequence: 10
         }
-        p   behavior {
+        behavior {
             target: {
                 page: 3
             }

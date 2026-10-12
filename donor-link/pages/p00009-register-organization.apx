@@ -174,9 +174,8 @@ page 9 (
             templateOptions: #DEFAULT#
         }
     )
-
     dynamicAction cancel-dialog (
-        name: cancel-dialog
+        name: "Cancel Dialog"
         execution {
             sequence: 10
         }
@@ -189,23 +188,19 @@ page 9 (
         action native-dialog-cancel (
             action: cancelDialog
             execution {
-                equence: 10s
-event: @cancel-dialog
-fireOnInit: false
+                sequence: 10
+                fireOnInit: false
             }
         )
+    ) 
     
-
     process create-organization-profile (
-        name: "create organization profile" 
+        name: "Create Organization Profile"
         type: executeCode
-        execution {
-            sequence: 10
-            point: afterSubmit
-        }
+        
         source {
             plsqlCode:
-                ```
+                ```plsql
                 DECLARE
                     v_charity_id NUMBER;
                     v_slug       VARCHAR2(255);
@@ -250,6 +245,28 @@ fireOnInit: false
                     );
                 END;
                 ```
+        }
+        execution {
+            sequence: 10
+            point: afterSubmit
+        }
+    )
+
+        branch (
+        name: Go to page 7
+        execution {
+            sequence: 20
+        }
+        behavior {
+                   target: {
+                page: 7
+                items: [
+                    { name: "P7_CHARITY_ID", value: &P9_NEW_CHARITY_ID. }
+                ]
+            }
+        }
+        serverSideCondition {
+            whenButtonPressed: @save
         }
     )
 )
