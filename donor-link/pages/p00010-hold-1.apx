@@ -1,0 +1,17 @@
+page 10 (
+    name: Hold 1
+    alias: HOLD-1
+    title: Hold 1
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+)
+

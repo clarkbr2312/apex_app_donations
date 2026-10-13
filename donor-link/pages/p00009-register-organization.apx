@@ -18,12 +18,12 @@ page 9 (
         type: staticContent
         layout {
             sequence: 20
-            slot: afterHeader
+            slot: afterHeader           
         }
     )
 
     pageItem P9_LEGAL_NAME (
-        type: textField
+        type: textField 
         label {
             label: "Legal Organization Name"
         }
