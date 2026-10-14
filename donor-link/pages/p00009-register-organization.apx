@@ -16,14 +16,21 @@ page 9 (
     region form (
         name: "Organization Registration"
         type: staticContent
-        layout {
-            sequence: 20
-            slot: afterHeader           
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: [
+                #DEFAULT#
+                t-Form--stretchInputs
+            ]
         }
+            layout {
+            sequence: 20
+            slot: contentBody
+           }
     )
 
     pageItem P9_LEGAL_NAME (
-        type: textField 
+        type: textField
         label {
             label: "Legal Organization Name"
         }
@@ -31,7 +38,7 @@ page 9 (
             valueRequired: true
         }
         layout {
-        sequence: 10
+            sequence: 10
             region: @form
             slot: regionBody
         }
@@ -56,7 +63,8 @@ page 9 (
         }
         layout {
             sequence: 20
-            slot: regionBody        
+            region: @form
+            slot: regionBody
         }
         appearance {
             valuePlaceholder: "e.g. 12-3456789"
@@ -75,7 +83,7 @@ page 9 (
             sequence: 30
             region: @form
             slot: regionBody
-        }
+                    }
         appearance {
             valuePlaceholder: "contact@organization.org"
         }
@@ -89,11 +97,11 @@ page 9 (
         validation {
             valueRequired: true
         }
-        layout {
+    layout {
             sequence: 40
             region: @form
             slot: regionBody
-        }
+                    }
         appearance {
             valuePlaceholder: "e.g. Austin"
         }
@@ -121,7 +129,7 @@ page 9 (
             sequence: 50
             region: @form
             slot: regionBody
-        }
+                    }
         appearance {
         }
     )
