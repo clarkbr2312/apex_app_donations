@@ -1,0 +1,171 @@
+page 10 (
+        name: "Edit Header & Branding"
+ 	    alias: EDIT-HEADER-BRANDING
+    title: "Edit Header & Branding"
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+)
+
+
+    region form (
+        name: "Header & Branding Settings"
+        type: staticContent
+        layout {
+            sequence: 10
+            slot:contentBody 
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+    )
+
+        pageItem P10_CHARITY_ID (
+        type: hidden
+        layout {
+            sequence: 5
+            region: @form
+            slot: regionBody
+        }
+    )
+
+        pageItem P10_TRADING_NAME (
+        type: textField
+        label {
+            label: "Public Display Name (DBA)"
+        }
+        layout {
+            sequence: 10
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/required-above
+            valuePlaceholder: "e.g. Austin Youth Shelter"
+        }
+        help {
+            helpText: "Enter the public-facing display name if different from your legal entity name."
+        }
+    )
+
+       pageItem P10_WEBSITE_URL (
+        type: textField
+        label {
+            label: "Official Website URL"
+        }
+        layout {
+            sequence: 30
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+            valuePlaceholder: "e.g. www.organization.org"
+        }
+        help {
+            helpText: "Provide the link to your official homepage."
+        }
+    )
+        pageItem P10_TAGLINE (
+        type: textarea
+        label {
+            label: "Organization Impact Tagline"
+        }
+        layout {
+            sequence: 20
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+            valuePlaceholder: "e.g. Safe shelter, emergency aid, and support for Central Texas youth."
+        }
+        settings {
+            autoHeight: true
+            characterCounter: true
+        }
+        validation {
+            maxLength: 255
+        }
+        help {
+            helpText: "A brief impact summary displayed directly underneath your organization title in the hero banner."
+        }
+    )
+
+        pageItem P10_LOGO_URL (
+        type: textField
+        label {
+            label: "Logo Image URL"
+        }
+        layout {
+            sequence: 40
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+            valuePlaceholder: "e.g. /static/logo.png"
+        }
+        help {
+            helpText: "Direct URL link to your square logo image asset."
+        }
+    )
+        pageItem P10_LOGO_URL (
+        type: textField
+        label {
+            label: "Logo Image URL"
+        }
+        layout {
+            sequence: 40
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+            valuePlaceholder: "e.g. /static/logo.png"
+        }
+        help {
+            helpText: "Direct URL link to your square logo image asset."
+        }
+    )
+
+    pageItem P10_COVER_PHOTO_URL (
+        type: textField
+        label {
+            label: "Cover Photo Banner URL"
+        }
+        layout {
+            sequence: 50
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+            valuePlaceholder: "e.g. /static/cover.jpg"
+        }
+        help {
+            helpText: "Direct URL link to a widescreen cover banner photo for your profile hero region."
+        }
+    )
+
+        region footer-buttons-region (
+        name: "Buttons"
+        type: staticContent
+        layout {
+            sequence: 20
+            slot: REGION_POSITION_03
+        }
+        appearance {
+            template: @/buttons-container
+            templateOptions: #DEFAULT#
+        }
+    )
