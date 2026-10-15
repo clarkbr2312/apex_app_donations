@@ -1,27 +1,24 @@
 page 10 (
-        name: "Edit Header & Branding"
- 	    alias: EDIT-HEADER-BRANDING
+    name: "Edit Header & Branding"
+    alias: EDIT-HEADER-BRANDING
     title: "Edit Header & Branding"
     appearance {
-        pageTemplate: @/standard
+        pageMode: modalDialog
+        dialogTemplate: @/modal-dialog
         templateOptions: #DEFAULT#
     }
-    navigation {
-        cursorFocus: doNotFocusCursor
-    }
     security {
+        authentication: public
         pageAccessProtection: argumentsMustHaveChecksum
         formAutoComplete: false
     }
-)
-
 
     region form (
-        name: "Header & Branding Settings"
+        name: "Header & Branding Details"
         type: staticContent
         layout {
             sequence: 10
-            slot:contentBody 
+            slot: BODY
         }
         appearance {
             template: @/blank-with-attributes
@@ -29,56 +26,19 @@ page 10 (
         }
     )
 
-        pageItem P10_CHARITY_ID (
+    pageItem P10_CHARITY_ID (
         type: hidden
-        layout {
-            sequence: 5
-            region: @form
-            slot: regionBody
-        }
-    )
-
-        pageItem P10_TRADING_NAME (
-        type: textField
-        label {
-            label: "Public Display Name (DBA)"
-        }
         layout {
             sequence: 10
             region: @form
             slot: regionBody
         }
-        appearance {
-            template: @/required-above
-            valuePlaceholder: "e.g. Austin Youth Shelter"
-        }
-        help {
-            helpText: "Enter the public-facing display name if different from your legal entity name."
-        }
     )
 
-       pageItem P10_WEBSITE_URL (
+    pageItem P10_TRADING_NAME (
         type: textField
         label {
-            label: "Official Website URL"
-        }
-        layout {
-            sequence: 30
-            region: @form
-            slot: regionBody
-        }
-        appearance {
-            template: @/optional-above
-            valuePlaceholder: "e.g. www.organization.org"
-        }
-        help {
-            helpText: "Provide the link to your official homepage."
-        }
-    )
-        pageItem P10_TAGLINE (
-        type: textarea
-        label {
-            label: "Organization Impact Tagline"
+            label: "Public Display Name (DBA)"
         }
         layout {
             sequence: 20
@@ -87,24 +47,40 @@ page 10 (
         }
         appearance {
             template: @/optional-above
-            valuePlaceholder: "e.g. Safe shelter, emergency aid, and support for Central Texas youth."
+            valuePlaceholder: "e.g. Austin Youth Shelter"
+        }
+        validation {
+            maxLength: 255
+        }
+    )
+
+    pageItem P10_TAGLINE (
+        type: textarea
+        label {
+            label: "Tagline / Impact Pitch"
+        }
+        layout {
+            sequence: 30
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+            valuePlaceholder: "Short 1-2 sentence pitch summarizing your mission..."
         }
         settings {
             autoHeight: true
             characterCounter: true
         }
         validation {
-            maxLength: 255
-        }
-        help {
-            helpText: "A brief impact summary displayed directly underneath your organization title in the hero banner."
+            maxLength: 500
         }
     )
 
-        pageItem P10_LOGO_URL (
+    pageItem P10_WEBSITE_URL (
         type: textField
         label {
-            label: "Logo Image URL"
+            label: "Website URL"
         }
         layout {
             sequence: 40
@@ -113,35 +89,16 @@ page 10 (
         }
         appearance {
             template: @/optional-above
-            valuePlaceholder: "e.g. /static/logo.png"
         }
-        help {
-            helpText: "Direct URL link to your square logo image asset."
-        }
-    )
-        pageItem P10_LOGO_URL (
-        type: textField
-        label {
-            label: "Logo Image URL"
-        }
-        layout {
-            sequence: 40
-            region: @form
-            slot: regionBody
-        }
-        appearance {
-            template: @/optional-above
-            valuePlaceholder: "e.g. /static/logo.png"
-        }
-        help {
-            helpText: "Direct URL link to your square logo image asset."
+        validation {
+            maxLength: 500
         }
     )
 
-    pageItem P10_COVER_PHOTO_URL (
-        type: textField
+    pageItem P10_LOGO_FILE (
+        type: imageUpload
         label {
-            label: "Cover Photo Banner URL"
+            label: "Organization Logo Image"
         }
         layout {
             sequence: 50
@@ -150,14 +107,61 @@ page 10 (
         }
         appearance {
             template: @/optional-above
-            valuePlaceholder: "e.g. /static/cover.jpg"
-        }
-        help {
-            helpText: "Direct URL link to a widescreen cover banner photo for your profile hero region."
         }
     )
 
-        region footer-buttons-region (
+    pageItem P10_LOGO_URL (
+        type: textField
+        label {
+            label: "Or Logo Image URL (External Link)"
+        }
+        layout {
+            sequence: 60
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+        validation {
+            maxLength: 500
+        }
+    )
+
+    pageItem P10_COVER_PHOTO_FILE (
+        type: imageUpload
+        label {
+            label: "Header Cover Photo Image"
+        }
+        layout {
+            sequence: 70
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+    )
+
+    pageItem P10_COVER_PHOTO_URL (
+        type: textField
+        label {
+            label: "Or Cover Photo URL (External Link)"
+        }
+        layout {
+            sequence: 80
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+        validation {
+            maxLength: 500
+        }
+    )
+
+    region buttons (
         name: "Buttons"
         type: staticContent
         layout {
@@ -169,3 +173,146 @@ page 10 (
             templateOptions: #DEFAULT#
         }
     )
+
+    button cancel (
+        buttonName: CANCEL
+        label: "Cancel"
+        layout {
+            sequence: 10
+            region: @buttons
+            slot: previous
+        }
+        behavior {
+            action: definedByDynamicAction
+        }
+        appearance {
+            buttonTemplate: @/text
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    button save (
+        buttonName: SAVE
+        label: "Save Branding Changes"
+        layout {
+            sequence: 20
+            region: @buttons
+            slot: next
+        }
+        behavior {
+            action: submitPage
+        }
+        appearance {
+            buttonTemplate: @/hot
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    dynamicAction cancel-dialog (
+        name: "Cancel Dialog"
+        execution {
+            sequence: 10
+        }
+        when {
+            event: click
+            selectionType: button
+            button: @cancel
+        }
+        action native-dialog-cancel (
+            action: cancelDialog
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+    )
+
+    process fetch-branding-details (
+        name: "Fetch Branding Details"
+        type: executeCode
+        execution {
+            sequence: 10
+            point: beforeHeader
+        }
+        source {
+            plsqlCode:
+                ```plsql
+                BEGIN
+                    IF :P10_CHARITY_ID IS NOT NULL THEN
+                        SELECT trading_name, tagline, website_url, logo_url, cover_photo_url
+                          INTO :P10_TRADING_NAME, :P10_TAGLINE, :P10_WEBSITE_URL, :P10_LOGO_URL, :P10_COVER_PHOTO_URL
+                          FROM dl_charity_profiles
+                         WHERE charity_id = TO_NUMBER(:P10_CHARITY_ID);
+                    END IF;
+                EXCEPTION
+                    WHEN NO_DATA_FOUND THEN
+                        NULL;
+                END;
+                ```
+        }
+    )
+
+    process save-branding-details (
+        name: "Save Branding Details"
+        type: executeCode
+        execution {
+            sequence: 10
+            point: afterSubmit
+        }
+        source {
+            plsqlCode:
+                ```plsql
+                DECLARE
+                    v_logo_url  VARCHAR2(500) := :P10_LOGO_URL;
+                    v_cover_url VARCHAR2(500) := :P10_COVER_PHOTO_URL;
+                BEGIN
+                    -- Process staged logo file if uploaded via APEX_APPLICATION_TEMP_FILES
+                    IF :P10_LOGO_FILE IS NOT NULL THEN
+                        FOR r IN (
+                            SELECT filename, name 
+                              FROM apex_application_temp_files 
+                             WHERE name = :P10_LOGO_FILE
+                        ) LOOP
+                            v_logo_url := r.name;
+                        END LOOP;
+                    END IF;
+
+                    -- Process staged cover photo file if uploaded via APEX_APPLICATION_TEMP_FILES
+                    IF :P10_COVER_PHOTO_FILE IS NOT NULL THEN
+                        FOR r IN (
+                            SELECT filename, name 
+                              FROM apex_application_temp_files 
+                             WHERE name = :P10_COVER_PHOTO_FILE
+                        ) LOOP
+                            v_cover_url := r.name;
+                        END LOOP;
+                    END IF;
+
+                    -- Update charity profile record
+                    UPDATE dl_charity_profiles
+                       SET trading_name    = :P10_TRADING_NAME,
+                           tagline         = :P10_TAGLINE,
+                           website_url     = :P10_WEBSITE_URL,
+                           logo_url        = v_logo_url,
+                           cover_photo_url = v_cover_url
+                     WHERE charity_id = TO_NUMBER(:P10_CHARITY_ID);
+                END;
+                ```
+        }
+        serverSideCondition {
+            whenButtonPressed: @save
+        }
+    )
+
+    process close-dialog (
+        name: "Close Dialog"
+        type: closeDialog
+        execution {
+            sequence: 20
+            point: afterSubmit
+        }
+        serverSideCondition {
+            whenButtonPressed: @save
+        }
+    )
+)
