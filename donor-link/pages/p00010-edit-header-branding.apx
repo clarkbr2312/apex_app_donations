@@ -70,8 +70,7 @@ page 10 (
         }
         settings {
             autoHeight: true
-            characterCounter: true
-        }
+                    }
         validation {
             maxLength: 500
         }
@@ -203,7 +202,8 @@ page 10 (
             action: submitPage
         }
         appearance {
-            buttonTemplate: @/hot
+            buttonTemplate: @/text
+            hot: true
             templateOptions: #DEFAULT#
         }
     )
