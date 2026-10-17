@@ -42,7 +42,7 @@ page 10 (
         }
         layout {
             sequence: 20
-            region: @form
+                region: @form
             slot: regionBody
         }
         appearance {
