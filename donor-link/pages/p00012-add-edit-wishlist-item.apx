@@ -1,7 +1,7 @@
 page 12 (
-    name: "Add / Edit Wishlist Item"
+    name: Add / Edit Wishlist Item
     alias: ADD-EDIT-WISHLIST-ITEM
-    title: "Add / Edit Wishlist Item"
+    title: Add / Edit Wishlist Item
     appearance {
         pageMode: modalDialog
         dialogTemplate: @/modal-dialog
@@ -13,25 +13,29 @@ page 12 (
         formAutoComplete: false
     }
 
-    region form (
-        name: "Wishlist Item Details"
+    region buttons (
+        name: Buttons
         type: staticContent
         layout {
-            sequence: 10
-            slot: BODY
+            sequence: 20
+            slot: dialogFooter
         }
         appearance {
-            template: @/blank-with-attributes
+            template: @/buttons-container
             templateOptions: #DEFAULT#
         }
     )
 
-    pageItem P12_ITEM_ID (
-        type: hidden
+    region form (
+        name: Wishlist Item Details
+        type: staticContent
         layout {
             sequence: 10
-            region: @form
-            slot: regionBody
+            slot: contentBody
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -44,68 +48,31 @@ page 12 (
         }
     )
 
-    pageItem P12_PRODUCT_TITLE (
-        type: textField
-        label {
-            label: "Product / Item Title"
-        }
+    pageItem P12_ITEM_ID (
+        type: hidden
         layout {
-            sequence: 30
+            sequence: 10
             region: @form
             slot: regionBody
-        }
-        appearance {
-            template: @/required-above
-            valuePlaceholder: "e.g. Winter Coats for Children (Sizes 6-12)"
-        }
-        validation {
-            valueRequired: true
-            maxLength: 250
-        }
-    )
-
-    pageItem P12_TARGET_QUANTITY (
-        type: numberField
-        label {
-            label: "Target Quantity Needed"
-        }
-        layout {
-            sequence: 40
-            region: @form
-            slot: regionBody
-        }
-        appearance {
-            template: @/required-above
-            valuePlaceholder: "e.g. 50"
-        }
-        validation {
-            valueRequired: true
-        }
-    )
-
-    pageItem P12_TARGET_PRICE (
-        type: numberField
-        label {
-            label: "Estimated Unit Price ($)"
-        }
-        layout {
-            sequence: 50
-            region: @form
-            slot: regionBody
-        }
-        appearance {
-            template: @/required-above
-            valuePlaceholder: "e.g. 35.00"
-        }
-        validation {
-            valueRequired: true
         }
     )
 
     pageItem P12_PRIORITY_LEVEL (
         type: selectList
         label {
-            label: "Priority Level"
+            label: Priority Level
+        }
+        lov {
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                SELECT 'Standard' AS d, 'STANDARD' AS r FROM dual
+                UNION ALL
+                SELECT 'High Priority' AS d, 'HIGH' AS r FROM dual
+                UNION ALL
+                SELECT 'Urgent Need' AS d, 'URGENT' AS r FROM dual
+                ```
+            displayNullValue: false
         }
         layout {
             sequence: 60
@@ -115,46 +82,12 @@ page 12 (
         appearance {
             template: @/optional-above
         }
-        lov {
-            type: sqlQuery
-            sqlQuery:
-                ```
-                SELECT 'Standard' AS d, 'STANDARD' AS r FROM dual
-                UNION ALL
-                SELECT 'High Priority' AS d, 'HIGH' AS r FROM dual
-                UNION ALL
-                SELECT 'Urgent Need' AS d, 'URGENT' AS r FROM dual
-                ```
-            displayNullValue: false
-        }
-    )
-
-    pageItem P12_WHY_WE_NEED_THIS (
-        type: textarea
-        label {
-            label: "Why We Need This / Impact Explanation"
-        }
-        layout {
-            sequence: 70
-            region: @form
-            slot: regionBody
-        }
-        appearance {
-            template: @/optional-above
-            valuePlaceholder: "Explain how this item directly impacts your beneficiaries..."
-        }
-        settings {
-            autoHeight: true
-        }
-        validation {
-            maxLength: 1000
-        }
     )
 
     pageItem P12_PRODUCT_IMAGE_FILE (
         type: imageUpload
         label {
-            label: "Product Image File"
+            label: Product Image File
         }
         layout {
             sequence: 80
@@ -169,7 +102,7 @@ page 12 (
     pageItem P12_PRODUCT_IMAGE_URL (
         type: textField
         label {
-            label: "Or Product Image URL (External Link)"
+            label: Or Product Image URL (External Link)
         }
         layout {
             sequence: 90
@@ -184,46 +117,110 @@ page 12 (
         }
     )
 
-    region buttons (
-        name: "Buttons"
-        type: staticContent
+    pageItem P12_PRODUCT_TITLE (
+        type: textField
+        label {
+            label: Product / Item Title
+        }
         layout {
-            sequence: 20
-            slot: REGION_POSITION_03
+            sequence: 30
+            region: @form
+            slot: regionBody
         }
         appearance {
-            template: @/buttons-container
-            templateOptions: #DEFAULT#
+            template: @/required-above
+            valuePlaceholder: e.g. Winter Coats for Children (Sizes 6-12)
+        }
+        validation {
+            valueRequired: true
+            maxLength: 250
+        }
+    )
+
+    pageItem P12_TARGET_PRICE (
+        type: numberField
+        label {
+            label: Estimated Unit Price ($)
+        }
+        layout {
+            sequence: 50
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/required-above
+            valuePlaceholder: e.g. 35.00
+        }
+        validation {
+            valueRequired: true
+        }
+    )
+
+    pageItem P12_TARGET_QUANTITY (
+        type: numberField
+        label {
+            label: Target Quantity Needed
+        }
+        layout {
+            sequence: 40
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/required-above
+            valuePlaceholder: e.g. 50
+        }
+        validation {
+            valueRequired: true
+        }
+    )
+
+    pageItem P12_WHY_WE_NEED_THIS (
+        type: textarea
+        label {
+            label: Why We Need This / Impact Explanation
+        }
+        settings {
+            autoHeight: true
+        }
+        layout {
+            sequence: 70
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+            valuePlaceholder: Explain how this item directly impacts your beneficiaries...
+        }
+        validation {
+            maxLength: 1000
         }
     )
 
     button cancel (
         buttonName: CANCEL
-        label: "Cancel"
+        label: Cancel
         layout {
             sequence: 10
             region: @buttons
             slot: previous
         }
-        behavior {
-            action: definedByDynamicAction
-        }
         appearance {
             buttonTemplate: @/text
             templateOptions: #DEFAULT#
+        }
+        behavior {
+            action: definedByDynamicAction
         }
     )
 
     button save (
         buttonName: SAVE
-        label: "Save Wishlist Item"
+        label: Save Wishlist Item
         layout {
             sequence: 20
             region: @buttons
             slot: next
-        }
-        behavior {
-            action: submitPage
         }
         appearance {
             buttonTemplate: @/text
@@ -233,7 +230,7 @@ page 12 (
     )
 
     dynamicAction cancel-dialog (
-        name: "Cancel Dialog"
+        name: Cancel Dialog
         execution {
             sequence: 10
         }
@@ -242,6 +239,7 @@ page 12 (
             selectionType: button
             button: @cancel
         }
+
         action native-dialog-cancel (
             action: cancelDialog
             execution {
@@ -249,18 +247,30 @@ page 12 (
                 fireOnInit: false
             }
         )
+
+    )
+
+    process close-dialog (
+        name: Close Dialog
+        type: closeDialog
+        execution {
+            sequence: 20
+            point: afterSubmit
+        }
+        advanced {
+            executionMappingIdentifier: 41037319946324025
+        }
+        serverSideCondition {
+            whenButtonPressed: @save
+        }
     )
 
     process fetch-item-details (
-        name: "Fetch Item Details"
+        name: Fetch Item Details
         type: executeCode
-        execution {
-            sequence: 10
-            point: beforeHeader
-        }
         source {
             plsqlCode:
-                ```
+                ```plsql
                 BEGIN
                     IF :P12_ITEM_ID IS NOT NULL THEN
                         SELECT product_title, target_quantity, target_price, priority_level, why_we_need_this, product_image_url
@@ -274,18 +284,21 @@ page 12 (
                 END;
                 ```
         }
+        execution {
+            sequence: 10
+            point: beforeHeader
+        }
+        advanced {
+            executionMappingIdentifier: 41037180589324025
+        }
     )
 
     process save-item-details (
-        name: "Save Item Details"
+        name: Save Item Details
         type: executeCode
-        execution {
-            sequence: 10
-            point: afterSubmit
-        }
         source {
             plsqlCode:
-                ```
+                ```plsql
                 DECLARE
                     v_img_url VARCHAR2(1000) := :P12_PRODUCT_IMAGE_URL;
                 BEGIN
@@ -299,7 +312,7 @@ page 12 (
                             v_img_url := r.name;
                         END LOOP;
                     END IF;
-
+                
                     IF :P12_ITEM_ID IS NULL THEN
                         INSERT INTO dl_charity_wishlist_items (
                             charity_id,
@@ -335,20 +348,17 @@ page 12 (
                 END;
                 ```
         }
+        execution {
+            sequence: 10
+            point: afterSubmit
+        }
+        advanced {
+            executionMappingIdentifier: 41037202251324025
+        }
         serverSideCondition {
             whenButtonPressed: @save
         }
     )
 
-    process close-dialog (
-        name: "Close Dialog"
-        type: closeDialog
-        execution {
-            sequence: 20
-            point: afterSubmit
-        }
-        serverSideCondition {
-            whenButtonPressed: @save
-        }
-    )
 )
+
