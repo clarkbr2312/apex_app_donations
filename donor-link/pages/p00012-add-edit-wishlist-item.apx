@@ -1,0 +1,354 @@
+page 12 (
+    name: "Add / Edit Wishlist Item"
+    alias: ADD-EDIT-WISHLIST-ITEM
+    title: "Add / Edit Wishlist Item"
+    appearance {
+        pageMode: modalDialog
+        dialogTemplate: @/modal-dialog
+        templateOptions: #DEFAULT#
+    }
+    security {
+        authentication: public
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region form (
+        name: "Wishlist Item Details"
+        type: staticContent
+        layout {
+            sequence: 10
+            slot: BODY
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    pageItem P12_ITEM_ID (
+        type: hidden
+        layout {
+            sequence: 10
+            region: @form
+            slot: regionBody
+        }
+    )
+
+    pageItem P12_CHARITY_ID (
+        type: hidden
+        layout {
+            sequence: 20
+            region: @form
+            slot: regionBody
+        }
+    )
+
+    pageItem P12_PRODUCT_TITLE (
+        type: textField
+        label {
+            label: "Product / Item Title"
+        }
+        layout {
+            sequence: 30
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/required-above
+            valuePlaceholder: "e.g. Winter Coats for Children (Sizes 6-12)"
+        }
+        validation {
+            valueRequired: true
+            maxLength: 250
+        }
+    )
+
+    pageItem P12_TARGET_QUANTITY (
+        type: numberField
+        label {
+            label: "Target Quantity Needed"
+        }
+        layout {
+            sequence: 40
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/required-above
+            valuePlaceholder: "e.g. 50"
+        }
+        validation {
+            valueRequired: true
+        }
+    )
+
+    pageItem P12_TARGET_PRICE (
+        type: numberField
+        label {
+            label: "Estimated Unit Price ($)"
+        }
+        layout {
+            sequence: 50
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/required-above
+            valuePlaceholder: "e.g. 35.00"
+        }
+        validation {
+            valueRequired: true
+        }
+    )
+
+    pageItem P12_PRIORITY_LEVEL (
+        type: selectList
+        label {
+            label: "Priority Level"
+        }
+        layout {
+            sequence: 60
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+        lov {
+            type: sqlQuery
+            sqlQuery:
+                ```
+                SELECT 'Standard' AS d, 'STANDARD' AS r FROM dual
+                UNION ALL
+                SELECT 'High Priority' AS d, 'HIGH' AS r FROM dual
+                UNION ALL
+                SELECT 'Urgent Need' AS d, 'URGENT' AS r FROM dual
+                ```
+            displayNullValue: false
+        }
+    )
+
+    pageItem P12_WHY_WE_NEED_THIS (
+        type: textarea
+        label {
+            label: "Why We Need This / Impact Explanation"
+        }
+        layout {
+            sequence: 70
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+            valuePlaceholder: "Explain how this item directly impacts your beneficiaries..."
+        }
+        settings {
+            autoHeight: true
+        }
+        validation {
+            maxLength: 1000
+        }
+    )
+
+    pageItem P12_PRODUCT_IMAGE_FILE (
+        type: imageUpload
+        label {
+            label: "Product Image File"
+        }
+        layout {
+            sequence: 80
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+    )
+
+    pageItem P12_PRODUCT_IMAGE_URL (
+        type: textField
+        label {
+            label: "Or Product Image URL (External Link)"
+        }
+        layout {
+            sequence: 90
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+        validation {
+            maxLength: 1000
+        }
+    )
+
+    region buttons (
+        name: "Buttons"
+        type: staticContent
+        layout {
+            sequence: 20
+            slot: REGION_POSITION_03
+        }
+        appearance {
+            template: @/buttons-container
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    button cancel (
+        buttonName: CANCEL
+        label: "Cancel"
+        layout {
+            sequence: 10
+            region: @buttons
+            slot: previous
+        }
+        behavior {
+            action: definedByDynamicAction
+        }
+        appearance {
+            buttonTemplate: @/text
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    button save (
+        buttonName: SAVE
+        label: "Save Wishlist Item"
+        layout {
+            sequence: 20
+            region: @buttons
+            slot: next
+        }
+        behavior {
+            action: submitPage
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    dynamicAction cancel-dialog (
+        name: "Cancel Dialog"
+        execution {
+            sequence: 10
+        }
+        when {
+            event: click
+            selectionType: button
+            button: @cancel
+        }
+        action native-dialog-cancel (
+            action: cancelDialog
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+    )
+
+    process fetch-item-details (
+        name: "Fetch Item Details"
+        type: executeCode
+        execution {
+            sequence: 10
+            point: beforeHeader
+        }
+        source {
+            plsqlCode:
+                ```
+                BEGIN
+                    IF :P12_ITEM_ID IS NOT NULL THEN
+                        SELECT product_title, target_quantity, target_price, priority_level, why_we_need_this, product_image_url
+                          INTO :P12_PRODUCT_TITLE, :P12_TARGET_QUANTITY, :P12_TARGET_PRICE, :P12_PRIORITY_LEVEL, :P12_WHY_WE_NEED_THIS, :P12_PRODUCT_IMAGE_URL
+                          FROM dl_charity_wishlist_items
+                         WHERE item_id = TO_NUMBER(:P12_ITEM_ID);
+                    END IF;
+                EXCEPTION
+                    WHEN NO_DATA_FOUND THEN
+                        NULL;
+                END;
+                ```
+        }
+    )
+
+    process save-item-details (
+        name: "Save Item Details"
+        type: executeCode
+        execution {
+            sequence: 10
+            point: afterSubmit
+        }
+        source {
+            plsqlCode:
+                ```
+                DECLARE
+                    v_img_url VARCHAR2(1000) := :P12_PRODUCT_IMAGE_URL;
+                BEGIN
+                    -- Process staged image file if uploaded via APEX_APPLICATION_TEMP_FILES
+                    IF :P12_PRODUCT_IMAGE_FILE IS NOT NULL THEN
+                        FOR r IN (
+                            SELECT filename, name 
+                              FROM apex_application_temp_files 
+                             WHERE name = :P12_PRODUCT_IMAGE_FILE
+                        ) LOOP
+                            v_img_url := r.name;
+                        END LOOP;
+                    END IF;
+
+                    IF :P12_ITEM_ID IS NULL THEN
+                        INSERT INTO dl_charity_wishlist_items (
+                            charity_id,
+                            product_title,
+                            target_quantity,
+                            target_price,
+                            priority_level,
+                            why_we_need_this,
+                            product_image_url,
+                            created_by
+                        ) VALUES (
+                            TO_NUMBER(:P12_CHARITY_ID),
+                            :P12_PRODUCT_TITLE,
+                            TO_NUMBER(:P12_TARGET_QUANTITY),
+                            TO_NUMBER(:P12_TARGET_PRICE),
+                            NVL(:P12_PRIORITY_LEVEL, 'STANDARD'),
+                            :P12_WHY_WE_NEED_THIS,
+                            v_img_url,
+                            NVL(:APP_USER, 'SYSTEM')
+                        );
+                    ELSE
+                        UPDATE dl_charity_wishlist_items
+                           SET product_title     = :P12_PRODUCT_TITLE,
+                               target_quantity   = TO_NUMBER(:P12_TARGET_QUANTITY),
+                               target_price      = TO_NUMBER(:P12_TARGET_PRICE),
+                               priority_level    = NVL(:P12_PRIORITY_LEVEL, 'STANDARD'),
+                               why_we_need_this  = :P12_WHY_WE_NEED_THIS,
+                               product_image_url = v_img_url,
+                               last_updated_date = SYSDATE,
+                               last_updated_by   = NVL(:APP_USER, 'SYSTEM')
+                         WHERE item_id = TO_NUMBER(:P12_ITEM_ID);
+                    END IF;
+                END;
+                ```
+        }
+        serverSideCondition {
+            whenButtonPressed: @save
+        }
+    )
+
+    process close-dialog (
+        name: "Close Dialog"
+        type: closeDialog
+        execution {
+            sequence: 20
+            point: afterSubmit
+        }
+        serverSideCondition {
+            whenButtonPressed: @save
+        }
+    )
+)
