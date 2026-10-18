@@ -1,0 +1,17 @@
+page 13 (
+    name: Hold 13
+    alias: HOLD-13
+    title: Hold 13
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+)
+
