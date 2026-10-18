@@ -1,0 +1,205 @@
+page 11 (
+    name: "Edit Mission & About Us"
+    alias: EDIT-MISSION-ABOUT-US
+    title: "Edit Mission & About Us"
+    appearance {
+        pageMode: modalDialog
+        dialogTemplate: @/modal-dialog
+        templateOptions: #DEFAULT#
+    }
+    security {
+        authentication: public
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region form (
+        name: "Mission & Narrative Details"
+        type: staticContent
+        layout {
+            sequence: 10
+            slot: BODY
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    pageItem P11_CHARITY_ID (
+        type: hidden
+        layout {
+            sequence: 10
+            region: @form
+            slot: regionBody
+        }
+    )
+
+    pageItem P11_MISSION_STATEMENT (
+        type: textarea
+        label {
+            label: "Mission Statement"
+        }
+        layout {
+            sequence: 20
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+            valuePlaceholder: "Summarize your core mission in 2-3 sentences..."
+        }
+        settings {
+            autoHeight: true
+        }
+        validation {
+            maxLength: 1000
+        }
+    )
+
+    pageItem P11_ABOUT_US_NARRATIVE (
+        type: richTextEditor
+        label {
+            label: "About Our Organization"
+        }
+        layout {
+            sequence: 30
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+        settings {
+            format: html
+            minHeight: 200
+        }
+    )
+
+    region buttons (
+        name: "Buttons"
+        type: staticContent
+        layout {
+            sequence: 20
+            slot: REGION_POSITION_03
+        }
+        appearance {
+            template: @/buttons-container
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    button cancel (
+        buttonName: CANCEL
+        label: "Cancel"
+        layout {
+            sequence: 10
+            region: @buttons
+            slot: previous
+        }
+        behavior {
+            action: definedByDynamicAction
+        }
+        appearance {
+            buttonTemplate: @/text
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    button save (
+        buttonName: SAVE
+        label: "Save Story Changes"
+        layout {
+            sequence: 20
+            region: @buttons
+            slot: next
+        }
+        behavior {
+            action: submitPage
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    dynamicAction cancel-dialog (
+        name: "Cancel Dialog"
+        execution {
+            sequence: 10
+        }
+        when {
+            event: click
+            selectionType: button
+            button: @cancel
+        }
+        action native-dialog-cancel (
+            action: cancelDialog
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+    )
+
+    process fetch-mission-details (
+        name: "Fetch Mission & Story Details"
+        type: executeCode
+        execution {
+            sequence: 10
+            point: beforeHeader
+        }
+        source {
+            plsqlCode:
+                ```plsql
+                BEGIN
+                    IF :P11_CHARITY_ID IS NOT NULL THEN
+                        SELECT mission_statement, about_us_narrative
+                          INTO :P11_MISSION_STATEMENT, :P11_ABOUT_US_NARRATIVE
+                          FROM dl_charity_profiles
+                         WHERE charity_id = TO_NUMBER(:P11_CHARITY_ID);
+                    END IF;
+                EXCEPTION
+                    WHEN NO_DATA_FOUND THEN
+                        NULL;
+                END;
+                ```
+        }
+    )
+
+    process save-mission-details (
+        name: "Save Mission & Story Details"
+        type: executeCode
+        execution {
+            sequence: 10
+            point: afterSubmit
+        }
+        source {
+            plsqlCode:
+                ```plsql
+                BEGIN
+                    UPDATE dl_charity_profiles
+                       SET mission_statement   = :P11_MISSION_STATEMENT,
+                           about_us_narrative  = :P11_ABOUT_US_NARRATIVE
+                     WHERE charity_id = TO_NUMBER(:P11_CHARITY_ID);
+                END;
+                ```
+        }
+        serverSideCondition {
+            whenButtonPressed: @save
+        }
+    )
+
+    process close-dialog (
+        name: "Close Dialog"
+        type: closeDialog
+        execution {
+            sequence: 20
+            point: afterSubmit
+        }
+        serverSideCondition {
+            whenButtonPressed: @save
+        }
+    )
+)
