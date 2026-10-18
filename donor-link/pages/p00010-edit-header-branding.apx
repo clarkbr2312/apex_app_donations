@@ -1,4 +1,4 @@
-page 10 (
+page 10 (   
     name: "Edit Header & Branding"
     alias: EDIT-HEADER-BRANDING
     title: "Edit Header & Branding"
@@ -46,7 +46,7 @@ page 10 (
             slot: regionBody
         }
         appearance {
-            template: @/optional-above
+                template: @/optional-above
             valuePlaceholder: "e.g. Austin Youth Shelter"
         }
         validation {
