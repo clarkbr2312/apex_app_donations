@@ -10,7 +10,7 @@ page 10 (
     security {
         authentication: public
         pageAccessProtection: argumentsMustHaveChecksum
-chan        formAutoComplete: false
+formAutoComplete: false
     }
 
     region form (
@@ -202,7 +202,8 @@ chan        formAutoComplete: false
             action: submitPage
         }
         appearance {
-            buttonTemplate: @/hot
+            buttonTemplate: @/text
+            hot: true
             templateOptions: #DEFAULT#
         }
     )
