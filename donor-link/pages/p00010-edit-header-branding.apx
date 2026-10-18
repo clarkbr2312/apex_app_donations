@@ -1,4 +1,4 @@
-page 10 (   
+page 10 (
     name: "Edit Header & Branding"
     alias: EDIT-HEADER-BRANDING
     title: "Edit Header & Branding"
@@ -10,7 +10,7 @@ page 10 (
     security {
         authentication: public
         pageAccessProtection: argumentsMustHaveChecksum
-        formAutoComplete: false
+chan        formAutoComplete: false
     }
 
     region form (
@@ -42,11 +42,11 @@ page 10 (
         }
         layout {
             sequence: 20
-                region: @form
+            region: @form
             slot: regionBody
         }
         appearance {
-                template: @/optional-above
+            template: @/optional-above
             valuePlaceholder: "e.g. Austin Youth Shelter"
         }
         validation {
@@ -70,7 +70,7 @@ page 10 (
         }
         settings {
             autoHeight: true
-                    }
+        }
         validation {
             maxLength: 500
         }
@@ -202,8 +202,7 @@ page 10 (
             action: submitPage
         }
         appearance {
-            buttonTemplate: @/text
-            hot: true
+            buttonTemplate: @/hot
             templateOptions: #DEFAULT#
         }
     )
