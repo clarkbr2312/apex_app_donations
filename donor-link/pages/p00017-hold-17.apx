@@ -1,0 +1,17 @@
+page 17 (
+    name: Hold 17
+    alias: HOLD-17
+    title: Hold 17
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+)
+

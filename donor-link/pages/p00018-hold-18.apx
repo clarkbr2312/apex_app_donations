@@ -1,0 +1,17 @@
+page 18 (
+    name: Hold 18
+    alias: HOLD-18
+    title: Hold 18
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+)
+

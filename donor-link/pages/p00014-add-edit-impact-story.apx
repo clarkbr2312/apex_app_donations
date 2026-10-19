@@ -1,7 +1,7 @@
 page 14 (
-    name: "Add / Edit Impact Story"
+    name: Add / Edit Impact Story
     alias: ADD-EDIT-IMPACT-STORY
-    title: "Add / Edit Impact Story"
+    title: Add / Edit Impact Story
     appearance {
         pageMode: modalDialog
         dialogTemplate: @/modal-dialog
@@ -13,25 +13,29 @@ page 14 (
         formAutoComplete: false
     }
 
-    region form (
-        name: "Impact Story Details"
+    region buttons (
+        name: Buttons
         type: staticContent
         layout {
-            sequence: 10
-            slot: BODY
+            sequence: 20
+            slot: dialogFooter
         }
         appearance {
-            template: @/blank-with-attributes
+            template: @/buttons-container
             templateOptions: #DEFAULT#
         }
     )
 
-    pageItem P14_STORY_ID (
-        type: hidden
+    region form (
+        name: Impact Story Details
+        type: staticContent
         layout {
             sequence: 10
-            region: @form
-            slot: regionBody
+            slot: contentBody
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -44,83 +48,10 @@ page 14 (
         }
     )
 
-    pageItem P14_TITLE (
-        type: textField
-        label {
-            label: "Impact Story Title"
-        }
-        layout {
-            sequence: 30
-            region: @form
-            slot: regionBody
-        }
-        appearance {
-            template: @/optional-above
-            valuePlaceholder: "e.g. Winter Warmth Shelter Drive 2025"
-        }
-        validation {
-            valueRequired: true
-            maxLength: 255
-        }
-    )
-
-    pageItem P14_IMPACT_METRIC (
-        type: textField
-        label {
-            label: "Impact Metric Callout"
-        }
-        layout {
-            sequence: 40
-            region: @form
-            slot: regionBody
-        }
-        appearance {
-            template: @/optional-above
-            valuePlaceholder: "e.g. 500 Families Sheltered, 1,200 Meals Served"
-        }
-        validation {
-            maxLength: 100
-        }
-    )
-
-    pageItem P14_EVENT_DATE (
-        type: datePicker
-        label {
-            label: "Event / Completion Date"
-        }
-        layout {
-            sequence: 50
-            region: @form
-            slot: regionBody
-        }
-        appearance {
-            template: @/optional-above
-        }
-    )
-
-    pageItem P14_STORY_NARRATIVE (
-        type: richTextEditor
-        label {
-            label: "Story Narrative"
-        }
-        layout {
-            sequence: 60
-            region: @form
-            slot: regionBody
-        }
-        appearance {
-            template: @/optional-above
-        }
-        settings {
-            format: html
-            minHeight: 200
-        }
-    )
-
     pageItem P14_DISPLAY_ORDER (
         type: numberField
         label {
-            label: "Display Order"
+            label: Display Order
         }
         layout {
             sequence: 70
@@ -132,10 +63,44 @@ page 14 (
         }
     )
 
+    pageItem P14_EVENT_DATE (
+        type: datePicker
+        label {
+            label: Event / Completion Date
+        }
+        layout {
+            sequence: 50
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+    )
+
+    pageItem P14_IMPACT_METRIC (
+        type: textField
+        label {
+            label: Impact Metric Callout
+        }
+        layout {
+            sequence: 40
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+            valuePlaceholder: e.g. 500 Families Sheltered, 1,200 Meals Served
+        }
+        validation {
+            maxLength: 100
+        }
+    )
+
     pageItem P14_MEDIA_FILE (
         type: imageUpload
         label {
-            label: "Story Photo / Media Image"
+            label: Story Photo / Media Image
         }
         layout {
             sequence: 80
@@ -150,7 +115,7 @@ page 14 (
     pageItem P14_MEDIA_URL (
         type: textField
         label {
-            label: "Or Media URL (External Link)"
+            label: Or Media URL (External Link)
         }
         layout {
             sequence: 90
@@ -165,46 +130,78 @@ page 14 (
         }
     )
 
-    region buttons (
-        name: "Buttons"
-        type: staticContent
+    pageItem P14_STORY_ID (
+        type: hidden
         layout {
-            sequence: 20
-            slot: REGION_POSITION_03
+            sequence: 10
+            region: @form
+            slot: regionBody
+        }
+    )
+
+    pageItem P14_STORY_NARRATIVE (
+        type: richTextEditor
+        label {
+            label: Story Narrative
+        }
+        settings {
+            format: html
+            minHeight: 200
+        }
+        layout {
+            sequence: 60
+            region: @form
+            slot: regionBody
         }
         appearance {
-            template: @/buttons-container
-            templateOptions: #DEFAULT#
+            template: @/optional-above
+        }
+    )
+
+    pageItem P14_TITLE (
+        type: textField
+        label {
+            label: Impact Story Title
+        }
+        layout {
+            sequence: 30
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+            valuePlaceholder: e.g. Winter Warmth Shelter Drive 2025
+        }
+        validation {
+            valueRequired: true
+            maxLength: 255
         }
     )
 
     button cancel (
         buttonName: CANCEL
-        label: "Cancel"
+        label: Cancel
         layout {
             sequence: 10
             region: @buttons
             slot: previous
         }
-        behavior {
-            action: definedByDynamicAction
-        }
         appearance {
             buttonTemplate: @/text
             templateOptions: #DEFAULT#
+        }
+        behavior {
+            action: definedByDynamicAction
         }
     )
 
     button save (
         buttonName: SAVE
-        label: "Save Impact Story"
+        label: Save Impact Story
         layout {
             sequence: 20
             region: @buttons
             slot: next
-        }
-        behavior {
-            action: submitPage
         }
         appearance {
             buttonTemplate: @/text
@@ -214,7 +211,7 @@ page 14 (
     )
 
     dynamicAction cancel-dialog (
-        name: "Cancel Dialog"
+        name: Cancel Dialog
         execution {
             sequence: 10
         }
@@ -223,6 +220,7 @@ page 14 (
             selectionType: button
             button: @cancel
         }
+
         action native-dialog-cancel (
             action: cancelDialog
             execution {
@@ -230,18 +228,30 @@ page 14 (
                 fireOnInit: false
             }
         )
+
+    )
+
+    process close-dialog (
+        name: Close Dialog
+        type: closeDialog
+        execution {
+            sequence: 20
+            point: afterSubmit
+        }
+        advanced {
+            executionMappingIdentifier: 41080812979209278
+        }
+        serverSideCondition {
+            whenButtonPressed: @save
+        }
     )
 
     process fetch-story-details (
-        name: "Fetch Impact Story Details"
+        name: Fetch Impact Story Details
         type: executeCode
-        execution {
-            sequence: 10
-            point: beforeHeader
-        }
         source {
             plsqlCode:
-                ```
+                ```plsql
                 BEGIN
                     IF :P14_STORY_ID IS NOT NULL THEN
                         SELECT title, story_narrative, media_url, impact_metric, event_date, display_order
@@ -255,18 +265,21 @@ page 14 (
                 END;
                 ```
         }
+        execution {
+            sequence: 10
+            point: beforeHeader
+        }
+        advanced {
+            executionMappingIdentifier: 41080633103209277
+        }
     )
 
     process save-story-details (
-        name: "Save Impact Story Details"
+        name: Save Impact Story Details
         type: executeCode
-        execution {
-            sequence: 10
-            point: afterSubmit
-        }
         source {
             plsqlCode:
-                ```
+                ```plsql
                 DECLARE
                     v_media_url VARCHAR2(500) := :P14_MEDIA_URL;
                 BEGIN
@@ -280,7 +293,7 @@ page 14 (
                             v_media_url := r.name;
                         END LOOP;
                     END IF;
-
+                
                     IF :P14_STORY_ID IS NOT NULL THEN
                         -- Update existing impact story
                         UPDATE dl_charity_portfolio_stories
@@ -314,20 +327,17 @@ page 14 (
                 END;
                 ```
         }
+        execution {
+            sequence: 10
+            point: afterSubmit
+        }
+        advanced {
+            executionMappingIdentifier: 41080755365209278
+        }
         serverSideCondition {
             whenButtonPressed: @save
         }
     )
 
-    process close-dialog (
-        name: "Close Dialog"
-        type: closeDialog
-        execution {
-            sequence: 20
-            point: afterSubmit
-        }
-        serverSideCondition {
-            whenButtonPressed: @save
-        }
-    )
 )
+

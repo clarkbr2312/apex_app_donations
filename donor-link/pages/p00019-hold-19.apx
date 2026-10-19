@@ -1,0 +1,17 @@
+page 19 (
+    name: Hold 19
+    alias: HOLD-19
+    title: Hold 19
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+)
+

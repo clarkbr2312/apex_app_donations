@@ -1,7 +1,7 @@
 page 15 (
-    name: "Add / Edit Gallery Photo"
+    name: Add / Edit Gallery Photo
     alias: ADD-EDIT-GALLERY-PHOTO
-    title: "Add / Edit Gallery Photo"
+    title: Add / Edit Gallery Photo
     appearance {
         pageMode: modalDialog
         dialogTemplate: @/modal-dialog
@@ -13,12 +13,25 @@ page 15 (
         formAutoComplete: false
     }
 
+    region buttons (
+        name: Buttons
+        type: staticContent
+        layout {
+            sequence: 20
+            slot: dialogFooter
+        }
+        appearance {
+            template: @/buttons-container
+            templateOptions: #DEFAULT#
+        }
+    )
+
     region form (
-        name: "Gallery Photo Details"
+        name: Gallery Photo Details
         type: staticContent
         layout {
             sequence: 10
-            slot: BODY
+            slot: contentBody
         }
         appearance {
             template: @/blank-with-attributes
@@ -26,12 +39,22 @@ page 15 (
         }
     )
 
-    pageItem P15_GALLERY_ID (
-        type: hidden
+    pageItem P15_CAPTION (
+        type: textField
+        label {
+            label: Photo Caption
+        }
         layout {
-            sequence: 10
+            sequence: 50
             region: @form
             slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+            valuePlaceholder: e.g. Annual community food drive event
+        }
+        validation {
+            maxLength: 255
         }
     )
 
@@ -44,10 +67,34 @@ page 15 (
         }
     )
 
+    pageItem P15_DISPLAY_ORDER (
+        type: numberField
+        label {
+            label: Display Order
+        }
+        layout {
+            sequence: 60
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+    )
+
+    pageItem P15_GALLERY_ID (
+        type: hidden
+        layout {
+            sequence: 10
+            region: @form
+            slot: regionBody
+        }
+    )
+
     pageItem P15_IMAGE_FILE (
         type: imageUpload
         label {
-            label: "Upload Photo Image"
+            label: Upload Photo Image
         }
         layout {
             sequence: 30
@@ -62,7 +109,7 @@ page 15 (
     pageItem P15_IMAGE_URL (
         type: textField
         label {
-            label: "Or Photo URL (External Link)"
+            label: Or Photo URL (External Link)
         }
         layout {
             sequence: 40
@@ -71,87 +118,37 @@ page 15 (
         }
         appearance {
             template: @/optional-above
-            valuePlaceholder: "https://..."
+            valuePlaceholder: https://...
         }
         validation {
             maxLength: 500
         }
     )
 
-    pageItem P15_CAPTION (
-        type: textField
-        label {
-            label: "Photo Caption"
-        }
-        layout {
-            sequence: 50
-            region: @form
-            slot: regionBody
-        }
-        appearance {
-            template: @/optional-above
-            valuePlaceholder: "e.g. Annual community food drive event"
-        }
-        validation {
-            maxLength: 255
-        }
-    )
-
-    pageItem P15_DISPLAY_ORDER (
-        type: numberField
-        label {
-            label: "Display Order"
-        }
-        layout {
-            sequence: 60
-            region: @form
-            slot: regionBody
-        }
-        appearance {
-            template: @/optional-above
-        }
-    )
-
-    region buttons (
-        name: "Buttons"
-        type: staticContent
-        layout {
-            sequence: 20
-            slot: REGION_POSITION_03
-        }
-        appearance {
-            template: @/buttons-container
-            templateOptions: #DEFAULT#
-        }
-    )
-
     button cancel (
         buttonName: CANCEL
-        label: "Cancel"
+        label: Cancel
         layout {
             sequence: 10
             region: @buttons
             slot: previous
         }
-        behavior {
-            action: definedByDynamicAction
-        }
         appearance {
             buttonTemplate: @/text
             templateOptions: #DEFAULT#
+        }
+        behavior {
+            action: definedByDynamicAction
         }
     )
 
     button save (
         buttonName: SAVE
-        label: "Save Photo"
+        label: Save Photo
         layout {
             sequence: 20
             region: @buttons
             slot: next
-        }
-        behavior {
-            action: submitPage
         }
         appearance {
             buttonTemplate: @/text
@@ -161,7 +158,7 @@ page 15 (
     )
 
     dynamicAction cancel-dialog (
-        name: "Cancel Dialog"
+        name: Cancel Dialog
         execution {
             sequence: 10
         }
@@ -170,6 +167,7 @@ page 15 (
             selectionType: button
             button: @cancel
         }
+
         action native-dialog-cancel (
             action: cancelDialog
             execution {
@@ -177,18 +175,30 @@ page 15 (
                 fireOnInit: false
             }
         )
+
+    )
+
+    process close-dialog (
+        name: Close Dialog
+        type: closeDialog
+        execution {
+            sequence: 20
+            point: afterSubmit
+        }
+        advanced {
+            executionMappingIdentifier: 41092373031288986
+        }
+        serverSideCondition {
+            whenButtonPressed: @save
+        }
     )
 
     process fetch-gallery-details (
-        name: "Fetch Gallery Photo Details"
+        name: Fetch Gallery Photo Details
         type: executeCode
-        execution {
-            sequence: 10
-            point: beforeHeader
-        }
         source {
             plsqlCode:
-                ```
+                ```plsql
                 BEGIN
                     IF :P15_GALLERY_ID IS NOT NULL THEN
                         SELECT image_url, caption, display_order
@@ -202,18 +212,21 @@ page 15 (
                 END;
                 ```
         }
+        execution {
+            sequence: 10
+            point: beforeHeader
+        }
+        advanced {
+            executionMappingIdentifier: 41092190129288986
+        }
     )
 
     process save-gallery-details (
-        name: "Save Gallery Photo Details"
+        name: Save Gallery Photo Details
         type: executeCode
-        execution {
-            sequence: 10
-            point: afterSubmit
-        }
         source {
             plsqlCode:
-                ```
+                ```plsql
                 DECLARE
                     v_image_url VARCHAR2(500) := :P15_IMAGE_URL;
                 BEGIN
@@ -227,7 +240,7 @@ page 15 (
                             v_image_url := r.name;
                         END LOOP;
                     END IF;
-
+                
                     IF :P15_GALLERY_ID IS NOT NULL THEN
                         -- Update existing gallery photo
                         UPDATE dl_charity_gallery_images
@@ -252,20 +265,17 @@ page 15 (
                 END;
                 ```
         }
+        execution {
+            sequence: 10
+            point: afterSubmit
+        }
+        advanced {
+            executionMappingIdentifier: 41092290659288986
+        }
         serverSideCondition {
             whenButtonPressed: @save
         }
     )
 
-    process close-dialog (
-        name: "Close Dialog"
-        type: closeDialog
-        execution {
-            sequence: 20
-            point: afterSubmit
-        }
-        serverSideCondition {
-            whenButtonPressed: @save
-        }
-    )
 )
+
