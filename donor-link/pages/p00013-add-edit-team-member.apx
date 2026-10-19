@@ -1,7 +1,7 @@
 page 13 (
-    name: Add / Edit Team Member
+    name: "Add / Edit Team Member"
     alias: ADD-EDIT-TEAM-MEMBER
-    title: Add / Edit Team Member
+    title: "Add / Edit Team Member"
     appearance {
         pageMode: modalDialog
         dialogTemplate: @/modal-dialog
@@ -13,95 +13,16 @@ page 13 (
         formAutoComplete: false
     }
 
-    region buttons (
-        name: Buttons
-        type: staticContent
-        layout {
-            sequence: 20
-            slot: dialogFooter
-        }
-        appearance {
-            template: @/buttons-container
-            templateOptions: #DEFAULT#
-        }
-    )
-
     region form (
-        name: Team Member Details
+        name: "Team Member Details"
         type: staticContent
         layout {
             sequence: 10
-            slot: contentBody
+            slot: BODY
         }
         appearance {
             template: @/blank-with-attributes
             templateOptions: #DEFAULT#
-        }
-    )
-
-    pageItem P13_BIO_SUMMARY (
-        type: textarea
-        label {
-            label: Bio Summary
-        }
-        settings {
-            autoHeight: true
-        }
-        layout {
-            sequence: 50
-            region: @form
-            slot: regionBody
-        }
-        appearance {
-            template: @/optional-above
-            valuePlaceholder: Brief background narrative about this team member...
-        }
-        validation {
-            maxLength: 1000
-        }
-    )
-
-    pageItem P13_CHARITY_ID (
-        type: hidden
-        layout {
-            sequence: 20
-            region: @form
-            slot: regionBody
-        }
-    )
-
-    pageItem P13_DISPLAY_ORDER (
-        type: numberField
-        label {
-            label: Display Order
-        }
-        layout {
-            sequence: 60
-            region: @form
-            slot: regionBody
-        }
-        appearance {
-            template: @/optional-above
-        }
-    )
-
-    pageItem P13_FULL_NAME (
-        type: textField
-        label {
-            label: Full Name
-        }
-        layout {
-            sequence: 30
-            region: @form
-            slot: regionBody
-        }
-        appearance {
-            template: @/optional-above
-            valuePlaceholder: e.g. Jane Doe
-        }
-        validation {
-            valueRequired: true
-            maxLength: 150
         }
     )
 
@@ -114,10 +35,96 @@ page 13 (
         }
     )
 
-    pageItem P13_PHOTO_FILE (
-        type: imageUpload
+    pageItem P13_CHARITY_ID (
+        type: hidden
+        layout {
+            sequence: 20
+            region: @form
+            slot: regionBody
+        }
+    )
+
+    pageItem P13_FULL_NAME (
+        type: textField
         label {
-            label: Member Headshot Photo
+            label: "Full Name"
+        }
+        layout {
+            sequence: 30
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+            valuePlaceholder: "e.g. Jane Doe"
+        }
+        validation {
+            valueRequired: true
+            maxLength: 150
+        }
+    )
+
+    pageItem P13_ROLE_TITLE (
+        type: textField
+        label {
+            label: "Role / Title"
+        }
+        layout {
+            sequence: 40
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+            valuePlaceholder: "e.g. Executive Director, Founder"
+        }
+        validation {
+            valueRequired: true
+            maxLength: 100
+        }
+    )
+
+    pageItem P13_BIO_SUMMARY (
+        type: textarea
+        label {
+            label: "Bio Summary"
+        }
+        layout {
+            sequence: 50
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+            valuePlaceholder: "Brief background narrative about this team member..."
+        }
+        settings {
+            autoHeight: true
+        }
+        validation {
+            maxLength: 1000
+        }
+    )
+
+    pageItem P13_DISPLAY_ORDER (
+        type: numberField
+        label {
+            label: "Display Order"
+        }
+        layout {
+            sequence: 60
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+    )
+
+    pageItem P13_PHOTO_FILE (
+        type: fileUpload
+        label {
+            label: "Member Headshot Photo"
         }
         layout {
             sequence: 70
@@ -127,12 +134,22 @@ page 13 (
         appearance {
             template: @/optional-above
         }
+        display {
+            displayAs: blockDropzone
+            dropzoneTitle: "Drop headshot photo here"
+            dropzoneDesc: "or click to browse"
+        }
+        storage {
+            type: appTempFiles
+            allowMultipleFiles: false
+            fileTypes: "image/*"
+        }
     )
 
     pageItem P13_PHOTO_URL (
         type: textField
         label {
-            label: Or Photo URL (External Link)
+            label: "Or Photo URL (External Link)"
         }
         layout {
             sequence: 80
@@ -147,50 +164,46 @@ page 13 (
         }
     )
 
-    pageItem P13_ROLE_TITLE (
-        type: textField
-        label {
-            label: Role / Title
-        }
+    region buttons (
+        name: "Buttons"
+        type: staticContent
         layout {
-            sequence: 40
-            region: @form
-            slot: regionBody
+            sequence: 20
+            slot: REGION_POSITION_03
         }
         appearance {
-            template: @/optional-above
-            valuePlaceholder: e.g. Executive Director, Founder
-        }
-        validation {
-            valueRequired: true
-            maxLength: 100
+            template: @/buttons-container
+            templateOptions: #DEFAULT#
         }
     )
 
     button cancel (
         buttonName: CANCEL
-        label: Cancel
+        label: "Cancel"
         layout {
             sequence: 10
             region: @buttons
             slot: previous
         }
+        behavior {
+            action: definedByDynamicAction
+        }
         appearance {
             buttonTemplate: @/text
             templateOptions: #DEFAULT#
-        }
-        behavior {
-            action: definedByDynamicAction
         }
     )
 
     button save (
         buttonName: SAVE
-        label: Save Team Member
+        label: "Save Team Member"
         layout {
             sequence: 20
             region: @buttons
             slot: next
+        }
+        behavior {
+            action: submitPage
         }
         appearance {
             buttonTemplate: @/text
@@ -200,7 +213,7 @@ page 13 (
     )
 
     dynamicAction cancel-dialog (
-        name: Cancel Dialog
+        name: "Cancel Dialog"
         execution {
             sequence: 10
         }
@@ -209,7 +222,6 @@ page 13 (
             selectionType: button
             button: @cancel
         }
-
         action native-dialog-cancel (
             action: cancelDialog
             execution {
@@ -217,27 +229,15 @@ page 13 (
                 fireOnInit: false
             }
         )
-
-    )
-
-    process close-dialog (
-        name: Close Dialog
-        type: closeDialog
-        execution {
-            sequence: 20
-            point: afterSubmit
-        }
-        advanced {
-            executionMappingIdentifier: 41068305026475438
-        }
-        serverSideCondition {
-            whenButtonPressed: @save
-        }
     )
 
     process fetch-member-details (
-        name: Fetch Team Member Details
+        name: "Fetch Team Member Details"
         type: executeCode
+        execution {
+            sequence: 10
+            point: beforeHeader
+        }
         source {
             plsqlCode:
                 ```plsql
@@ -254,18 +254,15 @@ page 13 (
                 END;
                 ```
         }
-        execution {
-            sequence: 10
-            point: beforeHeader
-        }
-        advanced {
-            executionMappingIdentifier: 41068163303475438
-        }
     )
 
     process save-member-details (
-        name: Save Team Member Details
+        name: "Save Team Member Details"
         type: executeCode
+        execution {
+            sequence: 10
+            point: afterSubmit
+        }
         source {
             plsqlCode:
                 ```plsql
@@ -282,7 +279,7 @@ page 13 (
                             v_photo_url := r.name;
                         END LOOP;
                     END IF;
-                
+
                     IF :P13_MEMBER_ID IS NOT NULL THEN
                         -- Update existing team member
                         UPDATE dl_charity_team
@@ -313,17 +310,20 @@ page 13 (
                 END;
                 ```
         }
-        execution {
-            sequence: 10
-            point: afterSubmit
-        }
-        advanced {
-            executionMappingIdentifier: 41068284249475438
-        }
         serverSideCondition {
             whenButtonPressed: @save
         }
     )
 
+    process close-dialog (
+        name: "Close Dialog"
+        type: closeDialog
+        execution {
+            sequence: 20
+            point: afterSubmit
+        }
+        serverSideCondition {
+            whenButtonPressed: @save
+        }
+    )
 )
-
