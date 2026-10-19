@@ -1,7 +1,7 @@
 page 7 (
-    name: Organization Profile
+    name: "Organization Profile"
     alias: ORGANIZATION-PROFILE
-    title: &P7_LEGAL_NAME. — DonorLink
+    title: "&P7_LEGAL_NAME. — DonorLink"
     appearance {
         pageTemplate: @/standard
         templateOptions: #DEFAULT#
@@ -163,30 +163,44 @@ page 7 (
         formAutoComplete: false
     }
 
-    region about-and-gallery-tab (
-        name: About & Community Gallery
+    /* 1. HERO HEADER REGION */
+    region hero-profile-header (
+        name: "Hero Profile Header"
         type: staticContent
         source {
             htmlCode:
                 ```html
-                <div style="background-color: #ffffff; padding: 28px; border-radius: 12px; border: 1px solid #E5E7EB;">
-                    <h3 style="font-size: 20px; font-weight: 700; color: #111827; margin-top: 0;">Our Mission & Story</h3>
-                    <p style="font-size: 15px; color: #4B5563; line-height: 1.6;">
-                        Dedicated to creating lasting community impact through transparent giving and direct support.
-                    </p>
-                    <hr style="border: none; border-top: 1px solid #E5E7EB; margin: 20px 0;">
-                    <h4 style="font-size: 16px; font-weight: 600; color: #111827;">Contact & Social Connections</h4>
-                    <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-top: 10px; font-size: 14px; color: #1B5B8A;">
-                        <span>📧 Contact Support</span>
-                        <span>🌐 Official Website</span>
+                <div class="profile-hero-card">
+                    <div class="profile-cover-wrap">
+                        <img src="&P7_COVER_PHOTO_URL." alt="Cover Photo" class="profile-cover-img" onerror="this.src='#APP_IMAGES#landing_page_banner.png'">
+                    </div>
+                    <div class="profile-header-body">
+                        <div class="profile-avatar-wrap">
+                            <img src="&P7_LOGO_URL." alt="Charity Logo" class="profile-avatar-img" onerror="this.src='https://via.placeholder.com/150?text=Logo'">
+                        </div>
+                        <div class="profile-identity-info">
+                            <div class="profile-title-row">
+                                <h1 class="profile-title">&P7_LEGAL_NAME.</h1>
+                                <span class="profile-verified-badge">Verified NPO</span>
+                            </div>
+                            <div class="profile-tagline">&P7_TAGLINE.</div>
+                            <div class="profile-meta-pills">
+                                <span>📍 501(c)(3) Tax-Exempt Non-Profit</span>
+                                <span>🛡️ Verified Partner Organization</span>
+                            </div>
+                        </div>
+                        <div class="profile-cta-group">
+                            <a href="#wishlist-catalog-tab" class="t-Button t-Button--hot t-Button--large" style="background-color: #0072CE; border-color: #0072CE; font-weight: bold;">
+                                View Wishlist Needs
+                            </a>
+                        </div>
                     </div>
                 </div>
                 ```
         }
         layout {
-            sequence: 40
-            parentRegion: @profile-tab-container
-            slot: regionBody
+            sequence: 10
+            slot: body
         }
         appearance {
             template: @/blank-with-attributes
@@ -194,8 +208,37 @@ page 7 (
         }
     )
 
+    button edit-header-branding (
+        buttonName: EDIT_HEADER_BRANDING
+        label: "Edit Header & Branding"
+        layout {
+            sequence: 10
+            region: @hero-profile-header
+            slot: rightOfTitle
+        }
+        appearance {
+            buttonTemplate: @/icon
+            icon: "fa-pencil"
+            templateOptions: [
+                #DEFAULT#
+                t-Button--noUI
+                t-Button--small
+            ]
+        }
+        behavior {
+            action: redirectThisApp
+            target: {
+                page: 10
+                items: {
+                    P10_CHARITY_ID: "&P7_CHARITY_ID."
+                }
+            }
+        }
+    )
+
+    /* 2. DYNAMIC IMPACT TICKER REGION */
     region dynamic-impact-ticker (
-        name: Impact & Trust Ticker
+        name: "Impact & Trust Ticker"
         type: staticContent
         source {
             htmlCode:
@@ -230,167 +273,9 @@ page 7 (
         }
     )
 
-    region hero-profile-header (
-        name: Hero Profile Header
-        type: staticContent
-        source {
-            htmlCode:
-                ```html
-                <div class="profile-hero-card">
-                    <div class="profile-cover-wrap">
-                        <img src="#APP_IMAGES#landing_page_banner.png" alt="Cover Photo" class="profile-cover-img">
-                    </div>
-                    <div class="profile-header-body">
-                        <div class="profile-avatar-wrap">
-                            <img src="https://via.placeholder.com/150?text=Logo" alt="Charity Logo" class="profile-avatar-img">
-                        </div>
-                        <div class="profile-identity-info">
-                            <div class="profile-title-row">
-                                <h1 class="profile-title">&P7_LEGAL_NAME.</h1>
-                                <span class="profile-verified-badge">Verified NPO</span>
-                            </div>
-                            <div class="profile-tagline">Connecting donors directly with verified charitable needs.</div>
-                            <div class="profile-meta-pills">
-                                <span>📍 501(c)(3) Tax-Exempt Non-Profit</span>
-                                <span>🛡️ Verified Partner Organization</span>
-                            </div>
-                        </div>
-                        <div class="profile-cta-group">
-                            <a href="#wishlist-catalog-tab" class="t-Button t-Button--hot t-Button--large" style="background-color: #0072CE; border-color: #0072CE; font-weight: bold;">
-                                View Wishlist Needs
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                ```
-        }
-        layout {
-            sequence: 10
-            slot: body
-        }
-        appearance {
-            template: @/blank-with-attributes
-            templateOptions: #DEFAULT#
-        }
-    )
-
-    region hidden-items (
-        name: Hidden Items
-        type: staticContent
-        layout {
-            sequence: 5
-            slot: body
-        }
-        appearance {
-            template: @/blank-with-attributes
-            templateOptions: #DEFAULT#
-        }
-    )
-
-    region leadership-team-tab (
-        name: Leadership & Team
-        type: cards
-        source {
-            location: localDatabase
-            type: sqlQuery
-            sqlQuery:
-                ```sql
-                SELECT 
-                    member_id,
-                    full_name,
-                    role_title,
-                    bio_summary,
-                    NVL(photo_url, 'https://via.placeholder.com/150?text=Team+Member') AS photo_url
-                FROM dl_charity_team
-                WHERE charity_id = :P7_CHARITY_ID
-                ORDER BY display_order ASC, member_id ASC
-                ```
-        }
-        layout {
-            sequence: 30
-            parentRegion: @profile-tab-container
-            slot: regionBody
-        }
-        appearance {
-            template: @/cards-container
-            templateOptions: [
-                #DEFAULT#
-                t-CardsRegion--hideHeader js-addHiddenHeadingRoleDesc
-                t-CardsRegion--styleC
-            ]
-        }
-        componentAppearance {
-            gridColumns: 3
-        }
-        card {
-            primaryKeyColumn1: MEMBER_ID
-        }
-        title {
-            column: FULL_NAME
-        }
-        subtitle {
-            column: ROLE_TITLE
-        }
-        body {
-            column: BIO_SUMMARY
-        }
-    )
-
-    region portfolio-stories-tab (
-        name: Impact & Success Stories
-        type: cards
-        source {
-            location: localDatabase
-            type: sqlQuery
-            sqlQuery:
-                ```sql
-                SELECT 
-                    story_id,
-                    title,
-                    story_narrative,
-                    NVL(media_url, 'https://via.placeholder.com/400x250?text=Impact+Story') AS media_url,
-                    impact_metric,
-                    TO_CHAR(event_date, 'Mon DD, YYYY') AS formatted_event_date
-                FROM dl_charity_portfolio_stories
-                WHERE charity_id = :P7_CHARITY_ID
-                ORDER BY display_order ASC, story_id DESC
-                ```
-        }
-        layout {
-            sequence: 20
-            parentRegion: @profile-tab-container
-            slot: regionBody
-        }
-        appearance {
-            template: @/cards-container
-            templateOptions: [
-                #DEFAULT#
-                t-CardsRegion--hideHeader js-addHiddenHeadingRoleDesc
-                t-CardsRegion--styleB
-            ]
-        }
-        componentAppearance {
-            gridColumns: 2
-        }
-        card {
-            primaryKeyColumn1: STORY_ID
-        }
-        title {
-            column: TITLE
-        }
-        subtitle {
-            column: FORMATTED_EVENT_DATE
-        }
-        body {
-            column: STORY_NARRATIVE
-        }
-        secondaryBody {
-            column: IMPACT_METRIC
-        }
-    )
-
+    /* 3. PARENT TAB CONTAINER REGION */
     region profile-tab-container (
-        name: Profile Navigation Tabs
+        name: "Profile Navigation Tabs"
         type: staticContent
         layout {
             sequence: 30
@@ -405,8 +290,9 @@ page 7 (
         }
     )
 
+    /* 4. SUB-TAB 1: ACTIVE NEEDS WISHLIST */
     region wishlist-catalog-tab (
-        name: Active Needs Wishlist
+        name: "Active Needs Wishlist"
         type: cards
         source {
             location: localDatabase
@@ -469,23 +355,450 @@ page 7 (
         }
         secondaryBody {
             advancedFormatting: true
-            htmlExpression: $&TARGET_PRICE.
+            htmlExpression: "$&TARGET_PRICE."
         }
 
-        action item_donate_action (
-            label: Fund This Need
+        action edit_item_action (
+            type: button
+            label: "Edit Need"
             layout {
+                position: primary
                 sequence: 10
             }
             behavior {
-                type: redirectUrl
-                targetUrl: #
+                type: redirectThisApp
+                target: {
+                    page: 12
+                    items: {
+                        P12_ITEM_ID: "&ITEM_ID."
+                        P12_CHARITY_ID: "&P7_CHARITY_ID."
+                    }
+                }
             }
             appearance {
-                cssClasses: card-cta-donate
+                displayType: icon
+                icon: "fa-pencil"
             }
         )
 
+        action item_donate_action (
+            label: "Fund This Need"
+            layout {
+                sequence: 20
+            }
+            behavior {
+                type: redirectUrl
+                targetUrl: "#"
+            }
+            appearance {
+                cssClasses: "card-cta-donate"
+            }
+        )
+    )
+
+    button add-wishlist-item (
+        buttonName: ADD_WISHLIST_ITEM
+        label: "Add Need"
+        layout {
+            sequence: 10
+            region: @wishlist-catalog-tab
+            slot: rightOfTitle
+        }
+        appearance {
+            buttonTemplate: @/text-with-icon
+            icon: "fa-plus"
+            hot: true
+            templateOptions: [
+                #DEFAULT#
+                t-Button--iconLeft
+            ]
+        }
+        behavior {
+            action: redirectThisApp
+            target: {
+                page: 12
+                items: {
+                    P12_CHARITY_ID: "&P7_CHARITY_ID."
+                }
+            }
+        }
+    )
+
+    /* 5. SUB-TAB 2: IMPACT & SUCCESS STORIES */
+    region portfolio-stories-tab (
+        name: "Impact & Success Stories"
+        type: cards
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                SELECT 
+                    story_id,
+                    title,
+                    story_narrative,
+                    NVL(media_url, 'https://via.placeholder.com/400x250?text=Impact+Story') AS media_url,
+                    impact_metric,
+                    TO_CHAR(event_date, 'Mon DD, YYYY') AS formatted_event_date
+                FROM dl_charity_portfolio_stories
+                WHERE charity_id = :P7_CHARITY_ID
+                ORDER BY display_order ASC, story_id DESC
+                ```
+        }
+        layout {
+            sequence: 20
+            parentRegion: @profile-tab-container
+            slot: regionBody
+        }
+        appearance {
+            template: @/cards-container
+            templateOptions: [
+                #DEFAULT#
+                t-CardsRegion--hideHeader js-addHiddenHeadingRoleDesc
+                t-CardsRegion--styleB
+            ]
+        }
+        componentAppearance {
+            gridColumns: 2
+        }
+        card {
+            primaryKeyColumn1: STORY_ID
+        }
+        title {
+            column: TITLE
+        }
+        subtitle {
+            column: FORMATTED_EVENT_DATE
+        }
+        body {
+            column: STORY_NARRATIVE
+        }
+        secondaryBody {
+            column: IMPACT_METRIC
+        }
+
+        action edit_story_action (
+            type: button
+            label: "Edit Story"
+            layout {
+                position: primary
+                sequence: 10
+            }
+            behavior {
+                type: redirectThisApp
+                target: {
+                    page: 14
+                    items: {
+                        P14_STORY_ID: "&STORY_ID."
+                        P14_CHARITY_ID: "&P7_CHARITY_ID."
+                    }
+                }
+            }
+            appearance {
+                displayType: icon
+                icon: "fa-pencil"
+            }
+        )
+    )
+
+    button add-impact-story (
+        buttonName: ADD_IMPACT_STORY
+        label: "Add Story"
+        layout {
+            sequence: 10
+            region: @portfolio-stories-tab
+            slot: rightOfTitle
+        }
+        appearance {
+            buttonTemplate: @/text-with-icon
+            icon: "fa-plus"
+            hot: true
+            templateOptions: [
+                #DEFAULT#
+                t-Button--iconLeft
+            ]
+        }
+        behavior {
+            action: redirectThisApp
+            target: {
+                page: 14
+                items: {
+                    P14_CHARITY_ID: "&P7_CHARITY_ID."
+                }
+            }
+        }
+    )
+
+    /* 6. SUB-TAB 3: LEADERSHIP & TEAM */
+    region leadership-team-tab (
+        name: "Leadership & Team"
+        type: cards
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                SELECT 
+                    member_id,
+                    full_name,
+                    role_title,
+                    bio_summary,
+                    NVL(photo_url, 'https://via.placeholder.com/150?text=Team+Member') AS photo_url
+                FROM dl_charity_team
+                WHERE charity_id = :P7_CHARITY_ID
+                ORDER BY display_order ASC, member_id ASC
+                ```
+        }
+        layout {
+            sequence: 30
+            parentRegion: @profile-tab-container
+            slot: regionBody
+        }
+        appearance {
+            template: @/cards-container
+            templateOptions: [
+                #DEFAULT#
+                t-CardsRegion--hideHeader js-addHiddenHeadingRoleDesc
+                t-CardsRegion--styleC
+            ]
+        }
+        componentAppearance {
+            gridColumns: 3
+        }
+        card {
+            primaryKeyColumn1: MEMBER_ID
+        }
+        title {
+            column: FULL_NAME
+        }
+        subtitle {
+            column: ROLE_TITLE
+        }
+        body {
+            column: BIO_SUMMARY
+        }
+
+        action edit_team_action (
+            type: button
+            label: "Edit Member"
+            layout {
+                position: primary
+                sequence: 10
+            }
+            behavior {
+                type: redirectThisApp
+                target: {
+                    page: 13
+                    items: {
+                        P13_MEMBER_ID: "&MEMBER_ID."
+                        P13_CHARITY_ID: "&P7_CHARITY_ID."
+                    }
+                }
+            }
+            appearance {
+                displayType: icon
+                icon: "fa-pencil"
+            }
+        )
+    )
+
+    button add-team-member (
+        buttonName: ADD_TEAM_MEMBER
+        label: "Add Member"
+        layout {
+            sequence: 10
+            region: @leadership-team-tab
+            slot: rightOfTitle
+        }
+        appearance {
+            buttonTemplate: @/text-with-icon
+            icon: "fa-plus"
+            hot: true
+            templateOptions: [
+                #DEFAULT#
+                t-Button--iconLeft
+            ]
+        }
+        behavior {
+            action: redirectThisApp
+            target: {
+                page: 13
+                items: {
+                    P13_CHARITY_ID: "&P7_CHARITY_ID."
+                }
+            }
+        }
+    )
+
+    /* 7. SUB-TAB 4: OUR MISSION & STORY */
+    region about-and-gallery-tab (
+        name: "About & Community Gallery"
+        type: staticContent
+        source {
+            htmlCode:
+                ```html
+                <div style="background-color: #ffffff; padding: 28px; border-radius: 12px; border: 1px solid #E5E7EB;">
+                    <h3 style="font-size: 20px; font-weight: 700; color: #111827; margin-top: 0;">Our Mission & Story</h3>
+                    <p style="font-size: 15px; color: #4B5563; line-height: 1.6;">
+                        &P7_MISSION_STATEMENT.
+                    </p>
+                    <p style="font-size: 14px; color: #6B7280; line-height: 1.6; margin-top: 12px;">
+                        &P7_ABOUT_US_NARRATIVE.
+                    </p>
+                    <hr style="border: none; border-top: 1px solid #E5E7EB; margin: 20px 0;">
+                    <h4 style="font-size: 16px; font-weight: 600; color: #111827;">Contact & Social Connections</h4>
+                    <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-top: 10px; font-size: 14px; color: #1B5B8A;">
+                        <span>📧 &P7_PUBLIC_EMAIL.</span>
+                        <span>📞 &P7_PRIMARY_PHONE.</span>
+                        <span>🌐 <a href="&P7_WEBSITE_URL." target="_blank" style="color: #1B5B8A;">Official Website</a></span>
+                    </div>
+                </div>
+                ```
+        }
+        layout {
+            sequence: 40
+            parentRegion: @profile-tab-container
+            slot: regionBody
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    button edit-about-story (
+        buttonName: EDIT_ABOUT_STORY
+        label: "Edit Mission & Story"
+        layout {
+            sequence: 10
+            region: @about-and-gallery-tab
+            slot: rightOfTitle
+        }
+        appearance {
+            buttonTemplate: @/icon
+            icon: "fa-pencil"
+            templateOptions: [
+                #DEFAULT#
+                t-Button--noUI
+                t-Button--small
+            ]
+        }
+        behavior {
+            action: redirectThisApp
+            target: {
+                page: 11
+                items: {
+                    P11_CHARITY_ID: "&P7_CHARITY_ID."
+                }
+            }
+        }
+    )
+
+    /* 8. SUB-TAB 5: MEDIA & PHOTO GALLERY */
+    region media-gallery-cards (
+        name: "Media & Photo Gallery"
+        type: cards
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                SELECT 
+                    gallery_id,
+                    image_url,
+                    caption
+                FROM dl_charity_gallery_images
+                WHERE charity_id = :P7_CHARITY_ID
+                ORDER BY display_order ASC, gallery_id DESC
+                ```
+        }
+        layout {
+            sequence: 50
+            parentRegion: @profile-tab-container
+            slot: regionBody
+        }
+        appearance {
+            template: @/cards-container
+            templateOptions: [
+                #DEFAULT#
+                t-CardsRegion--hideHeader js-addHiddenHeadingRoleDesc
+                t-CardsRegion--styleA
+            ]
+        }
+        componentAppearance {
+            gridColumns: 3
+        }
+        card {
+            primaryKeyColumn1: GALLERY_ID
+        }
+        title {
+            column: CAPTION
+        }
+
+        action edit_gallery_action (
+            type: button
+            label: "Edit Photo"
+            layout {
+                position: primary
+                sequence: 10
+            }
+            behavior {
+                type: redirectThisApp
+                target: {
+                    page: 15
+                    items: {
+                        P15_GALLERY_ID: "&GALLERY_ID."
+                        P15_CHARITY_ID: "&P7_CHARITY_ID."
+                    }
+                }
+            }
+            appearance {
+                displayType: icon
+                icon: "fa-pencil"
+            }
+        )
+    )
+
+    button add-gallery-photo (
+        buttonName: ADD_GALLERY_PHOTO
+        label: "Add Photo"
+        layout {
+            sequence: 10
+            region: @media-gallery-cards
+            slot: rightOfTitle
+        }
+        appearance {
+            buttonTemplate: @/text-with-icon
+            icon: "fa-plus"
+            hot: true
+            templateOptions: [
+                #DEFAULT#
+                t-Button--iconLeft
+            ]
+        }
+        behavior {
+            action: redirectThisApp
+            target: {
+                page: 15
+                items: {
+                    P15_CHARITY_ID: "&P7_CHARITY_ID."
+                }
+            }
+        }
+    )
+
+    /* 9. HIDDEN ITEMS REGION & ITEMS */
+    region hidden-items (
+        name: "Hidden Items"
+        type: staticContent
+        layout {
+            sequence: 5
+            slot: body
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
     )
 
     pageItem P7_CHARITY_ID (
@@ -497,7 +810,7 @@ page 7 (
         }
         default {
             type: static
-            staticValue: 1034
+            staticValue: "1"
         }
     )
 
@@ -510,8 +823,81 @@ page 7 (
         }
     )
 
+    pageItem P7_TAGLINE (
+        type: hidden
+        layout {
+            sequence: 30
+            region: @hidden-items
+            slot: regionBody
+        }
+    )
+
+    pageItem P7_MISSION_STATEMENT (
+        type: hidden
+        layout {
+            sequence: 40
+            region: @hidden-items
+            slot: regionBody
+        }
+    )
+
+    pageItem P7_ABOUT_US_NARRATIVE (
+        type: hidden
+        layout {
+            sequence: 50
+            region: @hidden-items
+            slot: regionBody
+        }
+    )
+
+    pageItem P7_LOGO_URL (
+        type: hidden
+        layout {
+            sequence: 60
+            region: @hidden-items
+            slot: regionBody
+        }
+    )
+
+    pageItem P7_COVER_PHOTO_URL (
+        type: hidden
+        layout {
+            sequence: 70
+            region: @hidden-items
+            slot: regionBody
+        }
+    )
+
+    pageItem P7_WEBSITE_URL (
+        type: hidden
+        layout {
+            sequence: 80
+            region: @hidden-items
+            slot: regionBody
+        }
+    )
+
+    pageItem P7_PUBLIC_EMAIL (
+        type: hidden
+        layout {
+            sequence: 90
+            region: @hidden-items
+            slot: regionBody
+        }
+    )
+
+    pageItem P7_PRIMARY_PHONE (
+        type: hidden
+        layout {
+            sequence: 100
+            region: @hidden-items
+            slot: regionBody
+        }
+    )
+
+    /* 10. PL/SQL PRE-HEADER PROCESS */
     process fetch-charity-defaults (
-        name: Fetch Charity Defaults
+        name: "Fetch Charity Defaults"
         type: executeCode
         source {
             plsqlCode:
@@ -523,10 +909,26 @@ page 7 (
                          WHERE ROWNUM = 1;
                     END IF;
                 
-                    SELECT NVL(trading_name, legal_name)
-                      INTO :P7_LEGAL_NAME
+                    SELECT NVL(trading_name, legal_name),
+                           tagline,
+                           mission_statement,
+                           about_us_narrative,
+                           logo_url,
+                           cover_photo_url,
+                           website_url,
+                           public_email,
+                           primary_phone
+                      INTO :P7_LEGAL_NAME,
+                           :P7_TAGLINE,
+                           :P7_MISSION_STATEMENT,
+                           :P7_ABOUT_US_NARRATIVE,
+                           :P7_LOGO_URL,
+                           :P7_COVER_PHOTO_URL,
+                           :P7_WEBSITE_URL,
+                           :P7_PUBLIC_EMAIL,
+                           :P7_PRIMARY_PHONE
                       FROM dl_charity_profiles
-                     WHERE charity_id = :P7_CHARITY_ID;
+                     WHERE charity_id = TO_NUMBER(:P7_CHARITY_ID);
                 EXCEPTION
                     WHEN OTHERS THEN
                         :P7_LEGAL_NAME := 'Organization Profile';
@@ -537,10 +939,167 @@ page 7 (
             sequence: 10
             point: beforeHeader
         }
-        advanced {
-            executionMappingIdentifier: 39319044578841955
-        }
     )
 
-)
+    /* 11. DYNAMIC ACTIONS FOR DIALOG REFRESH (apexafterclosedialog) */
+    dynamicAction refresh-hero-header-after-dialog (
+        name: "Refresh Hero Header After Dialog Close"
+        execution {
+            sequence: 10
+        }
+        when {
+            event: apexafterclosedialog
+            selectionType: region
+            region: @hero-profile-header
+        }
+        action refresh-hero-header (
+            action: refresh
+            affectedElements {
+                selectionType: region
+                region: @hero-profile-header
+            }
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+    )
 
+    dynamicAction refresh-about-story-after-dialog (
+        name: "Refresh About Story After Dialog Close"
+        execution {
+            sequence: 20
+        }
+        when {
+            event: apexafterclosedialog
+            selectionType: region
+            region: @about-and-gallery-tab
+        }
+        action refresh-about-story (
+            action: refresh
+            affectedElements {
+                selectionType: region
+                region: @about-and-gallery-tab
+            }
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+    )
+
+    dynamicAction refresh-wishlist-after-dialog (
+        name: "Refresh Wishlist Region After Dialog Close"
+        execution {
+            sequence: 30
+        }
+        when {
+            event: apexafterclosedialog
+            selectionType: region
+            region: @wishlist-catalog-tab
+        }
+        action refresh-wishlist-region (
+            action: refresh
+            affectedElements {
+                selectionType: region
+                region: @wishlist-catalog-tab
+            }
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+    )
+
+    dynamicAction refresh-team-after-dialog (
+        name: "Refresh Leadership Team After Dialog Close"
+        execution {
+            sequence: 40
+        }
+        when {
+            event: apexafterclosedialog
+            selectionType: region
+            region: @leadership-team-tab
+        }
+        action refresh-team-region (
+            action: refresh
+            affectedElements {
+                selectionType: region
+                region: @leadership-team-tab
+            }
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+    )
+
+    dynamicAction refresh-stories-after-dialog (
+        name: "Refresh Impact Stories After Dialog Close"
+        execution {
+            sequence: 50
+        }
+        when {
+            event: apexafterclosedialog
+            selectionType: region
+            region: @portfolio-stories-tab
+        }
+        action refresh-stories-region (
+            action: refresh
+            affectedElements {
+                selectionType: region
+                region: @portfolio-stories-tab
+            }
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+    )
+
+    dynamicAction refresh-gallery-after-dialog (
+        name: "Refresh Media Gallery After Dialog Close"
+        execution {
+            sequence: 60
+        }
+        when {
+            event: apexafterclosedialog
+            selectionType: region
+            region: @media-gallery-cards
+        }
+        action refresh-gallery-region (
+            action: refresh
+            affectedElements {
+                selectionType: region
+                region: @media-gallery-cards
+            }
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+    )
+
+    dynamicAction refresh-ticker-after-dialog (
+        name: "Refresh Impact Ticker After Dialog Close"
+        execution {
+            sequence: 70
+        }
+        when {
+            event: apexafterclosedialog
+            selectionType: region
+            region: @dynamic-impact-ticker
+        }
+        action refresh-ticker-region (
+            action: refresh
+            affectedElements {
+                selectionType: region
+                region: @dynamic-impact-ticker
+            }
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+    )
+)
