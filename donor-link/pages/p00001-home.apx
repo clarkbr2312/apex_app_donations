@@ -15,7 +15,7 @@ page 1 (
     }
     css {
         inline:
-            ```css
+            ```
             /* Modern Marketplace Card Container Polish */
             .a-CardView {
                 background-color: #ffffff !important;
@@ -209,7 +209,7 @@ page 1 (
         type: staticContent
         source {
             htmlCode:
-                ```html
+                ```
                 <div style="background-color: #ffffff; padding: 10px 20px 60px 20px; width: 100%; box-sizing: border-box;">
                     <div style="max-width: 760px; margin: 0 auto; text-align: center;">
                         
@@ -253,7 +253,7 @@ page 1 (
             location: localDatabase
             type: sqlQuery
             sqlQuery:
-                ```sql
+                ```
                 SELECT 
                     wi.item_id,
                     wi.product_title,
@@ -310,7 +310,7 @@ page 1 (
         body {
             advancedFormatting: true
             htmlExpression:
-                ```html
+                ```
                 <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
                     <!-- Progress Bar Track -->
                     <div style="flex-grow: 1; background-color: #E5E7EB; height: 6px; border-radius: 3px; overflow: hidden;">
@@ -329,18 +329,29 @@ page 1 (
             badgeColumn: CATEGORY_NAME
         }
 
-        action card_donate_action (
-            label: Donate
+                action card_donate_action (
+            type: button
+            label: "Donate"
             layout {
                 sequence: 20
-            }
-            behavior {
-                target: {
-                    page: 1
-                }
+                position: primary
             }
             appearance {
-                cssClasses: card-cta-donate
+                displayType: textWithIcon
+                icon: "fa-heart"
+                hot: true
+                cssClasses: [card-cta-donate]
+            }
+            behavior {
+                type: redirectThisApp
+                target: {
+                    page: 17
+                    items: {
+                        P17_ITEM_ID: "&ITEM_ID."
+                        P17_CHARITY_ID: "&CHARITY_ID."
+                    }
+                    clearCache: 17
+                }
             }
         )
 
@@ -377,7 +388,7 @@ page 1 (
         type: staticContent
         source {
             htmlCode:
-                ```html
+                ```
                 <div style="width: 100%; height: 270px; overflow: hidden; margin: 0; display: block;">
                     <img src="#APP_IMAGES#landing_page_banner.png" alt="Donor Link Hero Banner" style="width: 100%; height: 100%; object-fit: cover; display: block;">
                 </div>
@@ -401,7 +412,7 @@ page 1 (
         type: staticContent
         source {
             htmlCode:
-                ```html
+                ```
                 <div style="background-color: #1B5B8A; padding: 24px 20px; width: 100%; box-sizing: border-box; text-align: center;">
                     <div style="max-width: 900px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;">
                         <div style="color: #ffffff; text-align: left; font-size: 16px; font-weight: 500;">
@@ -453,7 +464,7 @@ page 1 (
         type: staticContent
         source {
             htmlCode:
-                ```html
+                ```
                 <p style="font-size:16px; font-family:Arial, sans-serif;">
                   <strong>Welcome back to Donor Link.</strong><br><br>
                   To log in, please enter your username or email address and password below.<br><br>
@@ -475,4 +486,3 @@ page 1 (
     )
 
 )
-
