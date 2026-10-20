@@ -1,0 +1,436 @@
+page 17 (
+    name: "Review & Customize Donation"
+    alias: REVIEW-CUSTOMIZE-DONATION
+    title: "Complete Your Gift — DonorLink"
+    appearance {
+        pageMode: modalDialog
+        dialogTemplate: @/modal-dialog
+        templateOptions: #DEFAULT#
+    }
+    security {
+        authentication: public
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region summary-region (
+        name: "Donation Summary"
+        type: staticContent
+        layout {
+            sequence: 10
+            slot: BODY
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    pageItem P17_ITEM_ID (
+        type: hidden
+        layout {
+            sequence: 10
+            region: @summary-region
+            slot: regionBody
+        }
+    )
+
+    pageItem P17_CHARITY_ID (
+        type: hidden
+        layout {
+            sequence: 20
+            region: @summary-region
+            slot: regionBody
+        }
+    )
+
+    pageItem P17_UNIT_PRICE (
+        type: hidden
+        layout {
+            sequence: 30
+            region: @summary-region
+            slot: regionBody
+        }
+    )
+
+    pageItem P17_REMAINING_QTY (
+        type: hidden
+        layout {
+            sequence: 40
+            region: @summary-region
+            slot: regionBody
+        }
+    )
+
+    region customization-region (
+        name: "Gift Details"
+        type: staticContent
+        layout {
+            sequence: 20
+            slot: BODY
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    pageItem P17_GIFT_PRESET (
+        type: radioGroup
+        label {
+            label: "Select Donation Amount / Quantity"
+        }
+        layout {
+            sequence: 10
+            region: @customization-region
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+        lov {
+            type: staticValues
+            staticValues: "STATIC:1 Unit ($35);1,2 Units ($70);2,5 Units ($175);5,Fund All Remaining;ALL,Custom Quantity;CUSTOM"
+        }
+        settings {
+            noOfCols: 4
+        }
+    )
+
+    pageItem P17_CUSTOM_QTY (
+        type: numberField
+        label {
+            label: "Custom Quantity Needed"
+        }
+        layout {
+            sequence: 20
+            region: @customization-region
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+            valuePlaceholder: "e.g. 3"
+        }
+    )
+
+    pageItem P17_DONOR_NAME (
+        type: textField
+        label {
+            label: "Your Full Name"
+        }
+        layout {
+            sequence: 30
+            region: @customization-region
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+            valuePlaceholder: "e.g. Jane Doe"
+        }
+        validation {
+            valueRequired: true
+            maxLength: 150
+        }
+    )
+
+    pageItem P17_DONOR_EMAIL (
+        type: textField
+        label {
+            label: "Email Address (for Tax Receipt)"
+        }
+        layout {
+            sequence: 40
+            region: @customization-region
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+            valuePlaceholder: "e.g. jane.doe@example.com"
+        }
+        validation {
+            valueRequired: true
+            maxLength: 255
+        }
+    )
+
+    pageItem P17_COVER_FEE (
+        type: switch
+        label {
+            label: "Cover Processing Fee (Add 3% so 100% goes to charity)"
+        }
+        layout {
+            sequence: 50
+            region: @customization-region
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+    )
+
+    pageItem P17_TOTAL_DISPLAY (
+        type: displayOnly
+        label {
+            label: "Total Gift Amount"
+        }
+        layout {
+            sequence: 55
+            region: @customization-region
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+    )
+
+    pageItem P17_IS_ANONYMOUS (
+        type: switch
+        label {
+            label: "Keep my gift anonymous from public donor feed"
+        }
+        layout {
+            sequence: 60
+            region: @customization-region
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+    )
+
+    pageItem P17_DONOR_NOTE (
+        type: textarea
+        label {
+            label: "Message of Encouragement (Optional)"
+        }
+        layout {
+            sequence: 70
+            region: @customization-region
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+            valuePlaceholder: "Leave a warm message for the non-profit team or beneficiaries..."
+        }
+        settings {
+            autoHeight: true
+        }
+        validation {
+            maxLength: 1000
+        }
+    )
+
+    region buttons-region (
+        name: "Modal Footer Buttons"
+        type: staticContent
+        layout {
+            sequence: 30
+            slot: REGION_POSITION_03
+        }
+        appearance {
+            template: @/buttons-container
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    button cancel (
+        buttonName: CANCEL
+        label: "Cancel"
+        layout {
+            sequence: 10
+            region: @buttons-region
+            slot: previous
+        }
+        appearance {
+            buttonTemplate: @/text
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            action: definedByDynamicAction
+        }
+    )
+
+    button proceed_payment (
+        buttonName: PROCEED_PAYMENT
+        label: "Continue to Payment 🔒"
+        layout {
+            sequence: 20
+            region: @buttons-region
+            slot: next
+        }
+        appearance {
+            buttonTemplate: @/text-with-icon
+            icon: "fa-lock"
+            hot: true
+            templateOptions: [
+                #DEFAULT#
+                t-Button--iconLeft
+            ]
+        }
+        behavior {
+            action: submitPage
+        }
+    )
+
+    dynamicAction cancel-dialog (
+        name: "Cancel Dialog Action"
+        execution {
+            sequence: 10
+        }
+        when {
+            event: click
+            selectionType: button
+            button: @cancel
+        }
+        action native-dialog-cancel (
+            action: cancelDialog
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+    )
+
+    dynamicAction calculate-total-live (
+        name: "Live Recalculate Total"
+        execution {
+            sequence: 20
+        }
+        when {
+            event: change
+            selectionType: items
+            items: [
+                P17_GIFT_PRESET,
+                P17_CUSTOM_QTY,
+                P17_COVER_FEE
+            ]
+        }
+        action compute-total-plsql (
+            action: executeServerSideCode
+            settings {
+                itemsToSubmit: [
+                    P17_GIFT_PRESET,
+                    P17_CUSTOM_QTY,
+                    P17_COVER_FEE,
+                    P17_UNIT_PRICE,
+                    P17_REMAINING_QTY
+                ]
+                itemsToReturn: [
+                    P17_TOTAL_DISPLAY
+                ]
+                plsqlCode:
+                    ```
+                    DECLARE
+                        v_qty NUMBER := 1;
+                        v_total NUMBER := 0;
+                    BEGIN
+                        IF :P17_GIFT_PRESET = 'CUSTOM' THEN
+                            v_qty := NVL(TO_NUMBER(:P17_CUSTOM_QTY), 1);
+                        ELSIF :P17_GIFT_PRESET = 'ALL' THEN
+                            v_qty := NVL(TO_NUMBER(:P17_REMAINING_QTY), 1);
+                        ELSE
+                            v_qty := NVL(TO_NUMBER(:P17_GIFT_PRESET), 1);
+                        END IF;
+
+                        v_total := v_qty * NVL(TO_NUMBER(:P17_UNIT_PRICE), 0);
+
+                        IF :P17_COVER_FEE = 'Y' THEN
+                            v_total := v_total * 1.03;
+                        END IF;
+
+                        :P17_TOTAL_DISPLAY := TO_CHAR(v_total, '$999,990.00');
+                    END;
+                    ```
+            }
+            execution {
+                sequence: 10
+                fireOnInit: true
+            }
+        )
+    )
+
+    process fetch-donation-context (
+        name: "Fetch Item & Charity Context"
+        type: executeCode
+        execution {
+            sequence: 10
+            point: beforeHeader
+        }
+        source {
+            plsqlCode:
+                ```
+                BEGIN
+                    IF :P17_ITEM_ID IS NOT NULL THEN
+                        SELECT wi.target_price,
+                               (wi.target_quantity - NVL(wi.funded_quantity, 0)) AS remaining_qty,
+                               wi.charity_id
+                          INTO :P17_UNIT_PRICE,
+                               :P17_REMAINING_QTY,
+                               :P17_CHARITY_ID
+                          FROM dl_charity_wishlist_items wi
+                         WHERE wi.item_id = TO_NUMBER(:P17_ITEM_ID);
+                        
+                        -- Set initial display total
+                        :P17_TOTAL_DISPLAY := TO_CHAR(NVL(:P17_UNIT_PRICE, 0), '$999,990.00');
+                    END IF;
+                EXCEPTION
+                    WHEN NO_DATA_FOUND THEN
+                        NULL;
+                END;
+                ```
+        }
+    )
+
+    process stage-donation-intent (
+        name: "Stage Donation Intent Before Checkout"
+        type: executeCode
+        execution {
+            sequence: 10
+            point: afterSubmit
+        }
+        source {
+            plsqlCode:
+                ```
+                DECLARE
+                    v_qty NUMBER := 1;
+                    v_total NUMBER := 0;
+                BEGIN
+                    -- Calculate quantity based on preset choice
+                    IF :P17_GIFT_PRESET = 'CUSTOM' THEN
+                        v_qty := NVL(TO_NUMBER(:P17_CUSTOM_QTY), 1);
+                    ELSIF :P17_GIFT_PRESET = 'ALL' THEN
+                        v_qty := NVL(TO_NUMBER(:P17_REMAINING_QTY), 1);
+                    ELSE
+                        v_qty := NVL(TO_NUMBER(:P17_GIFT_PRESET), 1);
+                    END IF;
+
+                    -- Compute baseline gift total
+                    v_total := v_qty * NVL(TO_NUMBER(:P17_UNIT_PRICE), 0);
+
+                    -- Apply 3% fee coverage if donor opted in
+                    IF :P17_COVER_FEE = 'Y' THEN
+                        v_total := v_total * 1.03;
+                    END IF;
+
+                    -- Record staged donation intent in application tables
+                    NULL;
+                END;
+                ```
+        }
+        serverSideCondition {
+            whenButtonPressed: @proceed_payment
+        }
+    )
+
+    process close-dialog (
+        name: "Close Dialog After Staging"
+        type: closeDialog
+        execution {
+            sequence: 20
+            point: afterSubmit
+        }
+        serverSideCondition {
+            whenButtonPressed: @proceed_payment
+        }
+    )
+)
