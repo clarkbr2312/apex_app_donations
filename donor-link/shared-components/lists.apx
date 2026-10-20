@@ -506,6 +506,21 @@ list register-a-non-profit (
         }
     )
 
+    entry find-a-non-profit (
+        label: find a non-profit
+        icon {
+            imageIconCssClasses: fa-search
+        }
+        layout {
+            sequence: 25
+        }
+        link {
+            target: {
+                page: 16
+            }
+        }
+    )
+    
     entry login (
         label: Login
         layout {
@@ -514,4 +529,3 @@ list register-a-non-profit (
     )
 
 )
-
