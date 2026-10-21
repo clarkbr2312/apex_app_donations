@@ -79,9 +79,8 @@ app DONOR-LINK (
             validValues: Y, N
         }
         config {
-            buildOption: @feature-feedback
+            buil    dOption: @feature-feedback
         }
-    )
+    )       
 
 )
-
