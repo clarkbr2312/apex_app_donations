@@ -442,6 +442,25 @@ list navigation-menu (
         }
     )
 
+    entry hold-21 (
+        label: hold 21
+        icon {
+            imageIconCssClasses: fa-file-o
+        }
+        layout {
+            sequence: 310
+        }
+        isCurrent {
+            type: pages
+            pages: 21
+        }
+        link {
+            target: {
+                page: 21
+            }
+        }
+    )
+
     entry home (
         label: Home
         icon {
@@ -492,20 +511,6 @@ list navigation-menu (
 list register-a-non-profit (
     name: register a non-profit
 
-    entry invite-a-donor (
-        label: Invite a donor
-        layout {
-            sequence: 20
-        }
-    )
-
-    entry invite-a-non-profit (
-        label: Invite a non-profit
-        layout {
-            sequence: 10
-        }
-    )
-
     entry find-a-non-profit (
         label: find a non-profit
         icon {
@@ -520,7 +525,21 @@ list register-a-non-profit (
             }
         }
     )
-    
+
+    entry invite-a-donor (
+        label: Invite a donor
+        layout {
+            sequence: 20
+        }
+    )
+
+    entry invite-a-non-profit (
+        label: Invite a non-profit
+        layout {
+            sequence: 10
+        }
+    )
+
     entry login (
         label: Login
         layout {
@@ -529,3 +548,4 @@ list register-a-non-profit (
     )
 
 )
+

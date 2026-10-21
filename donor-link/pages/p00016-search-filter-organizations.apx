@@ -1,13 +1,11 @@
 page 16 (
-    name: "Search & Filter Organizations"
+    name: Search & Filter Organizations
     alias: SEARCH-FILTER-ORGANIZATIONS
-    title: "Discover Organizations — DonorLink"
+    title: Discover Organizations — DonorLink
     appearance {
         pageMode: modalDialog
         dialogTemplate: @/drawer
-        templateOptions: [
-            js-dialog-class-t-Drawer--pullOutEnd
-        ]
+        templateOptions: js-dialog-class-t-Drawer--pullOutEnd
     }
     navigation {
         cursorFocus: doNotFocusCursor
@@ -18,12 +16,25 @@ page 16 (
         formAutoComplete: false
     }
 
+    region buttons-region (
+        name: Drawer Actions
+        type: staticContent
+        layout {
+            sequence: 30
+            slot: dialogFooter
+        }
+        appearance {
+            template: @/buttons-container
+            templateOptions: #DEFAULT#
+        }
+    )
+
     region filters-region (
-        name: "Filter Organizations"
+        name: Filter Organizations
         type: staticContent
         layout {
             sequence: 10
-            slot: BODY
+            slot: contentBody
         }
         appearance {
             template: @/blank-with-attributes
@@ -31,152 +42,55 @@ page 16 (
         }
     )
 
-    pageItem P16_SEARCH_TEXT (
-        type: textField
-        label {
-            label: "Search by Organization Name or Keyword"
-        }
-        layout {
-            sequence: 10
-            region: @filters-region
-            slot: regionBody
-        }
-        appearance {
-            template: @/optional-above
-            valuePlaceholder: "e.g. Austin Youth, Shelter, Food, Rescue..."
-        }
-    )
-
-    pageItem P16_CATEGORY_IDS (
-        type: checkboxGroup
-        label {
-            label: "Cause Categories"
-        }
-        layout {
-            sequence: 20
-            region: @filters-region
-            slot: regionBody
-        }
-        appearance {
-            template: @/optional-above
-        }
-        lov {
-            type: sqlQuery
-            sqlQuery:
-                ```sql
-                SELECT category_name AS d, TO_CHAR(category_id) AS r
-                  FROM dl_cause_categories
-                  WHERE is_active = 'Y'
-                  ORDER BY display_order ASC
-            ```
-                    }
-    )
-
-    pageItem P16_STATE_IDS (
-        type: popupLov
-        label {
-            label: "State / Location"
-        }
-        layout {
-            sequence: 30
-            region: @filters-region
-            slot: regionBody
-        }
-        appearance {
-            template: @/optional-above
-            valuePlaceholder: "Select states..."
-        }
-        lov {
-            type: sqlQuery
-            sqlQuery:
-                ```sql
-                SELECT state_name || ' (' || state_code || ')' AS d, TO_CHAR(state_id) AS r
-                  FROM dl_us_states
-                  WHERE is_active = 'Y'
-                  ORDER BY display_order ASC
-            ```
-                    }
-    )
-
-    pageItem P16_VERIFIED_ONLY (
-        type: switch
-        label {
-            label: "501(c)(3) Verified Only"
-        }
-        layout {
-            sequence: 40
-            region: @filters-region
-            slot: regionBody
-        }
-        appearance {
-            template: @/optional-above
-        }
-    )
-
-    pageItem P16_URGENT_ONLY (
-        type: switch
-        label {
-            label: "Has Active Urgent Needs"
-        }
-        layout {
-            sequence: 50
-            region: @filters-region
-            slot: regionBody
-        }
-        appearance {
-            template: @/optional-above
-        }
-    )
-
     region results-cards-region (
-        name: "Matching Organizations"
+        name: Matching Organizations
         type: cards
         source {
             location: localDatabase
             type: sqlQuery
             sqlQuery:
                 ```sql
-                SELECT 
-                    cp.charity_id,
-                    NVL(cp.trading_name, cp.legal_name) AS trading_name,
-                    cp.tagline,
-                    NVL(cp.logo_url, 'https://via.placeholder.com/150?text=NPO') AS logo_url,
-                    sa.city || ', ' || st.state_code || ' — ' || cp.tax_exempt_status AS location_and_status,
-                    (
-                        SELECT COUNT(*) || ' Active Need(s)'
-                          FROM dl_charity_wishlist_items wi
-                        WHERE wi.charity_id = cp.charity_id
-                          AND wi.item_status = 'ACTIVE'
-                    ) AS active_needs_summary
-                FROM dl_charity_profiles cp
-                LEFT JOIN dl_charity_addresses sa 
-                      ON cp.charity_id = sa.charity_id 
-                      AND sa.is_primary = 'Y'
-                LEFT JOIN dl_us_states st 
-                      ON sa.state_id = st.state_id
-                WHERE (:P16_SEARCH_TEXT IS NULL 
-                        OR UPPER(cp.legal_name) LIKE '%' || UPPER(:P16_SEARCH_TEXT) || '%' 
-                        OR UPPER(cp.trading_name) LIKE '%' || UPPER(:P16_SEARCH_TEXT) || '%' 
-                        OR UPPER(cp.tagline) LIKE '%' || UPPER(:P16_SEARCH_TEXT) || '%' )
-                    AND (:P16_VERIFIED_ONLY IS NULL OR :P16_VERIFIED_ONLY = 'N' OR cp.tax_exempt_status LIKE '%Verified%')
-                    AND (:P16_STATE_IDS IS NULL OR sa.state_id = TO_NUMBER(:P16_STATE_IDS))
-                    AND (:P16_CATEGORY_IDS IS NULL OR EXISTS (
-                        SELECT 1 FROM dl_charity_category_map cm 
-                          WHERE cm.charity_id = cp.charity_id 
-                            AND cm.category_id = TO_NUMBER(:P16_CATEGORY_IDS)
-                    ))
-                    AND (:P16_URGENT_ONLY IS NULL OR :P16_URGENT_ONLY = 'N' OR EXISTS (
-                        SELECT 1 FROM dl_charity_wishlist_items wi 
-                          WHERE wi.charity_id = cp.charity_id 
-                            AND wi.priority_level = 'URGENT'
-                            AND wi.item_status = 'ACTIVE'
-                    ))
-                ORDER BY cp.trading_name ASC
-            ```
+                    SELECT 
+                        cp.charity_id,
+                        NVL(cp.trading_name, cp.legal_name) AS trading_name,
+                        cp.tagline,
+                        NVL(cp.logo_url, 'https://via.placeholder.com/150?text=NPO') AS logo_url,
+                        sa.city || ', ' || st.state_code || ' — ' || cp.tax_exempt_status AS location_and_status,
+                        (
+                            SELECT COUNT(*) || ' Active Need(s)'
+                              FROM dl_charity_wishlist_items wi
+                            WHERE wi.charity_id = cp.charity_id
+                              AND wi.item_status = 'ACTIVE'
+                        ) AS active_needs_summary
+                    FROM dl_charity_profiles cp
+                    LEFT JOIN dl_charity_addresses sa 
+                          ON cp.charity_id = sa.charity_id 
+                          AND sa.is_primary = 'Y'
+                    LEFT JOIN dl_us_states st 
+                          ON sa.state_id = st.state_id
+                    WHERE (:P16_SEARCH_TEXT IS NULL 
+                            OR UPPER(cp.legal_name) LIKE '%' || UPPER(:P16_SEARCH_TEXT) || '%' 
+                            OR UPPER(cp.trading_name) LIKE '%' || UPPER(:P16_SEARCH_TEXT) || '%' 
+                            OR UPPER(cp.tagline) LIKE '%' || UPPER(:P16_SEARCH_TEXT) || '%' )
+                        AND (:P16_VERIFIED_ONLY IS NULL OR :P16_VERIFIED_ONLY = 'N' OR cp.tax_exempt_status LIKE '%Verified%')
+                        AND (:P16_STATE_IDS IS NULL OR sa.state_id = TO_NUMBER(:P16_STATE_IDS))
+                        AND (:P16_CATEGORY_IDS IS NULL OR EXISTS (
+                            SELECT 1 FROM dl_charity_category_map cm 
+                              WHERE cm.charity_id = cp.charity_id 
+                                AND cm.category_id = TO_NUMBER(:P16_CATEGORY_IDS)
+                        ))
+                        AND (:P16_URGENT_ONLY IS NULL OR :P16_URGENT_ONLY = 'N' OR EXISTS (
+                            SELECT 1 FROM dl_charity_wishlist_items wi 
+                              WHERE wi.charity_id = cp.charity_id 
+                                AND wi.priority_level = 'URGENT'
+                                AND wi.item_status = 'ACTIVE'
+                        ))
+                    ORDER BY cp.trading_name ASC
+                ```
         }
         layout {
             sequence: 20
-            slot: BODY
+            slot: contentBody
         }
         appearance {
             template: @/cards-container
@@ -184,9 +98,6 @@ page 16 (
                 #DEFAULT#
                 t-CardsRegion--styleA
             ]
-        }
-        componentAppearance {
-            layout: grid
         }
         card {
             primaryKeyColumn1: CHARITY_ID
@@ -205,45 +116,149 @@ page 16 (
         }
 
         action view_profile_action (
-            type: button
-            label: "View Profile ⁤"
+            label: View Profile ⁤
             layout {
                 sequence: 10
-                position: primary
             }
             behavior {
-                type: redirectThisApp
                 target: {
                     page: 7
                     items: {
-                        P7_CHARITY_ID: "&CHARITY_ID."
+                        P7_CHARITY_ID: &CHARITY_ID.
                     }
                 }
             }
             appearance {
                 displayType: textWithIcon
-                icon: "fa-chevron-right"
+                icon: fa-chevron-right
                 hot: true
             }
         )
+
     )
 
-    region buttons-region (
-        name: "Drawer Actions"
-        type: staticContent
+    pageItem P16_CATEGORY_IDS (
+        type: checkboxGroup
+        label {
+            label: Cause Categories
+        }
+        lov {
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                    SELECT category_name AS d, TO_CHAR(category_id) AS r
+                      FROM dl_cause_categories
+                      WHERE is_active = 'Y'
+                      ORDER BY display_order ASC
+                ```
+        }
         layout {
-            sequence: 30
-            slot: REGION_POSITION_03
+            sequence: 20
+            region: @filters-region
+            slot: regionBody
         }
         appearance {
-            template: @/buttons-container
-            templateOptions: #DEFAULT#
+            template: @/optional-above
+        }
+    )
+
+    pageItem P16_SEARCH_TEXT (
+        type: textField
+        label {
+            label: Search by Organization Name or Keyword
+        }
+        layout {
+            sequence: 10
+            region: @filters-region
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+            valuePlaceholder: e.g. Austin Youth, Shelter, Food, Rescue...
+        }
+    )
+
+    pageItem P16_STATE_IDS (
+        type: popupLov
+        label {
+            label: State / Location
+        }
+        lov {
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                    SELECT state_name || ' (' || state_code || ')' AS d, TO_CHAR(state_id) AS r
+                      FROM dl_us_states
+                      WHERE is_active = 'Y'
+                      ORDER BY display_order ASC
+                ```
+        }
+        layout {
+            sequence: 30
+            region: @filters-region
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+            valuePlaceholder: Select states...
+        }
+    )
+
+    pageItem P16_URGENT_ONLY (
+        type: switch
+        label {
+            label: Has Active Urgent Needs
+        }
+        layout {
+            sequence: 50
+            region: @filters-region
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+    )
+
+    pageItem P16_VERIFIED_ONLY (
+        type: switch
+        label {
+            label: 501(c)(3) Verified Only
+        }
+        layout {
+            sequence: 40
+            region: @filters-region
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+    )
+
+    button apply_search (
+        buttonName: APPLY_SEARCH
+        label: Search Organizations
+        layout {
+            sequence: 20
+            region: @buttons-region
+            slot: next
+        }
+        appearance {
+            buttonTemplate: @/text-with-icon
+            hot: true
+            templateOptions: [
+                #DEFAULT#
+                t-Button--iconLeft
+            ]
+            icon: fa-search
+        }
+        behavior {
+            action: definedByDynamicAction
         }
     )
 
     button reset_filters (
         buttonName: RESET_FILTERS
-        label: "Reset All Filters"
+        label: Reset All Filters
         layout {
             sequence: 10
             region: @buttons-region
@@ -258,44 +273,22 @@ page 16 (
         }
     )
 
-    button apply_search (
-        buttonName: APPLY_SEARCH
-        label: "Search Organizations"
-        layout {
-            sequence: 20
-            region: @buttons-region
-            slot: next
-        }
-        appearance {
-            buttonTemplate: @/text-with-icon
-            icon: "fa-search"
-            hot: true
-            templateOptions: [
-                #DEFAULT#
-                t-Button--iconLeft
-            ]
-        }
-        behavior {
-            action: definedByDynamicAction
-        }
-    )
-
     dynamicAction live-search-filter (
-        name: "Live Search Filter"
+        name: Live Search Filter
         execution {
             sequence: 10
         }
         when {
-            event: change
             selectionType: items
             items: [
-                P16_SEARCH_TEXT,
-                P16_CATEGORY_IDS,
-                P16_STATE_IDS,
-                P16_VERIFIED_ONLY,
+                P16_SEARCH_TEXT
+                P16_CATEGORY_IDS
+                P16_STATE_IDS
+                P16_VERIFIED_ONLY
                 P16_URGENT_ONLY
             ]
         }
+
         action refresh-cards (
             action: refresh
             affectedElements {
@@ -307,10 +300,11 @@ page 16 (
                 fireOnInit: false
             }
         )
+
     )
 
     dynamicAction manual-search-click (
-        name: "Apply Search Click"
+        name: Apply Search Click
         execution {
             sequence: 20
         }
@@ -319,6 +313,7 @@ page 16 (
             selectionType: button
             button: @apply_search
         }
+
         action refresh-cards-click (
             action: refresh
             affectedElements {
@@ -330,10 +325,11 @@ page 16 (
                 fireOnInit: false
             }
         )
+
     )
 
     dynamicAction reset-filters-action (
-        name: "Reset All Filters"
+        name: Reset All Filters
         execution {
             sequence: 30
         }
@@ -342,23 +338,25 @@ page 16 (
             selectionType: button
             button: @reset_filters
         }
+
         action clear-search-text (
             action: clear
             affectedElements {
                 selectionType: items
                 items: [
-                    P16_SEARCH_TEXT,
-                    P16_CATEGORY_IDS,
-                    P16_STATE_IDS,
-                    P16_VERIFIED_ONLY,
+                    P16_SEARCH_TEXT
+                    P16_CATEGORY_IDS
+                    P16_STATE_IDS
+                    P16_VERIFIED_ONLY
                     P16_URGENT_ONLY
-            ]
+                ]
             }
             execution {
                 sequence: 10
                 fireOnInit: false
             }
         )
+
         action refresh-after-reset (
             action: refresh
             affectedElements {
@@ -370,5 +368,8 @@ page 16 (
                 fireOnInit: false
             }
         )
+
     )
+
 )
+
