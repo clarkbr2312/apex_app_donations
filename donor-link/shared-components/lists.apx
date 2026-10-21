@@ -233,8 +233,7 @@ list navbar (
         }
         link {
             target: {
-                page: 3
-                session: &APP_SESSION..
+                page: 19
             }
         }
         serverSideCondition {
