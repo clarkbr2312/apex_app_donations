@@ -1,0 +1,388 @@
+page 18 (
+    name: "Wishlist Item & Charity Details"
+    alias: WISHLIST_ITEM-CHARITY-DETAILS
+    title: "Item Details — DonorLink"
+    appearance {
+        pageMode: modalDialog
+        dialogTemplate: @/drawer
+        templateOptions: [
+            js-dialog-class-t-Drawer--pullOutEnd
+        ]
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        authentication: public
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region item-spotlight-region (
+        name: "Item Overview"
+        type: staticContent
+        layout {
+            sequence: 10
+            slot: BODY
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    pageItem P18_ITEM_ID (
+        type: hidden
+        layout {
+            sequence: 10
+            region: @item-spotlight-region
+            slot: regionBody
+        }
+    )
+
+    pageItem P18_CHARITY_ID (
+        type: hidden
+        layout {
+            sequence: 20
+            region: @item-spotlight-region
+            slot: regionBody
+        }
+    )
+
+    pageItem P18_PRODUCT_TITLE (
+        type: displayOnly
+        label {
+            label: "Wishlist Item"
+        }
+        layout {
+            sequence: 30
+            region: @item-spotlight-region
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+    )
+
+    pageItem P18_WHY_WE_NEED_THIS (
+        type: displayOnly
+        label {
+            label: "Why This Need Matters (Item Description)"
+        }
+        layout {
+            sequence: 40
+            region: @item-spotlight-region
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+    )
+
+    pageItem P18_PRICE_AND_FUNDING (
+        type: displayOnly
+        label {
+            label: "Pricing & Funding Progress"
+        }
+        layout {
+            sequence: 50
+            region: @item-spotlight-region
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+    )
+
+    button donate_now_btn (
+        buttonName: DONATE_NOW_BTN
+        label: "Donate to This Need 🔒"
+        layout {
+            sequence: 60
+            region: @item-spotlight-region
+            slot: regionBody
+        }
+        appearance {
+            buttonTemplate: @/text-with-icon
+            icon: "fa-heart"
+            hot: true
+            templateOptions: [
+                #DEFAULT#
+                t-Button--iconLeft
+                t-Button--stretch
+            ]
+        }
+        behavior {
+            action: redirectThisApp
+            target: {
+                page: 17
+                items: {
+                    P17_ITEM_ID: "&P18_ITEM_ID."
+                    P17_CHARITY_ID: "&P18_CHARITY_ID."
+                }
+                clearCache: 17
+            }
+        }
+    )
+
+    region charity-spotlight-region (
+        name: "About the Non-Profit"
+        type: staticContent
+        layout {
+            sequence: 20
+            slot: BODY
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    pageItem P18_CHARITY_NAME (
+        type: displayOnly
+        label {
+            label: "Organization Name"
+        }
+        layout {
+            sequence: 10
+            region: @charity-spotlight-region
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+    )
+
+    pageItem P18_CHARITY_TAGLINE (
+        type: displayOnly
+        label {
+            label: "Mission Summary"
+        }
+        layout {
+            sequence: 20
+            region: @charity-spotlight-region
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+    )
+
+    button view_profile_btn (
+        buttonName: VIEW_PROFILE_BTN
+        label: "View Full Organization Profile"
+        layout {
+            sequence: 30
+            region: @charity-spotlight-region
+            slot: regionBody
+        }
+        appearance {
+            buttonTemplate: @/text-with-icon
+            icon: "fa-chevron-right"
+            hot: false
+            templateOptions: [
+                #DEFAULT#
+                t-Button--iconRight
+            ]
+        }
+        behavior {
+            action: redirectThisApp
+            target: {
+                page: 7
+                items: {
+                    P7_CHARITY_ID: "&P18_CHARITY_ID."
+                }
+            }
+        }
+    )
+
+    region secondary-needs-region (
+        name: "More Wishlist Needs from This Charity"
+        type: cards
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                SELECT 
+                    wi.item_id,
+                    wi.charity_id,
+                    wi.product_title,
+                    wi.product_image_url,
+                    TO_CHAR(wi.target_price, '$999,990.00') AS formatted_price,
+                    ROUND(CASE
+                        WHEN wi.target_quantity = 0 THEN 0
+                        ELSE ((NVL(wi.funded_quantity, 0) / wi.target_quantity) * 100)
+                    END) AS percent_funded,
+                    cat.category_name
+                FROM dl_charity_wishlist_items wi
+                LEFT JOIN dl_charity_category_map cm ON wi.charity_id = cm.charity_id
+                LEFT JOIN dl_cause_categories cat ON cm.category_id = cat.category_id
+                WHERE wi.charity_id = TO_NUMBER(:P18_CHARITY_ID)
+                  AND wi.item_id != TO_NUMBER(:P18_ITEM_ID)
+                  AND wi.item_status = 'ACTIVE'
+                ORDER BY wi.priority_level DESC, wi.item_id DESC
+            ```
+        }
+        layout {
+            sequence: 30
+            slot: BODY
+        }
+        appearance {
+            template: @/cards-container
+            templateOptions: [
+                #DEFAULT#
+                t-CardsRegion--styleA
+            ]
+        }
+        componentAppearance {
+            layout: grid
+        }
+        card {
+            primaryKeyColumn1: ITEM_ID
+        }
+        title {
+            column: PRODUCT_TITLE
+        }
+        subtitle {
+            column: FORMATTED_PRICE
+        }
+        iconAndBadge {
+            badgeColumn: CATEGORY_NAME
+        }
+
+        action card_donate_action (
+            type: button
+            label: "Donate"
+            layout {
+                sequence: 10
+                position: primary
+            }
+            appearance {
+                displayType: textWithIcon
+                icon: "fa-heart"
+                hot: true
+            }
+            behavior {
+                type: redirectThisApp
+                target: {
+                    page: 17
+                    items: {
+                        P17_ITEM_ID: "&ITEM_ID."
+                        P17_CHARITY_ID: "&CHARITY_ID."
+                    }
+                    clearCache: 17
+                }
+            }
+        )
+
+        action card_details_action (
+            type: fullCard
+            layout {
+                sequence: 20
+            }
+            behavior {
+                type: redirectThisApp
+                target: {
+                    page: 18
+                    items: {
+                        P18_ITEM_ID: "&ITEM_ID."
+                        P18_CHARITY_ID: "&CHARITY_ID."
+                    }
+                    clearCache: 18
+                }
+            }
+        )
+    )
+
+    region buttons-region (
+        name: "Drawer Actions"
+        type: staticContent
+        layout {
+            sequence: 40
+            slot: REGION_POSITION_03
+        }
+        appearance {
+            template: @/buttons-container
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    button close_drawer (
+        buttonName: CLOSE_DRAWER
+        label: "Close"
+        layout {
+            sequence: 10
+            region: @buttons-region
+            slot: previous
+        }
+        appearance {
+            buttonTemplate: @/text
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            action: definedByDynamicAction
+        }
+    )
+
+    dynamicAction close-drawer-da (
+        name: "Close Drawer Action"
+        execution {
+            sequence: 10
+        }
+        when {
+            event: click
+            selectionType: button
+            button: @close_drawer
+        }
+        action native-dialog-cancel (
+            action: cancelDialog
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+    )
+
+    process fetch-item-and-charity-details (
+        name: "Fetch Details for Item and Charity"
+        type: executeCode
+        execution {
+            sequence: 10
+            point: beforeHeader
+        }
+        source {
+            plsqlCode:
+                ```plsql
+                BEGIN
+                    IF :P18_ITEM_ID IS NOT NULL THEN
+                        SELECT wi.product_title,
+                               NVL(wi.why_we_need_this, 'No specific description provided for this item.'),
+                               'Unit Price: ' || TO_CHAR(wi.target_price, '$999,990.00') || 
+                               ' — ' || TO_CHAR(NVL(wi.funded_quantity, 0)) || ' of ' || TO_CHAR(wi.target_quantity) || ' Funded (' ||
+                               TO_CHAR(ROUND(CASE WHEN wi.target_quantity = 0 THEN 0 ELSE (NVL(wi.funded_quantity, 0) / wi.target_quantity) * 100 END)) || '%)',
+                               wi.charity_id
+                          INTO :P18_PRODUCT_TITLE,
+                               :P18_WHY_WE_NEED_THIS,
+                               :P18_PRICE_AND_FUNDING,
+                               :P18_CHARITY_ID
+                          FROM dl_charity_wishlist_items wi
+                         WHERE wi.item_id = TO_NUMBER(:P18_ITEM_ID);
+                    END IF;
+
+                    IF :P18_CHARITY_ID IS NOT NULL THEN
+                        SELECT NVL(cp.trading_name, cp.legal_name),
+                               NVL(cp.tagline, NVL(DBMS_LOB.SUBSTR(cp.about_us_narrative, 250, 1), 'Dedicated non-profit organization serving our local community.'))
+                          INTO :P18_CHARITY_NAME,
+                               :P18_CHARITY_TAGLINE
+                          FROM dl_charity_profiles cp
+                         WHERE cp.charity_id = TO_NUMBER(:P18_CHARITY_ID);
+                    END IF;
+                EXCEPTION
+                    WHEN NO_DATA_FOUND THEN
+                        NULL;
+                END;
+                ```
+        }
+    )
+)
