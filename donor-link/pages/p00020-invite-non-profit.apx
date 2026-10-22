@@ -1,14 +1,11 @@
 page 20 (
-    name: "Invite Non-Profit"
+    name: Invite Non-Profit
     alias: INVITE-NON-PROFIT
-    title: "Nominate a Non-Profit — DonorLink"
+    title: Nominate a Non-Profit — DonorLink
     appearance {
         pageMode: modalDialog
         dialogTemplate: @/modal-dialog
         templateOptions: #DEFAULT#
-    }
-    navigation {
-        cursorFocus: firstItemOnPage
     }
     security {
         authentication: public
@@ -16,12 +13,25 @@ page 20 (
         formAutoComplete: false
     }
 
+    region buttons-region (
+        name: Modal Buttons
+        type: staticContent
+        layout {
+            sequence: 20
+            slot: dialogFooter
+        }
+        appearance {
+            template: @/buttons-container
+            templateOptions: #DEFAULT#
+        }
+    )
+
     region invite-form-region (
-        name: "Nominate & Invite"
+        name: Nominate & Invite
         type: staticContent
         layout {
             sequence: 10
-            slot: BODY
+            slot: contentBody
         }
         appearance {
             template: @/blank-with-attributes
@@ -29,30 +39,10 @@ page 20 (
         }
     )
 
-    pageItem P20_CHARITY_NAME (
-        type: textField
-        label {
-            label: "Non-Profit Organization Name"
-        }
-        layout {
-            sequence: 10
-            region: @invite-form-region
-            slot: regionBody
-        }
-        appearance {
-            template: @/required-floating
-            valuePlaceholder: "e.g. Hope Community Food Bank"
-        }
-        validation {
-            valueRequired: true
-            maxLength: 150
-        }
-    )
-
     pageItem P20_CHARITY_EMAIL (
         type: textField
         label {
-            label: "Organization Contact Email"
+            label: Organization Contact Email
         }
         layout {
             sequence: 20
@@ -61,7 +51,7 @@ page 20 (
         }
         appearance {
             template: @/required-floating
-            valuePlaceholder: "info@organization.org"
+            valuePlaceholder: info@organization.org
         }
         validation {
             valueRequired: true
@@ -69,21 +59,22 @@ page 20 (
         }
     )
 
-    pageItem P20_CONTACT_NAME (
+    pageItem P20_CHARITY_NAME (
         type: textField
         label {
-            label: "Contact Person Name (Optional)"
+            label: Non-Profit Organization Name
         }
         layout {
-            sequence: 30
+            sequence: 10
             region: @invite-form-region
             slot: regionBody
         }
         appearance {
-            template: @/optional-floating
-            valuePlaceholder: "e.g. Maria Director"
+            template: @/required-floating
+            valuePlaceholder: e.g. Hope Community Food Bank
         }
         validation {
+            valueRequired: true
             maxLength: 150
         }
     )
@@ -91,7 +82,7 @@ page 20 (
     pageItem P20_CHARITY_WEBSITE (
         type: textField
         label {
-            label: "Website or Social Link (Optional)"
+            label: Website or Social Link (Optional)
         }
         layout {
             sequence: 40
@@ -100,7 +91,71 @@ page 20 (
         }
         appearance {
             template: @/optional-floating
-            valuePlaceholder: "e.g. organization.org"
+            valuePlaceholder: e.g. organization.org
+        }
+        validation {
+            maxLength: 255
+        }
+    )
+
+    pageItem P20_CONTACT_NAME (
+        type: textField
+        label {
+            label: Contact Person Name (Optional)
+        }
+        layout {
+            sequence: 30
+            region: @invite-form-region
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-floating
+            valuePlaceholder: e.g. Maria Director
+        }
+        validation {
+            maxLength: 150
+        }
+    )
+
+    pageItem P20_PERSONAL_NOTE (
+        type: textarea
+        label {
+            label: Personal Message / Invitation Note
+        }
+        settings {
+            autoHeight: true
+        }
+        layout {
+            sequence: 70
+            region: @invite-form-region
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-floating
+            valuePlaceholder: Add a short note to the organization...
+        }
+        validation {
+            maxLength: 1000
+        }
+        default {
+            type: static
+            staticValue: Hi! I love the work your organization does in our community. I am active on DonorLink and would love to see your needs listed here so donors can support you directly.
+        }
+    )
+
+    pageItem P20_YOUR_EMAIL (
+        type: textField
+        label {
+            label: Your Email Address (Optional)
+        }
+        layout {
+            sequence: 60
+            region: @invite-form-region
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-floating
+            valuePlaceholder: alex@example.com
         }
         validation {
             maxLength: 255
@@ -110,7 +165,7 @@ page 20 (
     pageItem P20_YOUR_NAME (
         type: textField
         label {
-            label: "Your Name"
+            label: Your Name
         }
         layout {
             sequence: 50
@@ -119,7 +174,7 @@ page 20 (
         }
         appearance {
             template: @/required-floating
-            valuePlaceholder: "e.g. Alex"
+            valuePlaceholder: e.g. Alex
         }
         validation {
             valueRequired: true
@@ -127,67 +182,9 @@ page 20 (
         }
     )
 
-    pageItem P20_YOUR_EMAIL (
-        type: textField
-        label {
-            label: "Your Email Address (Optional)"
-        }
-        layout {
-            sequence: 60
-            region: @invite-form-region
-            slot: regionBody
-        }
-        appearance {
-            template: @/optional-floating
-            valuePlaceholder: "alex@example.com"
-        }
-        validation {
-            maxLength: 255
-        }
-    )
-
-    pageItem P20_PERSONAL_NOTE (
-        type: textarea
-        label {
-            label: "Personal Message / Invitation Note"
-        }
-        layout {
-            sequence: 70
-            region: @invite-form-region
-            slot: regionBody
-        }
-        appearance {
-            template: @/optional-floating
-            valuePlaceholder: "Add a short note to the organization..."
-        }
-        default {
-            type: static
-            staticValue: "Hi! I love the work your organization does in our community. I am active on DonorLink and would love to see your needs listed here so donors can support you directly."
-        }
-        settings {
-            autoHeight: true
-        }
-        validation {
-            maxLength: 1000
-        }
-    )
-
-    region buttons-region (
-        name: "Modal Buttons"
-        type: staticContent
-        layout {
-            sequence: 20
-            slot: REGION_POSITION_03
-        }
-        appearance {
-            template: @/buttons-container
-            templateOptions: #DEFAULT#
-        }
-    )
-
     button cancel_btn (
         buttonName: CANCEL_BTN
-        label: "Cancel"
+        label: Cancel
         layout {
             sequence: 10
             region: @buttons-region
@@ -204,7 +201,7 @@ page 20 (
 
     button send_invite_btn (
         buttonName: SEND_INVITE_BTN
-        label: "Send Invitation ✉️"
+        label: Send Invitation ✉️
         layout {
             sequence: 20
             region: @buttons-region
@@ -212,17 +209,14 @@ page 20 (
         }
         appearance {
             buttonTemplate: @/text-with-icon
-            icon: "fa-paper-plane"
             hot: true
             templateOptions: #DEFAULT#
-        }
-        behavior {
-            action: submitPage
+            icon: fa-paper-plane
         }
     )
 
     dynamicAction cancel-dialog-da (
-        name: "Cancel Invitation Dialog"
+        name: Cancel Invitation Dialog
         execution {
             sequence: 10
         }
@@ -231,6 +225,7 @@ page 20 (
             selectionType: button
             button: @cancel_btn
         }
+
         action native-dialog-cancel (
             action: cancelDialog
             execution {
@@ -238,38 +233,47 @@ page 20 (
                 fireOnInit: false
             }
         )
+
+    )
+
+    process close-dialog-after-send (
+        name: Close Dialog After Send
+        type: closeDialog
+        execution {
+            sequence: 20
+            point: afterSubmit
+        }
+        advanced {
+            executionMappingIdentifier: 42795839178229156
+        }
+        serverSideCondition {
+            whenButtonPressed: @send_invite_btn
+        }
     )
 
     process send-invitation-email (
-        name: "Send Invitation Process"
+        name: Send Invitation Process
         type: executeCode
-        execution {
-            sequence: 10
-            point: afterSubmit
-        }
         source {
             plsqlCode:
-                ```
+                ```plsql
                 BEGIN
                     -- Email dispatch logic will be attached here
                     NULL;
                 END;
                 ```
         }
+        execution {
+            sequence: 10
+            point: afterSubmit
+        }
+        advanced {
+            executionMappingIdentifier: 42795790939229156
+        }
         serverSideCondition {
             whenButtonPressed: @send_invite_btn
         }
     )
 
-    process close-dialog-after-send (
-        name: "Close Dialog After Send"
-        type: closeDialog
-        execution {
-            sequence: 20
-            point: afterSubmit
-        }
-        serverSideCondition {
-            whenButtonPressed: @send_invite_btn
-        }
-    )
 )
+
