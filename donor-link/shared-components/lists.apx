@@ -247,6 +247,11 @@ list navbar (
         layout {
             sequence: 20
         }
+        link {
+            target: {
+                page: 20
+            }
+        }
         serverSideCondition {
             type: currentPageInList
             pages: 1
@@ -547,4 +552,3 @@ list register-a-non-profit (
     )
 
 )
-
