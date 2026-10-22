@@ -446,24 +446,7 @@ list navigation-menu (
         }
     )
 
-    entry hold-21 (
-        label: hold 21
-        icon {
-            imageIconCssClasses: fa-file-o
-        }
-        layout {
-            sequence: 310
-        }
-        isCurrent {
-            type: pages
-            pages: 21
-        }
-        link {
-            target: {
-                page: 21
-            }
-        }
-    )
+    
 
     entry home (
         label: Home
@@ -506,6 +489,25 @@ list navigation-menu (
         link {
             target: {
                 page: 1
+            }
+        }
+    )
+
+    entry order-fulfillment-tracking (
+        label: Order Fulfillment Tracking
+        icon {
+            imageIconCssClasses: fa-clipboard
+        }
+        layout {
+            sequence: 310
+        }
+        isCurrent {
+            type: pages
+            pages: 21
+        }
+        link {
+            target: {
+                page: 21
             }
         }
     )

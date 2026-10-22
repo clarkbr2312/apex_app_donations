@@ -85,22 +85,6 @@ breadcrumb breadcrumb (
         }
     )
 
-    entry stripe-payments (
-        name: Stripe Payments
-        pageNumber: 8
-        execution {
-            sequence: 10
-        }
-        appearance {
-            parentEntry: @donor-link-dashboard
-        }
-        link {
-            target: {
-                page: 8
-            }
-        }
-    )
-
     entry order-fulfillment-tracking (
         name: Order Fulfillment Tracking
         pageNumber: 21
@@ -117,4 +101,21 @@ breadcrumb breadcrumb (
         }
     )
 
+    entry stripe-payments (
+        name: Stripe Payments
+        pageNumber: 8
+        execution {
+            sequence: 10
+        }
+        appearance {
+            parentEntry: @donor-link-dashboard
+        }
+        link {
+            target: {
+                page: 8
+            }
+        }
+    )
+
 )
+
