@@ -4,7 +4,7 @@ page 21 (
     title: "Order Fulfillment Tracking — DonorLink"
     appearance {
         pageMode: normal
-        template: @/standard
+        pageTemplate: @/standard
         templateOptions: #DEFAULT#
     }
     navigation {
@@ -46,7 +46,7 @@ page 21 (
             location: localDatabase
             type: sqlQuery
             sqlQuery:
-                ```
+                ```sql
                 SELECT 'Awaiting Purchase' AS card_title,
                        'Needs Processing' AS card_subtitle,
                        TO_CHAR(COUNT(CASE WHEN d.fulfillment_status_id = 1 THEN 1 END)) AS card_value,
@@ -120,7 +120,7 @@ page 21 (
             location: localDatabase
             type: sqlQuery
             sqlQuery:
-                ```
+                ```sql
                 SELECT d.donation_id,
                        c.legal_name AS charity_name,
                        wi.product_title,
@@ -174,51 +174,57 @@ page 21 (
             }
 
             displayColumn (
-                column: @APEX$ROW_ACTION
+                column: @APEX$ROW_SELECTOR
                 layout {
                     sequence: 10
                 }
             )
             displayColumn (
-                column: @DONATION_ID
+                column: @APEX$ROW_ACTION
                 layout {
                     sequence: 20
                 }
             )
             displayColumn (
-                column: @CHARITY_NAME
+                column: @DONATION_ID
                 layout {
                     sequence: 30
                 }
             )
             displayColumn (
-                column: @PRODUCT_TITLE
+                column: @CHARITY_NAME
                 layout {
                     sequence: 40
                 }
             )
             displayColumn (
-                column: @DONATION_AMOUNT
+                column: @PRODUCT_TITLE
                 layout {
                     sequence: 50
                 }
             )
             displayColumn (
-                column: @DONATION_DATE
+                column: @DONATION_AMOUNT
                 layout {
                     sequence: 60
                 }
             )
             displayColumn (
-                column: @FULFILLMENT_STATUS_ID
+                column: @DONATION_DATE
                 layout {
                     sequence: 70
                 }
             )
             displayColumn (
-                column: @STRIPE_PAYMENT_INTENT
+                column: @FULFILLMENT_STATUS_ID
                 layout {
                     sequence: 80
+                }
+            )
+            displayColumn (
+                column: @STRIPE_PAYMENT_INTENT
+                layout {
+                    sequence: 90
                 }
             )
         )
@@ -340,7 +346,7 @@ page 21 (
             lov {
                 type: sqlQuery
                 sqlQuery:
-                    ```
+                    ```sql
                     SELECT status_name AS d, status_id AS r
                       FROM dl_fulfillment_status_lookup
                      WHERE is_active = 'Y'
