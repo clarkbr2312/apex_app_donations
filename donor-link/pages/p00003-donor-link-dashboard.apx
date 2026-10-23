@@ -56,7 +56,7 @@ page 3 (
             templateOptions: [
                 #DEFAULT#
                 t-Region--scrollBody
-            ]
+        ]
         }
     )
 
