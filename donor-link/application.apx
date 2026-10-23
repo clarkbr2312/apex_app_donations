@@ -1,7 +1,7 @@
 app DONOR-LINK (
     name: Donor Link
     logo {
-            type: custom
+        type: custom
         customHtml: <img src="#APP_FILES#Donor link icon light.png" alt="Donor Link Logo" class="navbar-brand-logo">
     }
     navigation {
@@ -80,9 +80,8 @@ app DONOR-LINK (
         }
         config {
             buildOption: @feature-feedback
-        }1
+        }
     )
-    
 
 )
 

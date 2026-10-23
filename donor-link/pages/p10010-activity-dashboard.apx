@@ -16,7 +16,6 @@ page 10010 (
         warnOnUnsavedChanges: false
     }
     security {
-        authorizationScheme: @administration-rights
         pageAccessProtection: argumentsMustHaveChecksum
         formAutoComplete: false
     }

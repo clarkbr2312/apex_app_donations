@@ -29,7 +29,6 @@ page 10011 (
             ```
     }
     security {
-        authorizationScheme: @administration-rights
         pageAccessProtection: argumentsMustHaveChecksum
         formAutoComplete: false
     }

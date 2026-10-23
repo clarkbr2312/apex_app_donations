@@ -414,9 +414,6 @@ list navigation-menu (
                 page: 10000
             }
         }
-        security {
-            authorizationScheme: @administration-rights
-        }
     )
 
     entry audit-reports (
@@ -445,8 +442,6 @@ list navigation-menu (
             }
         }
     )
-
-    
 
     entry home (
         label: Home
@@ -478,21 +473,6 @@ list navigation-menu (
         }
     )
 
-    entry stripe-payments (
-        label: Stripe Payments
-        icon {
-            imageIconCssClasses: fa-dollar
-        }
-        layout {
-            sequence: 300
-        }
-        link {
-            target: {
-                page: 1
-            }
-        }
-    )
-
     entry order-fulfillment-tracking (
         label: Order Fulfillment Tracking
         icon {
@@ -508,6 +488,21 @@ list navigation-menu (
         link {
             target: {
                 page: 21
+            }
+        }
+    )
+
+    entry stripe-payments (
+        label: Stripe Payments
+        icon {
+            imageIconCssClasses: fa-dollar
+        }
+        layout {
+            sequence: 300
+        }
+        link {
+            target: {
+                page: 1
             }
         }
     )
@@ -554,3 +549,4 @@ list register-a-non-profit (
     )
 
 )
+

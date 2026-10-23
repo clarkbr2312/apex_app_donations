@@ -1,7 +1,7 @@
 page 3 (
     name: Donor Link Dashboard
     alias: DONOR-LINK-DASHBOARD
-    title: Donor Link Dashboard
+    title: Donor Link Dashboard — Platform Oversight
     appearance {
         pageTemplate: @/standard
         templateOptions: #DEFAULT#
@@ -14,25 +14,109 @@ page 3 (
         formAutoComplete: false
     }
 
-    region logo (
+    region breadcrumb (
+        name: Breadcrumb
+        type: breadcrumb
+        source {
+            breadcrumb: @breadcrumb
+        }
+        layout {
+            sequence: 10
+            slot: breadcrumbBar
+        }
+        appearance {
+            template: @/title-bar
+            templateOptions: [
+                #DEFAULT#
+                t-BreadcrumbRegion--useBreadcrumbTitle
+            ]
+        }
+        componentAppearance {
+            breadcrumbTemplate: @/breadcrumb
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region kpi-overview-cards (
+        name: Platform Executive Overview
+        type: cards
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                SELECT 'Pending NPO Vetting' AS card_title,
+                       'Requires Admin Review' AS card_subtitle,
+                       TO_CHAR(COUNT(CASE WHEN cp.profile_status_id = 2 THEN 1 END)) AS card_value,
+                       'fa-clock-o' AS card_icon
+                  FROM dl_charity_profiles cp
+                UNION ALL
+                SELECT 'Orders Pending Fulfillment' AS card_title,
+                       'Awaiting Retailer Order' AS card_subtitle,
+                       TO_CHAR(COUNT(CASE WHEN d.fulfillment_status_id = 1 THEN 1 END)) AS card_value,
+                       'fa-shopping-cart' AS card_icon
+                  FROM dl_donations_log d
+                UNION ALL
+                SELECT 'Active Verified NPOs' AS card_title,
+                       'Live on Platform' AS card_subtitle,
+                       TO_CHAR(COUNT(CASE WHEN cp.profile_status_id = 1 THEN 1 END)) AS card_value,
+                       'fa-building-o' AS card_icon
+                  FROM dl_charity_profiles cp
+                UNION ALL
+                SELECT 'Stripe Processed Volume' AS card_title,
+                       'YTD Total' AS card_subtitle,
+                       TO_CHAR(NVL(SUM(d.donation_amount), 0), '$999,990.00') AS card_value,
+                       'fa-stripe' AS card_icon
+                  FROM dl_donations_log d
+                ```
+        }
+        layout {
+            sequence: 20
+            slot: body
+        }
+        appearance {
+            template: @/cards-container
+            templateOptions: [
+                #DEFAULT#
+                t-CardsRegion--styleA
+            ]
+        }
+        componentAppearance {
+            gridColumns: 4
+        }
+        card {
+            primaryKeyColumn1: CARD_TITLE
+        }
+        title {
+            column: CARD_TITLE
+        }
+        subtitle {
+            column: CARD_SUBTITLE
+        }
+        body {
+            column: CARD_VALUE
+        }
+        iconAndBadge {
+            iconSource: iconClassColumn
+            iconColumn: CARD_ICON
+            iconPosition: top
+        }
+    )
+
+    region logo-header (
         name: Logo
         type: staticContent
         source {
             htmlCode:
                 ```html
                 <div class="logo-container" style="text-align: center; padding: 10px;">
-                    <img src="#APP_FILES#Donor link updated logo.png" alt="Donor Link Logo" style="max-width: 100%; height: auto;" />
+                    <img src="#APP_FILES#Donor link updated logo.png" alt="Donor Link Logo" style="max-width: 280px; height: auto;" />
                 </div>
-                
-                
-                
-                
                 ```
         }
         layout {
             sequence: 10
             slot: body
-            columnSpan: 3
         }
         appearance {
             template: @/blank-with-attributes
@@ -40,36 +124,32 @@ page 3 (
         }
     )
 
-    region monthly-donations-ytd-chart (
-        name: Monthly Donations (YTD $)  Chart
-        title: "<span style=\"color:#0072CE\">Monthly Donations (YTD $)  Chart</span> "
-        type: staticContent
+    region pending-fulfillment-summary (
+        name: Orders Pending Fulfillment
+        title: Orders Pending Fulfillment
+        type: classicReport
         source {
-            htmlCode: "This is the placeholder for chart of donation totals per month showing categories and total spend. "
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                SELECT d.donation_id,
+                       cp.legal_name AS charity_name,
+                       wi.product_title,
+                       d.donation_amount,
+                       TO_CHAR(d.created_at, 'DD-MON-YYYY') AS funded_date,
+                       d.stripe_payment_intent
+                  FROM dl_donations_log d
+                  JOIN dl_charity_wishlist_items wi ON wi.item_id = d.item_id
+                  JOIN dl_charity_profiles cp ON cp.charity_id = wi.charity_id
+                 WHERE d.fulfillment_status_id = 1
+                 ORDER BY d.created_at DESC
+                ```
         }
         layout {
             sequence: 40
             slot: body
-        }
-        appearance {
-            template: @/standard
-            templateOptions: [
-                #DEFAULT#
-                t-Region--scrollBody
-        ]
-        }
-    )
-
-    region non-profits-pending-verification (
-        name: Non-profit Organizations Pending Verification
-        title: "<span style=\"color:#0072CE\">Non-profit Organizations Pending Verification</span> "
-        type: staticContent
-        source {
-            htmlCode: This will be an action list of non-profit organizations that have requested registration.
-        }
-        layout {
-            sequence: 20
-            slot: body
+            columnSpan: 6
         }
         appearance {
             template: @/standard
@@ -78,18 +158,106 @@ page 3 (
                 t-Region--scrollBody
             ]
         }
+        componentAppearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Report--stretch
+                t-Report--horizontalBorders
+            ]
+        }
+        messages {
+            whenNoDataFound: No orders are currently pending fulfillment.
+        }
+
+        column CHARITY_NAME (
+            derivedColumn: N
+            heading {
+                heading: Charity
+            }
+            layout {
+                sequence: 20
+            }
+        )
+
+        column DONATION_AMOUNT (
+            derivedColumn: N
+            heading {
+                heading: Amount
+                alignment: end
+            }
+            layout {
+                sequence: 40
+            }
+            appearance {
+                formatMask: $999,990.00
+            }
+        )
+
+        column DONATION_ID (
+            derivedColumn: N
+            type: hidden
+            layout {
+                sequence: 10
+            }
+        )
+
+        column FUNDED_DATE (
+            derivedColumn: N
+            heading {
+                heading: Date Funded
+            }
+            layout {
+                sequence: 50
+            }
+        )
+
+        column PRODUCT_TITLE (
+            derivedColumn: N
+            heading {
+                heading: Funded Item
+            }
+            layout {
+                sequence: 30
+            }
+        )
+
+        column STRIPE_PAYMENT_INTENT (
+            derivedColumn: N
+            heading {
+                heading: Stripe Reference
+            }
+            layout {
+                sequence: 60
+            }
+        )
+
     )
 
-    region orders-pending-fulfillment (
-        name: Orders Pending Fulfillment
-        title: "<span style=\"color:#0072CE\">Orders Pending Fulfillment</span> "
-        type: staticContent
+    region pending-npo-verification (
+        name: Non-Profit Organizations Pending Verification
+        title: Non-Profit Organizations Pending Verification
+        type: classicReport
         source {
-            htmlCode: This is the placeholder for a report of all orders not yet fulfilled (pending completion).
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                SELECT cp.charity_id,
+                       cp.legal_name,
+                       cp.registration_number AS ein_tax_id,
+                       cp.tax_exempt_status,
+                       TO_CHAR(cp.creation_date, 'DD-MON-YYYY') AS application_date
+                  FROM dl_charity_profiles cp
+                 WHERE cp.profile_status_id = 2
+                    OR cp.tax_exempt_status LIKE '%Pending%'
+                 ORDER BY cp.creation_date DESC
+                ```
         }
         layout {
             sequence: 30
             slot: body
+            columnSpan: 6
         }
         appearance {
             template: @/standard
@@ -98,6 +266,66 @@ page 3 (
                 t-Region--scrollBody
             ]
         }
+        componentAppearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Report--stretch
+                t-Report--horizontalBorders
+            ]
+        }
+        messages {
+            whenNoDataFound: No non-profit organizations are currently pending verification.
+        }
+
+        column APPLICATION_DATE (
+            derivedColumn: N
+            heading {
+                heading: Applied On
+            }
+            layout {
+                sequence: 50
+            }
+        )
+
+        column CHARITY_ID (
+            derivedColumn: N
+            type: hidden
+            layout {
+                sequence: 10
+            }
+        )
+
+        column EIN_TAX_ID (
+            derivedColumn: N
+            heading {
+                heading: Tax ID / Registration #
+            }
+            layout {
+                sequence: 30
+            }
+        )
+
+        column LEGAL_NAME (
+            derivedColumn: N
+            heading {
+                heading: Organization Legal Name
+            }
+            layout {
+                sequence: 20
+            }
+        )
+
+        column TAX_EXEMPT_STATUS (
+            derivedColumn: N
+            heading {
+                heading: Verification Status
+            }
+            layout {
+                sequence: 40
+            }
+        )
+
     )
 
 )
