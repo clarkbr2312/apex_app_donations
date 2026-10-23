@@ -1,0 +1,329 @@
+page 22 (
+    name: "NPO Vetting & Approval"
+    alias: NPO-VETTING-APPROVAL
+    title: "Charity Vetting & Verification — DonorLink"
+    appearance {
+        pageMode: modalDialog
+        dialogTemplate: @/modal-dialog
+        templateOptions: #DEFAULT#
+    }
+    security {
+        authentication: required
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region vetting-form (
+        name: "Non-Profit Organization Verification Details"
+        type: staticContent
+        layout {
+            sequence: 10
+            slot: BODY
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    pageItem P22_CHARITY_ID (
+        type: hidden
+        layout {
+            sequence: 10
+            region: @vetting-form
+            slot: regionBody
+        }
+    )
+
+    pageItem P22_LEGAL_NAME (
+        type: textField
+        label {
+            label: "Organization Legal Name"
+        }
+        layout {
+            sequence: 20
+            region: @vetting-form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+        readOnly {
+            type: always
+        }
+    )
+
+    pageItem P22_EIN_NUMBER (
+        type: textField
+        label {
+            label: "Tax ID / EIN Number"
+        }
+        layout {
+            sequence: 30
+            region: @vetting-form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+        readOnly {
+            type: always
+        }
+    )
+
+    pageItem P22_TAX_EXEMPT_STATUS (
+        type: textField
+        label {
+            label: "Current Tax-Exempt Status"
+        }
+        layout {
+            sequence: 40
+            region: @vetting-form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+        readOnly {
+            type: always
+        }
+    )
+
+    pageItem P22_CONTACT_EMAIL (
+        type: textField
+        label {
+            label: "Primary Contact Email"
+        }
+        layout {
+            sequence: 50
+            region: @vetting-form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+        readOnly {
+            type: always
+        }
+    )
+
+    pageItem P22_CONTACT_PHONE (
+        type: textField
+        label {
+            label: "Contact Phone Number"
+        }
+        layout {
+            sequence: 60
+            region: @vetting-form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+        readOnly {
+            type: always
+        }
+    )
+
+    pageItem P22_WEBSITE_URL (
+        type: textField
+        label {
+            label: "Official Website URL"
+        }
+        layout {
+            sequence: 70
+            region: @vetting-form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+        readOnly {
+            type: always
+        }
+    )
+
+    pageItem P22_MISSION_STATEMENT (
+        type: textarea
+        label {
+            label: "Mission Statement"
+        }
+        layout {
+            sequence: 80
+            region: @vetting-form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+        readOnly {
+            type: always
+        }
+    )
+
+    region buttons (
+        name: "Buttons"
+        type: staticContent
+        layout {
+            sequence: 20
+            slot: REGION_POSITION_03
+        }
+        appearance {
+            template: @/buttons-container
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    button cancel (
+        buttonName: CANCEL
+        label: "Cancel"
+        layout {
+            sequence: 10
+            region: @buttons
+            slot: previous
+        }
+        behavior {
+            action: definedByDynamicAction
+        }
+        appearance {
+            buttonTemplate: @/text
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    button reject (
+        buttonName: REJECT
+        label: "Reject Application"
+        layout {
+            sequence: 20
+            region: @buttons
+            slot: next
+        }
+        behavior {
+            action: submitPage
+        }
+        appearance {
+            buttonTemplate: @/text
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    button approve (
+        buttonName: APPROVE
+        label: "Approve & Verify Charity"
+        layout {
+            sequence: 30
+            region: @buttons
+            slot: next
+        }
+        behavior {
+            action: submitPage
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    dynamicAction cancel-dialog (
+        name: "Cancel Dialog"
+        execution {
+            sequence: 10
+        }
+        when {
+            event: click
+            selectionType: button
+            button: @cancel
+        }
+        action native-dialog-cancel (
+            action: cancelDialog
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+    )
+
+    process fetch-charity-details (
+        name: "Fetch Charity Record"
+        type: executeCode
+        execution {
+            sequence: 10
+            point: beforeHeader
+        }
+        source {
+            plsqlCode:
+                ```
+                BEGIN
+                    IF :P22_CHARITY_ID IS NOT NULL THEN
+                        SELECT legal_name, ein_number, tax_exempt_status, contact_email, contact_phone, website_url, mission_statement
+                          INTO :P22_LEGAL_NAME, :P22_EIN_NUMBER, :P22_TAX_EXEMPT_STATUS, :P22_CONTACT_EMAIL, :P22_CONTACT_PHONE, :P22_WEBSITE_URL, :P22_MISSION_STATEMENT
+                          FROM dl_charity_profiles
+                         WHERE charity_id = TO_NUMBER(:P22_CHARITY_ID);
+                    END IF;
+                EXCEPTION
+                    WHEN NO_DATA_FOUND THEN
+                        NULL;
+                END;
+                ```
+        }
+    )
+
+    process approve-npo (
+        name: "Approve Charity Application"
+        type: executeCode
+        execution {
+            sequence: 10
+            point: afterSubmit
+        }
+        source {
+            plsqlCode:
+                ```
+                BEGIN
+                    UPDATE dl_charity_profiles
+                       SET profile_status_id = 1,
+                           tax_exempt_status = '501(c)(3) Verified',
+                           last_updated_date = SYSDATE
+                     WHERE charity_id = TO_NUMBER(:P22_CHARITY_ID);
+                END;
+                ```
+        }
+        serverSideCondition {
+            whenButtonPressed: @approve
+        }
+    )
+
+    process reject-npo (
+        name: "Reject Charity Application"
+        type: executeCode
+        execution {
+            sequence: 20
+            point: afterSubmit
+        }
+        source {
+            plsqlCode:
+                ```
+                BEGIN
+                    UPDATE dl_charity_profiles
+                       SET profile_status_id = 3,
+                           tax_exempt_status = 'Application Rejected',
+                           last_updated_date = SYSDATE
+                     WHERE charity_id = TO_NUMBER(:P22_CHARITY_ID);
+                END;
+                ```
+        }
+        serverSideCondition {
+            whenButtonPressed: @reject
+        }
+    )
+
+    process close-dialog (
+        name: "Close Dialog"
+        type: closeDialog
+        execution {
+            sequence: 30
+            point: afterSubmit
+        }
+    )
+)
