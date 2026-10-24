@@ -1,0 +1,287 @@
+page 23 (
+    name: Payment Details
+    alias: PAYMENT-DETAILS
+    title: Payment Details
+    appearance {
+        pageMode: modalDialog
+        dialogTemplate: @/drawer
+        templateOptions: [
+            #DEFAULT#
+            js-dialog-class-t-Drawer--pullOutEnd
+        ]
+    }
+    security {
+        authentication: public
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    pageItem P23_DONATION_ID (
+        type: hidden
+        layout {
+            sequence: 10
+            region: @impact-summary
+            slot: regionBody
+        }
+    )
+
+    pageItem P23_DONATION_AMOUNT (
+        type: displayOnly
+        label {
+            label: Donation Amount
+        }
+        appearance {
+            template: @/optional-floating
+        }
+        layout {
+            sequence: 10
+            region: @impact-summary
+            slot: regionBody
+            columnSpan: 4
+        }
+    )
+
+    pageItem P23_PAYMENT_DATE (
+        type: displayOnly
+        label {
+            label: Payment Date
+        }
+        appearance {
+            template: @/optional-floating
+        }
+        layout {
+            sequence: 20
+            region: @impact-summary
+            slot: regionBody
+            columnSpan: 4
+        }
+    )
+
+    pageItem P23_PAYMENT_STATUS (
+        type: displayOnly
+        label {
+            label: Status
+        }
+        appearance {
+            template: @/optional-floating
+        }
+        layout {
+            sequence: 30
+            region: @impact-summary
+            slot: regionBody
+            columnSpan: 4
+        }
+    )
+
+    pageItem P23_DONOR_NAME (
+        type: displayOnly
+        label {
+            label: Donor Name
+        }
+        appearance {
+            template: @/optional-floating
+        }
+        layout {
+            sequence: 10
+            region: @donation-details
+            slot: regionBody
+            startNewRow: true
+        }
+    )
+
+    pageItem P23_CHARITY_NAME (
+        type: displayOnly
+        label {
+            label: Charity
+        }
+        appearance {
+            template: @/optional-floating
+        }
+        layout {
+            sequence: 20
+            region: @donation-details
+            slot: regionBody
+            startNewRow: false
+        }
+    )
+
+    pageItem P23_ITEM_NAME (
+        type: displayOnly
+        label {
+            label: Item Funded
+        }
+        appearance {
+            template: @/optional-floating
+        }
+        layout {
+            sequence: 30
+            region: @donation-details
+            slot: regionBody
+            startNewRow: true
+        }
+    )
+
+    pageItem P23_TOTAL_CHARITY_RAISED (
+        type: displayOnly
+        label {
+            label: Total Raised by Charity
+        }
+        appearance {
+            template: @/optional-floating
+        }
+        layout {
+            sequence: 40
+            region: @donation-details
+            slot: regionBody
+            startNewRow: false
+        }
+    )
+
+    pageItem P23_STRIPE_INTENT (
+        type: displayOnly
+        label {
+            label: Stripe Intent ID
+        }
+        appearance {
+            template: @/optional-floating
+        }
+        layout {
+            sequence: 10
+            region: @audit-details
+            slot: regionBody
+            startNewRow: true
+        }
+    )
+
+    pageItem P23_STRIPE_CHARGE (
+        type: displayOnly
+        label {
+            label: Stripe Charge ID
+        }
+        appearance {
+            template: @/optional-floating
+        }
+        layout {
+            sequence: 20
+            region: @audit-details
+            slot: regionBody
+            startNewRow: true
+        }
+    )
+
+    region breadcrumb (
+        name: Breadcrumb
+        type: breadcrumb
+        source {
+            breadcrumb: @breadcrumb
+        }
+        layout {
+            sequence: 10
+            slot: breadcrumbBar
+        }
+        appearance {
+            template: @/title-bar
+            templateOptions: [
+                #DEFAULT#
+                t-BreadcrumbRegion--useBreadcrumbTitle
+            ]
+        }
+        componentAppearance {
+            breadcrumbTemplate: @/breadcrumb
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region impact-summary (
+        name: Impact Summary
+        type: staticContent
+        layout {
+            sequence: 10
+            slot: contentBody
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--noPadding
+                t-Region--hideHeader
+            ]
+        }
+    )
+
+    region donation-details (
+        name: Donation Details
+        type: staticContent
+        layout {
+            sequence: 20
+            slot: contentBody
+        }
+        appearance {
+            template: @/standard
+        }
+    )
+
+    region audit-details (
+        name: Technical Audit
+        type: staticContent
+        layout {
+            sequence: 30
+            slot: contentBody
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--noPadding
+            ]
+        }
+    )
+
+    button close_details (
+        buttonName: CLOSE
+        label: Close
+        layout {
+            sequence: 10
+            region: @footer-buttons
+            slot: next
+        }
+        appearance {
+            buttonTemplate: @/text
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            action: definedByDynamicAction
+        }
+    )
+
+    region footer-buttons (
+        name: Footer Buttons
+        type: staticContent
+        layout {
+            sequence: 40
+            slot: dialogFooter
+        }
+        appearance {
+            template: @/buttons-container
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    dynamicAction close-drawer (
+        name: Close Drawer Action
+        execution {
+            sequence: 10
+        }
+        when {
+            event: click
+            selectionType: button
+            button: @close_details
+        }
+        action native-dialog-close (
+            action: cancelDialog
+            execution {
+                sequence: 10
+            }
+        )
+    )
+)

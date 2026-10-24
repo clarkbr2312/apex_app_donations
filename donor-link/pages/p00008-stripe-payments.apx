@@ -42,7 +42,24 @@ page 8 (
         type: interactiveGrid
         source {
             location: localDatabase
-            tableName: DL_DONATIONS_LOG
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                SELECT
+                    apex_page.get_url(p_page => '23', p_items => 'P23_DONATION_ID', p_values => d.donation_id) as donation_link,
+                    d.donation_id,
+                    d.item_id,
+                    d.donor_id,
+                    d.payment_type_id,
+                    d.fulfillment_status_id,
+                    d.donation_amount,
+                    d.currency,
+                    d.stripe_payment_intent,
+                    d.stripe_charge_id,
+                    d.receipt_url,
+                    d.created_at
+                FROM dl_donations_log d
+                ```
         }
         layout {
             sequence: 10
@@ -86,7 +103,7 @@ page 8 (
             }
 
             displayColumn (
-                column: @DONATION_ID
+                column: @DONATION_LINK
                 layout {
                     sequence: 1
                 }
@@ -229,21 +246,20 @@ page 8 (
             }
         )
 
-        column DONATION_ID (
-            type: hidden
+        column DONATION_LINK (
+            type: textField
+            heading {
+                heading: Donation
+            }
             layout {
-                sequence: 10
+                sequence: 1
             }
             source {
-                databaseColumn: DONATION_ID
-                dataType: number
-                queryOnly: true
-                primaryKey: true
-            }
-            exportPrinting {
-                includeInExportPrint: false
+                databaseColumn: DONATION_LINK
+                dataType: varchar2
             }
         )
+
 
         column DONOR_ID (
             type: numberField
@@ -274,7 +290,7 @@ page 8 (
                 sqlQuery:
                     ```sql
                     select status_name d, status_id r
-                    from dl_fulfillment_status_lookup; 
+                    from dl_fulfillment_status_lookup;
                     ```
             }
             layout {
@@ -327,8 +343,8 @@ page 8 (
                 sqlQuery:
                     ```sql
                     select type_name d, type_id r
-                    from dl_payment_type_lookup; 
-                    
+                    from dl_payment_type_lookup;
+
                     ```
             }
             layout {
@@ -438,4 +454,3 @@ page 8 (
     )
 
 )
-
