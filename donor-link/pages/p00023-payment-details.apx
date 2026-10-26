@@ -16,156 +16,80 @@ page 23 (
         formAutoComplete: false
     }
 
-    pageItem P23_DONATION_ID (
-        type: hidden
-        layout {
+    process populate-donation-details (
+        name: Populate Donation Details
+        type: executeCode
+        source {
+            plsqlCode:
+                ```plsql
+                DECLARE
+                    l_charity_id NUMBER;
+                BEGIN
+                    -- Use LEFT JOINs to prevent NO_DATA_FOUND if some related records are missing
+                    -- and ensure we get the donation amount and donor info regardless.
+                    SELECT
+                        d.donation_amount,
+                        d.created_at,
+                        s.status_name,
+                        dr.first_name || ' ' || dr.last_name,
+                        cp.legal_name,
+                        wi.product_title,
+                        d.stripe_payment_intent,
+                        d.stripe_charge_id,
+                        wi.charity_id
+                    INTO
+                        :P23_DONATION_AMOUNT,
+                        :P23_PAYMENT_DATE,
+                        :P23_PAYMENT_STATUS,
+                        :P23_DONOR_NAME,
+                        :P23_CHARITY_NAME,
+                        :P23_ITEM_NAME,
+                        :P23_STRIPE_INTENT,
+                        :P23_STRIPE_CHARGE,
+                        l_charity_id
+                    FROM dl_donations_log d
+                    LEFT JOIN dl_donors dr ON d.donor_id = dr.donor_id
+                    LEFT JOIN dl_fulfillment_status_lookup s ON d.fulfillment_status_id = s.fulfillment_status_id
+                    LEFT JOIN dl_charity_wishlist_items wi ON d.item_id = wi.item_id
+                    LEFT JOIN dl_charity_profiles cp ON wi.charity_id = cp.charity_id
+                    WHERE d.donation_id = :P23_DONATION_ID;
+
+                    -- Only calculate total if we actually found a charity
+                    IF l_charity_id IS NOT NULL THEN
+                        SELECT SUM(donation_amount)
+                        INTO :P23_TOTAL_CHARITY_RAISED
+                        FROM dl_donations_log
+                        WHERE charity_id = l_charity_id;
+                    ELSE
+                        :P23_TOTAL_CHARITY_RAISED := 0;
+                    END IF;
+                EXCEPTION
+                    WHEN NO_DATA_FOUND THEN
+                        NULL;
+                    WHEN OTHERS THEN
+                        RAISE;
+                END;
+                ```
+        }
+        execution {
             sequence: 10
-            region: @impact-summary
-            slot: regionBody
+            point: beforeHeader
         }
     )
 
-    pageItem P23_DONATION_AMOUNT (
-        type: displayOnly
-        label {
-            label: Donation Amount
-        }
-        appearance {
-            template: @/optional-floating
-        }
-        layout {
-            sequence: 10
-            region: @impact-summary
-            slot: regionBody
-            columnSpan: 4
-        }
-    )
-
-    pageItem P23_PAYMENT_DATE (
-        type: displayOnly
-        label {
-            label: Payment Date
-        }
-        appearance {
-            template: @/optional-floating
-        }
-        layout {
-            sequence: 20
-            region: @impact-summary
-            slot: regionBody
-            columnSpan: 4
-        }
-    )
-
-    pageItem P23_PAYMENT_STATUS (
-        type: displayOnly
-        label {
-            label: Status
-        }
-        appearance {
-            template: @/optional-floating
-        }
+    region audit-details (
+        name: Technical Audit
+        type: staticContent
         layout {
             sequence: 30
-            region: @impact-summary
-            slot: regionBody
-            columnSpan: 4
-        }
-    )
-
-    pageItem P23_DONOR_NAME (
-        type: displayOnly
-        label {
-            label: Donor Name
+            slot: contentBody
         }
         appearance {
-            template: @/optional-floating
-        }
-        layout {
-            sequence: 10
-            region: @donation-details
-            slot: regionBody
-            startNewRow: true
-        }
-    )
-
-    pageItem P23_CHARITY_NAME (
-        type: displayOnly
-        label {
-            label: Charity
-        }
-        appearance {
-            template: @/optional-floating
-        }
-        layout {
-            sequence: 20
-            region: @donation-details
-            slot: regionBody
-            startNewRow: false
-        }
-    )
-
-    pageItem P23_ITEM_NAME (
-        type: displayOnly
-        label {
-            label: Item Funded
-        }
-        appearance {
-            template: @/optional-floating
-        }
-        layout {
-            sequence: 30
-            region: @donation-details
-            slot: regionBody
-            startNewRow: true
-        }
-    )
-
-    pageItem P23_TOTAL_CHARITY_RAISED (
-        type: displayOnly
-        label {
-            label: Total Raised by Charity
-        }
-        appearance {
-            template: @/optional-floating
-        }
-        layout {
-            sequence: 40
-            region: @donation-details
-            slot: regionBody
-            startNewRow: false
-        }
-    )
-
-    pageItem P23_STRIPE_INTENT (
-        type: displayOnly
-        label {
-            label: Stripe Intent ID
-        }
-        appearance {
-            template: @/optional-floating
-        }
-        layout {
-            sequence: 10
-            region: @audit-details
-            slot: regionBody
-            startNewRow: true
-        }
-    )
-
-    pageItem P23_STRIPE_CHARGE (
-        type: displayOnly
-        label {
-            label: Stripe Charge ID
-        }
-        appearance {
-            template: @/optional-floating
-        }
-        layout {
-            sequence: 20
-            region: @audit-details
-            slot: regionBody
-            startNewRow: true
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--noPadding
+            ]
         }
     )
 
@@ -192,6 +116,31 @@ page 23 (
         }
     )
 
+    region donation-details (
+        name: Donation Details
+        type: staticContent
+        layout {
+            sequence: 20
+            slot: contentBody
+        }
+        appearance {
+            template: @/standard
+        }
+    )
+
+    region footer-buttons (
+        name: Footer Buttons
+        type: staticContent
+        layout {
+            sequence: 40
+            slot: dialogFooter
+        }
+        appearance {
+            template: @/buttons-container
+            templateOptions: #DEFAULT#
+        }
+    )
+
     region impact-summary (
         name: Impact Summary
         type: staticContent
@@ -209,79 +158,153 @@ page 23 (
         }
     )
 
-    region donation-details (
-        name: Donation Details
-        type: staticContent
+    pageItem P23_CHARITY_NAME (
+        type: displayOnly
+        label {
+            label: Charity
+        }
         layout {
             sequence: 20
-            slot: contentBody
+            region: @donation-details
+            slot: regionBody
+            startNewRow: false
         }
         appearance {
-            template: @/standard
+            template: @/optional-floating
         }
     )
 
-    region audit-details (
-        name: Technical Audit
-        type: staticContent
+    pageItem P23_DONATION_AMOUNT (
+        type: displayOnly
+        label {
+            label: Donation Amount
+        }
+        layout {
+            sequence: 10
+            region: @impact-summary
+            slot: regionBody
+            columnSpan: 4
+        }
+        appearance {
+            template: @/optional-floating
+        }
+    )
+
+    pageItem P23_DONATION_ID (
+        type: hidden
+        layout {
+            sequence: 10
+            region: @impact-summary
+            slot: regionBody
+        }
+    )
+
+    pageItem P23_DONOR_NAME (
+        type: displayOnly
+        label {
+            label: Donor Name
+        }
+        layout {
+            sequence: 10
+            region: @donation-details
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-floating
+        }
+    )
+
+    pageItem P23_ITEM_NAME (
+        type: displayOnly
+        label {
+            label: Item Funded
+        }
         layout {
             sequence: 30
-            slot: contentBody
+            region: @donation-details
+            slot: regionBody
         }
         appearance {
-            template: @/standard
-            templateOptions: [
-                #DEFAULT#
-                t-Region--noPadding
-            ]
+            template: @/optional-floating
         }
     )
 
-    button close_details (
-        buttonName: CLOSE
-        label: Close
+    pageItem P23_PAYMENT_DATE (
+        type: displayOnly
+        label {
+            label: Payment Date
+        }
+        layout {
+            sequence: 20
+            region: @impact-summary
+            slot: regionBody
+            columnSpan: 4
+        }
+        appearance {
+            template: @/optional-floating
+        }
+    )
+
+    pageItem P23_PAYMENT_STATUS (
+        type: displayOnly
+        label {
+            label: Status
+        }
+        layout {
+            sequence: 30
+            region: @impact-summary
+            slot: regionBody
+            columnSpan: 4
+        }
+        appearance {
+            template: @/optional-floating
+        }
+    )
+
+    pageItem P23_STRIPE_CHARGE (
+        type: displayOnly
+        label {
+            label: Stripe Charge ID
+        }
+        layout {
+            sequence: 20
+            region: @audit-details
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-floating
+        }
+    )
+
+    pageItem P23_STRIPE_INTENT (
+        type: displayOnly
+        label {
+            label: Stripe Intent ID
+        }
         layout {
             sequence: 10
-            region: @footer-buttons
-            slot: next
+            region: @audit-details
+            slot: regionBody
         }
         appearance {
-            buttonTemplate: @/text
-            templateOptions: #DEFAULT#
-        }
-        behavior {
-            action: definedByDynamicAction
+            template: @/optional-floating
         }
     )
 
-    region footer-buttons (
-        name: Footer Buttons
-        type: staticContent
+    pageItem P23_TOTAL_CHARITY_RAISED (
+        type: displayOnly
+        label {
+            label: Total Raised by Charity
+        }
         layout {
             sequence: 40
-            slot: dialogFooter
+            region: @donation-details
+            slot: regionBody
+            startNewRow: false
         }
         appearance {
-            template: @/buttons-container
-            templateOptions: #DEFAULT#
+            template: @/optional-floating
         }
     )
 
-    dynamicAction close-drawer (
-        name: Close Drawer Action
-        execution {
-            sequence: 10
-        }
-        when {
-            event: click
-            selectionType: button
-            button: @close_details
-        }
-        action native-dialog-close (
-            action: cancelDialog
-            execution {
-                sequence: 10
-            }
-        )
-    )
 )

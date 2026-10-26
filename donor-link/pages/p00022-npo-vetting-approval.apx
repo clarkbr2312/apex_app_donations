@@ -1,24 +1,36 @@
 page 22 (
-    name: "NPO Vetting & Approval"
+    name: NPO Vetting & Approval
     alias: NPO-VETTING-APPROVAL
-    title: "Charity Vetting & Verification — DonorLink"
+    title: Charity Vetting & Verification — DonorLink
     appearance {
         pageMode: modalDialog
         dialogTemplate: @/modal-dialog
         templateOptions: #DEFAULT#
     }
     security {
-        authentication: required
         pageAccessProtection: argumentsMustHaveChecksum
         formAutoComplete: false
     }
 
+    region buttons (
+        name: Buttons
+        type: staticContent
+        layout {
+            sequence: 20
+            slot: dialogFooter
+        }
+        appearance {
+            template: @/buttons-container
+            templateOptions: #DEFAULT#
+        }
+    )
+
     region vetting-form (
-        name: "Non-Profit Organization Verification Details"
+        name: Non-Profit Organization Verification Details
         type: staticContent
         layout {
             sequence: 10
-            slot: BODY
+            slot: contentBody
         }
         appearance {
             template: @/blank-with-attributes
@@ -35,64 +47,10 @@ page 22 (
         }
     )
 
-    pageItem P22_LEGAL_NAME (
-        type: textField
-        label {
-            label: "Organization Legal Name"
-        }
-        layout {
-            sequence: 20
-            region: @vetting-form
-            slot: regionBody
-        }
-        appearance {
-            template: @/optional-above
-        }
-        readOnly {
-            type: always
-        }
-    )
-
-    pageItem P22_EIN_NUMBER (
-        type: textField
-        label {
-            label: "Tax ID / EIN Number"
-        }
-        layout {
-            sequence: 30
-            region: @vetting-form
-            slot: regionBody
-        }
-        appearance {
-            template: @/optional-above
-        }
-        readOnly {
-            type: always
-        }
-    )
-
-    pageItem P22_TAX_EXEMPT_STATUS (
-        type: textField
-        label {
-            label: "Current Tax-Exempt Status"
-        }
-        layout {
-            sequence: 40
-            region: @vetting-form
-            slot: regionBody
-        }
-        appearance {
-            template: @/optional-above
-        }
-        readOnly {
-            type: always
-        }
-    )
-
     pageItem P22_CONTACT_EMAIL (
         type: textField
         label {
-            label: "Primary Contact Email"
+            label: Primary Contact Email
         }
         layout {
             sequence: 50
@@ -110,7 +68,7 @@ page 22 (
     pageItem P22_CONTACT_PHONE (
         type: textField
         label {
-            label: "Contact Phone Number"
+            label: Contact Phone Number
         }
         layout {
             sequence: 60
@@ -125,13 +83,31 @@ page 22 (
         }
     )
 
-    pageItem P22_WEBSITE_URL (
+    pageItem P22_EIN_NUMBER (
         type: textField
         label {
-            label: "Official Website URL"
+            label: Tax ID / EIN Number
         }
         layout {
-            sequence: 70
+            sequence: 30
+            region: @vetting-form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+        readOnly {
+            type: always
+        }
+    )
+
+    pageItem P22_LEGAL_NAME (
+        type: textField
+        label {
+            label: Organization Legal Name
+        }
+        layout {
+            sequence: 20
             region: @vetting-form
             slot: regionBody
         }
@@ -146,7 +122,7 @@ page 22 (
     pageItem P22_MISSION_STATEMENT (
         type: textarea
         label {
-            label: "Mission Statement"
+            label: Mission Statement
         }
         layout {
             sequence: 80
@@ -161,63 +137,49 @@ page 22 (
         }
     )
 
-    region buttons (
-        name: "Buttons"
-        type: staticContent
+    pageItem P22_TAX_EXEMPT_STATUS (
+        type: textField
+        label {
+            label: Current Tax-Exempt Status
+        }
         layout {
-            sequence: 20
-            slot: REGION_POSITION_03
+            sequence: 40
+            region: @vetting-form
+            slot: regionBody
         }
         appearance {
-            template: @/buttons-container
-            templateOptions: #DEFAULT#
+            template: @/optional-above
+        }
+        readOnly {
+            type: always
         }
     )
 
-    button cancel (
-        buttonName: CANCEL
-        label: "Cancel"
-        layout {
-            sequence: 10
-            region: @buttons
-            slot: previous
+    pageItem P22_WEBSITE_URL (
+        type: textField
+        label {
+            label: Official Website URL
         }
-        behavior {
-            action: definedByDynamicAction
+        layout {
+            sequence: 70
+            region: @vetting-form
+            slot: regionBody
         }
         appearance {
-            buttonTemplate: @/text
-            templateOptions: #DEFAULT#
+            template: @/optional-above
         }
-    )
-
-    button reject (
-        buttonName: REJECT
-        label: "Reject Application"
-        layout {
-            sequence: 20
-            region: @buttons
-            slot: next
-        }
-        behavior {
-            action: submitPage
-        }
-        appearance {
-            buttonTemplate: @/text
-            templateOptions: #DEFAULT#
+        readOnly {
+            type: always
         }
     )
 
     button approve (
         buttonName: APPROVE
-        label: "Approve & Verify Charity"
+        label: Approve & Verify Charity
         layout {
             sequence: 30
             region: @buttons
             slot: next
-        }
-        behavior {
-            action: submitPage
         }
         appearance {
             buttonTemplate: @/text
@@ -226,8 +188,39 @@ page 22 (
         }
     )
 
+    button cancel (
+        buttonName: CANCEL
+        label: Cancel
+        layout {
+            sequence: 10
+            region: @buttons
+            slot: previous
+        }
+        appearance {
+            buttonTemplate: @/text
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            action: definedByDynamicAction
+        }
+    )
+
+    button reject (
+        buttonName: REJECT
+        label: Reject Application
+        layout {
+            sequence: 20
+            region: @buttons
+            slot: next
+        }
+        appearance {
+            buttonTemplate: @/text
+            templateOptions: #DEFAULT#
+        }
+    )
+
     dynamicAction cancel-dialog (
-        name: "Cancel Dialog"
+        name: Cancel Dialog
         execution {
             sequence: 10
         }
@@ -236,6 +229,7 @@ page 22 (
             selectionType: button
             button: @cancel
         }
+
         action native-dialog-cancel (
             action: cancelDialog
             execution {
@@ -243,18 +237,54 @@ page 22 (
                 fireOnInit: false
             }
         )
+
+    )
+
+    process approve-npo (
+        name: Approve Charity Application
+        type: executeCode
+        source {
+            plsqlCode:
+                ```plsql
+                BEGIN
+                    UPDATE dl_charity_profiles
+                       SET profile_status_id = 1,
+                           tax_exempt_status = '501(c)(3) Verified',
+                           last_updated_date = SYSDATE
+                     WHERE charity_id = TO_NUMBER(:P22_CHARITY_ID);
+                END;
+                ```
+        }
+        execution {
+            sequence: 10
+            point: afterSubmit
+        }
+        advanced {
+            executionMappingIdentifier: 43278989315429835
+        }
+        serverSideCondition {
+            whenButtonPressed: @approve
+        }
+    )
+
+    process close-dialog (
+        name: Close Dialog
+        type: closeDialog
+        execution {
+            sequence: 30
+            point: afterSubmit
+        }
+        advanced {
+            executionMappingIdentifier: 43279181042429835
+        }
     )
 
     process fetch-charity-details (
-        name: "Fetch Charity Record"
+        name: Fetch Charity Record
         type: executeCode
-        execution {
-            sequence: 10
-            point: beforeHeader
-        }
         source {
             plsqlCode:
-                ```
+                ```plsql
                 BEGIN
                     IF :P22_CHARITY_ID IS NOT NULL THEN
                         SELECT legal_name, ein_number, tax_exempt_status, contact_email, contact_phone, website_url, mission_statement
@@ -268,42 +298,21 @@ page 22 (
                 END;
                 ```
         }
-    )
-
-    process approve-npo (
-        name: "Approve Charity Application"
-        type: executeCode
         execution {
             sequence: 10
-            point: afterSubmit
+            point: beforeHeader
         }
-        source {
-            plsqlCode:
-                ```
-                BEGIN
-                    UPDATE dl_charity_profiles
-                       SET profile_status_id = 1,
-                           tax_exempt_status = '501(c)(3) Verified',
-                           last_updated_date = SYSDATE
-                     WHERE charity_id = TO_NUMBER(:P22_CHARITY_ID);
-                END;
-                ```
-        }
-        serverSideCondition {
-            whenButtonPressed: @approve
+        advanced {
+            executionMappingIdentifier: 43278827606429835
         }
     )
 
     process reject-npo (
-        name: "Reject Charity Application"
+        name: Reject Charity Application
         type: executeCode
-        execution {
-            sequence: 20
-            point: afterSubmit
-        }
         source {
             plsqlCode:
-                ```
+                ```plsql
                 BEGIN
                     UPDATE dl_charity_profiles
                        SET profile_status_id = 3,
@@ -313,17 +322,17 @@ page 22 (
                 END;
                 ```
         }
+        execution {
+            sequence: 20
+            point: afterSubmit
+        }
+        advanced {
+            executionMappingIdentifier: 43279069781429835
+        }
         serverSideCondition {
             whenButtonPressed: @reject
         }
     )
 
-    process close-dialog (
-        name: "Close Dialog"
-        type: closeDialog
-        execution {
-            sequence: 30
-            point: afterSubmit
-        }
-    )
 )
+

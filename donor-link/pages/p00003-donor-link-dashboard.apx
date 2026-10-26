@@ -1,9 +1,8 @@
 page 3 (
-    name: "Donor Link Dashboard"
+    name: Donor Link Dashboard
     alias: DONOR-LINK-DASHBOARD
-    title: "Donor Link Dashboard — Platform Oversight"
+    title: Donor Link Dashboard — Platform Oversight
     appearance {
-        pageMode: normal
         pageTemplate: @/standard
         templateOptions: #DEFAULT#
     }
@@ -11,7 +10,6 @@ page 3 (
         cursorFocus: doNotFocusCursor
     }
     security {
-        authentication: required
         pageAccessProtection: argumentsMustHaveChecksum
         formAutoComplete: false
     }
@@ -39,35 +37,14 @@ page 3 (
         }
     )
 
-    region logo-header (
-        name: Logo
-        type: staticContent
-        source {
-            htmlCode:
-                ```
-                <div class="logo-container" style="text-align: center; padding: 10px;">
-                    <img src="#APP_FILES#Donor link updated logo.png" alt="Donor Link Logo" style="max-width: 280px; height: auto;" />
-                </div>
-                ```
-        }
-        layout {
-            sequence: 10
-            slot: body
-        }
-        appearance {
-            template: @/blank-with-attributes
-            templateOptions: #DEFAULT#
-        }
-    )
-
     region kpi-overview-cards (
-        name: "Platform Executive Overview"
+        name: Platform Executive Overview
         type: cards
         source {
             location: localDatabase
             type: sqlQuery
             sqlQuery:
-                ```
+                ```sql
                 SELECT 'Pending NPO Vetting' AS card_title,
                        'Requires Admin Review' AS card_subtitle,
                        TO_CHAR(COUNT(CASE WHEN cp.profile_status_id = 2 THEN 1 END)) AS card_value,
@@ -126,107 +103,36 @@ page 3 (
         }
     )
 
-    region pending-npo-verification (
-        name: "Non-Profit Organizations Pending Verification"
-        title: "Non-Profit Organizations Pending Verification"
-        type: classicReport
+    region logo-header (
+        name: Logo
+        type: staticContent
         source {
-            location: localDatabase
-            type: sqlQuery
-            sqlQuery:
-                ```
-                SELECT cp.charity_id,
-                       '<a href="' || apex_page.get_url(p_page => '22', p_items => 'P22_CHARITY_ID', p_values => cp.charity_id) || '">' || cp.legal_name || '</a>' AS legal_name,
-                       cp.registration_number AS ein_tax_id,
-                       cp.tax_exempt_status,
-                       TO_CHAR(cp.creation_date, 'DD-MON-YYYY') AS application_date
-                  FROM dl_charity_profiles cp
-                 WHERE cp.profile_status_id = 2
-                    OR cp.tax_exempt_status LIKE '%Pending%'
-                 ORDER BY cp.creation_date DESC
+            htmlCode:
+                ```html
+                <div class="logo-container" style="text-align: center; padding: 10px;">
+                    <img src="#APP_FILES#Donor link updated logo.png" alt="Donor Link Logo" style="max-width: 280px; height: auto;" />
+                </div>
                 ```
         }
         layout {
-            sequence: 30
+            sequence: 10
             slot: body
-            columnSpan: 6
         }
         appearance {
-            template: @/standard
-            templateOptions: [
-                #DEFAULT#
-                t-Region--scrollBody
-            ]
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
         }
-        componentAppearance {
-            template: @/standard
-            templateOptions: [
-                #DEFAULT#
-                t-Report--stretch
-                t-Report--horizontalBorders
-            ]
-        }
-        messages {
-            whenNoDataFound: "No non-profit organizations are currently pending verification."
-        }
-
-        column CHARITY_ID (
-            type: hidden
-            layout {
-                sequence: 10
-            }
-        )
-
-        column LEGAL_NAME (
-            type: plainText
-            heading {
-                heading: "Organization Legal Name"
-            }
-            layout {
-                sequence: 20
-            }
-        )
-
-        column EIN_TAX_ID (
-            type: plainText
-            heading {
-                heading: "Tax ID / Registration #"
-            }
-            layout {
-                sequence: 30
-            }
-        )
-
-        column TAX_EXEMPT_STATUS (
-            type: plainText
-            heading {
-                heading: "Verification Status"
-            }
-            layout {
-                sequence: 40
-            }
-        )
-
-        column APPLICATION_DATE (
-            type: plainText
-            heading {
-                heading: "Applied On"
-            }
-            layout {
-                sequence: 50
-            }
-        )
     )
 
     region pending-fulfillment-summary (
-        name: "Orders Pending Fulfillment"
-        title: "Orders Pending Fulfillment"
+        name: Orders Pending Fulfillment
+        title: Orders Pending Fulfillment
         type: classicReport
         source {
             location: localDatabase
             type: sqlQuery
             sqlQuery:
-                ```
+                ```sql
                 SELECT d.donation_id,
                        cp.legal_name AS charity_name,
                        '<a href="' || apex_page.get_url(p_page => '21', p_items => 'P21_SEARCH_ITEM', p_values => wi.product_title) || '">' || wi.product_title || '</a>' AS product_title,
@@ -261,68 +167,166 @@ page 3 (
             ]
         }
         messages {
-            whenNoDataFound: "No orders are currently pending fulfillment."
+            whenNoDataFound: No orders are currently pending fulfillment.
         }
 
-        column DONATION_ID (
-            type: hidden
-            layout {
-                sequence: 10
-            }
-        )
-
         column CHARITY_NAME (
-            type: plainText
+            derivedColumn: N
             heading {
-                heading: "Charity"
+                heading: Charity
             }
             layout {
                 sequence: 20
             }
         )
 
-        column PRODUCT_TITLE (
-            type: plainText
-            heading {
-                heading: "Funded Item"
-            }
-            layout {
-                sequence: 30
-            }
-        )
-
         column DONATION_AMOUNT (
-            type: plainText
+            derivedColumn: N
             heading {
-                heading: "Amount"
+                heading: Amount
                 alignment: end
             }
             layout {
                 sequence: 40
             }
             appearance {
-                formatMask: "$999,990.00"
+                formatMask: $999,990.00
+            }
+        )
+
+        column DONATION_ID (
+            derivedColumn: N
+            type: hidden
+            layout {
+                sequence: 10
             }
         )
 
         column FUNDED_DATE (
-            type: plainText
+            derivedColumn: N
             heading {
-                heading: "Date Funded"
+                heading: Date Funded
             }
             layout {
                 sequence: 50
             }
         )
 
-        column STRIPE_PAYMENT_INTENT (
-            type: plainText
+        column PRODUCT_TITLE (
+            derivedColumn: N
             heading {
-                heading: "Stripe Reference"
+                heading: Funded Item
+            }
+            layout {
+                sequence: 30
+            }
+        )
+
+        column STRIPE_PAYMENT_INTENT (
+            derivedColumn: N
+            heading {
+                heading: Stripe Reference
             }
             layout {
                 sequence: 60
             }
         )
+
     )
+
+    region pending-npo-verification (
+        name: Non-Profit Organizations Pending Verification
+        title: Non-Profit Organizations Pending Verification
+        type: classicReport
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                SELECT cp.charity_id,
+                       '<a href="' || apex_page.get_url(p_page => '22', p_items => 'P22_CHARITY_ID', p_values => cp.charity_id) || '">' || cp.legal_name || '</a>' AS legal_name,
+                       cp.registration_number AS ein_tax_id,
+                       cp.tax_exempt_status,
+                       TO_CHAR(cp.creation_date, 'DD-MON-YYYY') AS application_date
+                  FROM dl_charity_profiles cp
+                 WHERE cp.profile_status_id = 2
+                    OR cp.tax_exempt_status LIKE '%Pending%'
+                 ORDER BY cp.creation_date DESC
+                ```
+        }
+        layout {
+            sequence: 30
+            slot: body
+            columnSpan: 6
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--scrollBody
+            ]
+        }
+        componentAppearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Report--stretch
+                t-Report--horizontalBorders
+            ]
+        }
+        messages {
+            whenNoDataFound: No non-profit organizations are currently pending verification.
+        }
+
+        column APPLICATION_DATE (
+            derivedColumn: N
+            heading {
+                heading: Applied On
+            }
+            layout {
+                sequence: 50
+            }
+        )
+
+        column CHARITY_ID (
+            derivedColumn: N
+            type: hidden
+            layout {
+                sequence: 10
+            }
+        )
+
+        column EIN_TAX_ID (
+            derivedColumn: N
+            heading {
+                heading: Tax ID / Registration #
+            }
+            layout {
+                sequence: 30
+            }
+        )
+
+        column LEGAL_NAME (
+            derivedColumn: N
+            heading {
+                heading: Organization Legal Name
+            }
+            layout {
+                sequence: 20
+            }
+        )
+
+        column TAX_EXEMPT_STATUS (
+            derivedColumn: N
+            heading {
+                heading: Verification Status
+            }
+            layout {
+                sequence: 40
+            }
+        )
+
+    )
+
 )
+

@@ -46,7 +46,6 @@ page 8 (
             sqlQuery:
                 ```sql
                 SELECT
-                    apex_page.get_url(p_page => '23', p_items => 'P23_DONATION_ID', p_values => d.donation_id) as donation_link,
                     d.donation_id,
                     d.item_id,
                     d.donor_id,
@@ -101,13 +100,6 @@ page 8 (
             singleRowView {
                 displayedColumns: true
             }
-
-            displayColumn (
-                column: @DONATION_LINK
-                layout {
-                    sequence: 1
-                }
-            )
 
             displayColumn (
                 column: @ITEM_ID
@@ -179,6 +171,13 @@ page 8 (
                 }
             )
 
+            displayColumn (
+                column: @DONATION_ID
+                layout {
+                    sequence: 1
+                }
+            )
+
         )
 
         column CREATED_AT (
@@ -246,20 +245,33 @@ page 8 (
             }
         )
 
-        column DONATION_LINK (
-            type: textField
+        column DONATION_ID (
+            type: link
             heading {
-                heading: Donation
+                heading: Donation Number
+                alignment: end
             }
             layout {
-                sequence: 1
+                sequence: 120
+                columnAlignment: end
+            }
+            link {
+                target: {
+                    page: 23
+                    items: {
+                        P23_DONATION_ID: &DONATION_ID.
+                    }
+                }
+                linkText: &DONATION_ID.
             }
             source {
-                databaseColumn: DONATION_LINK
-                dataType: varchar2
+                databaseColumn: DONATION_ID
+                dataType: number
+            }
+            columnFilter {
+                lovType: none
             }
         )
-
 
         column DONOR_ID (
             type: numberField
@@ -344,7 +356,7 @@ page 8 (
                     ```sql
                     select type_name d, type_id r
                     from dl_payment_type_lookup;
-
+                    
                     ```
             }
             layout {
@@ -369,31 +381,19 @@ page 8 (
         )
 
         column RECEIPT_URL (
-            type: textarea
+            type: hidden
             heading {
                 heading: Receipt Url
             }
             layout {
                 sequence: 100
             }
-            validation {
-                maxLength: 500
-            }
             source {
                 databaseColumn: RECEIPT_URL
                 dataType: varchar2
             }
-            columnFilter {
-                performanceImpactingOperators: [
-                    contains
-                    startsWith
-                    caseInsensitive
-                    regexp
-                ]
-                lovType: none
-            }
-            enableUsersTo {
-                sort: false
+            exportPrinting {
+                includeInExportPrint: false
             }
         )
 
@@ -454,3 +454,4 @@ page 8 (
     )
 
 )
+

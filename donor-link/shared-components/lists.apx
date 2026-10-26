@@ -502,7 +502,7 @@ list navigation-menu (
         }
         link {
             target: {
-                page: 1
+                page: 8
             }
         }
     )
