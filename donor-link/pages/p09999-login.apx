@@ -1,0 +1,439 @@
+page 9999 (
+    name: Login Page
+    alias: LOGIN
+    title: Donor Link - Log In
+    appearance {
+        pageTemplate: @/marquee
+        templateOptions: #DEFAULT#
+    }
+    navigationMenu {
+        overrideUserInterfaceLevel: true
+    }
+    navigation {
+        warnOnUnsavedChanges: false
+    }
+    css {
+        inline:
+            ```css
+            /* Style only the login button on this specific page to match the navbar blue */
+            .custom-login-btn {
+                background-color: #0072CE !important;
+                color: #ffffff !important;
+                border: none !important;
+                font-weight: 600 !important;
+            }
+            
+            .custom-login-btn:hover {
+                background-color: #005bb5 !important;
+                color: #ffffff !important;
+            }
+            ```
+    }
+    security {
+        authentication: public
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region banner (
+        name: Banner
+        type: staticContent
+        source {
+            htmlCode:
+                ```html
+                s<div style="width: 100%; height: 270px; overflow: hidden; margin: 0; display: block;">
+                    <img src="#APP_IMAGES#landing_page_banner.png" alt="Donor Link Hero Banner" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                </div>
+                ```
+        }
+        layout {
+            sequence: 20
+            slot: banner
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: [
+                #DEFAULT#
+                margin-bottom-none
+            ]
+        }
+        advanced {
+            customAttributes: style="display:block;"
+        }
+    )
+
+    region container (
+        name: Container
+        type: staticContent
+        layout {
+            sequence: 20
+            slot: body
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region donor-link (
+        name: Donor Link
+        type: staticContent
+        layout {
+            sequence: 50
+            parentRegion: @container
+            slot: regionBody
+            startNewRow: false
+            column: 7
+        }
+        appearance {
+            template: @/login
+            templateOptions: #DEFAULT#
+        }
+        image {
+            fileUrl: #APP_FILES#icons/app-icon-512.png
+        }
+    )
+
+    region featured (
+        name: Featured
+        type: cards
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                SELECT 
+                    wi.item_id,
+                    wi.product_title,
+                    NVL(wi.product_image_url, 'https://via.placeholder.com/300x200?text=No+Image') AS product_image_url,
+                    wi.target_price,
+                    wi.pledged_amount,
+                    wi.target_quantity,
+                    wi.funded_quantity,
+                    wi.priority_level,
+                    wi.item_status,
+                    cp.charity_id,
+                    cp.legal_name AS charity_name,
+                    cp.public_slug AS charity_slug,
+                    addr.city,
+                    st.state_code,
+                    cc.category_name,
+                    ROUND((wi.pledged_amount / NULLIF(wi.target_price * wi.target_quantity, 0)) * 100) AS percent_funded
+                FROM dl_charity_wishlist_items wi
+                JOIN dl_charity_profiles cp ON wi.charity_id = cp.charity_id
+                LEFT JOIN dl_charity_addresses addr ON cp.charity_id = addr.charity_id AND addr.is_primary = 'Y'
+                LEFT JOIN dl_us_states st ON addr.state_id = st.state_id
+                LEFT JOIN dl_charity_category_map ccm ON cp.charity_id = ccm.charity_id
+                LEFT JOIN dl_cause_categories cc ON ccm.category_id = cc.category_id
+                WHERE wi.item_status = 'ACTIVE'
+                ```
+        }
+        layout {
+            sequence: 30
+            parentRegion: @container
+            slot: regionBody
+            columnSpan: 6
+        }
+        appearance {
+            template: @/cards-container
+            templateOptions: [
+                #DEFAULT#
+                t-CardsRegion--hideHeader js-addHiddenHeadingRoleDesc
+                t-CardsRegion--styleA
+                margin-top-lg
+            ]
+        }
+        componentAppearance {
+            gridColumns: 2
+        }
+        card {
+            primaryKeyColumn1: CHARITY_ID
+            primaryKeyColumn2: ITEM_ID
+        }
+        title {
+            column: PRODUCT_TITLE
+        }
+        subtitle {
+            advancedFormatting: true
+            htmlExpression: &CHARITY_NAME. — &CITY., &STATE_CODE.
+        }
+        body {
+            advancedFormatting: true
+            htmlExpression:
+                ```html
+                <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+                    <!-- Progress Bar Track -->
+                    <div style="flex-grow: 1; background-color: #E5E7EB; height: 6px; border-radius: 3px; overflow: hidden;">
+                        <div style="width: &PERCENT_FUNDED.%; background-color: #1B5B8A; height: 100%; border-radius: 3px;"></div>
+                    </div>
+                    <!-- Percentage Text -->
+                    <span style="color: #4B5563; font-weight: 600; font-size: 12px; white-space: nowrap;">&PERCENT_FUNDED.% Funded</span>
+                </div>
+                ```
+        }
+        secondaryBody {
+            advancedFormatting: true
+            htmlExpression: $&TARGET_PRICE.
+        }
+        iconAndBadge {
+            badgeColumn: CATEGORY_NAME
+        }
+
+        action action (
+            label: Donate
+            layout {
+                sequence: 10
+            }
+            behavior {
+                target: {
+                    page: 9999
+                }
+            }
+            appearance {
+                cssClasses: card-cta-donate
+            }
+        )
+
+        action action_1 (
+            label: Discover more
+            layout {
+                sequence: 20
+            }
+            behavior {
+                target: {
+                    page: 9999
+                }
+            }
+            appearance {
+                cssClasses: card-cta-secondary
+            }
+        )
+
+    )
+
+    pageItem P9999_PASSWORD (
+        type: password
+        label {
+            label: Password
+            alignment: left
+        }
+        layout {
+            sequence: 20
+            region: @donor-link
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/hidden
+            templateOptions: #DEFAULT#
+            icon: fa-key
+            width: 40
+            valuePlaceholder: Password
+        }
+        validation {
+            maxLength: 100
+        }
+        advanced {
+            customAttributes: autocomplete="current-password"
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    pageItem P9999_REMEMBER (
+        type: checkbox
+        label {
+            label: Remember username
+            alignment: left
+        }
+        layout {
+            sequence: 30
+            region: @donor-link
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/hidden
+            templateOptions: #DEFAULT#
+        }
+        serverSideCondition {
+            type: expression
+            plsqlExpression: apex_authentication.persistent_cookies_enabled
+        }
+    )
+
+    pageItem P9999_USERNAME (
+        type: textField
+        label {
+            label: Username
+            alignment: left
+        }
+        layout {
+            sequence: 10
+            region: @donor-link
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/hidden
+            templateOptions: #DEFAULT#
+            icon: fa-user
+            width: 40
+            valuePlaceholder: Username
+        }
+        validation {
+            maxLength: 100
+        }
+        advanced {
+            customAttributes: autocomplete="username"
+        }
+        sessionState {
+            storage: request
+        }
+    )
+
+    button SIGNIN (
+        buttonName: SIGNIN
+        label: Sign In
+        layout {
+            sequence: 40
+            region: @donor-link
+            slot: next
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+            templateOptions: [
+                #DEFAULT#
+                t-Button--gapTop
+            ]
+            cssClasses: custom-login-btn
+        }
+        behavior {
+            warnOnUnsavedChanges: doNotCheck
+        }
+    )
+
+    process clear-page-s-cache (
+        name: Clear Page(s) Cache
+        type: clearSessionState
+        execution {
+            sequence: 30
+        }
+        advanced {
+            executionMappingIdentifier: 19006920914437312
+        }
+        serverSideCondition {
+            type: never
+        }
+    )
+
+    process login (
+        name: Login
+        type: invokeApi
+        invoke {
+            package: APEX_AUTHENTICATION
+            procedureOrFunction: LOGIN
+        }
+        execution {
+            sequence: 20
+        }
+        advanced {
+            executionMappingIdentifier: 19003276999437306
+        }
+        serverSideCondition {
+            type: never
+        }
+
+        parameter p_password (
+            value {
+                type: item
+                item: P9999_PASSWORD
+            }
+            advanced {
+                displaySequence: 2
+            }
+        )
+
+        parameter p_set_persistent_auth (
+            parameter {
+                dataType: date
+                hasDefault: true
+            }
+            value {
+                type: apiDefault
+            }
+            advanced {
+                displaySequence: 3
+            }
+        )
+
+        parameter p_username (
+            value {
+                type: item
+                item: P9999_USERNAME
+            }
+            advanced {
+                displaySequence: 1
+            }
+        )
+
+    )
+
+    process set-username-cookie (
+        name: Set Username Cookie
+        type: invokeApi
+        invoke {
+            package: APEX_AUTHENTICATION
+            procedureOrFunction: SEND_LOGIN_USERNAME_COOKIE
+        }
+        execution {
+            sequence: 10
+        }
+        advanced {
+            executionMappingIdentifier: 19005170304437310
+        }
+        serverSideCondition {
+            type: never
+        }
+
+        parameter p_consent (
+            parameter {
+                dataType: boolean
+            }
+            value {
+                type: item
+                item: P9999_REMEMBER
+            }
+            advanced {
+                displaySequence: 2
+            }
+        )
+
+        parameter p_username (
+            value {
+                type: expression
+                plsqlExpression: lower( :P9999_USERNAME )
+            }
+            advanced {
+                displaySequence: 1
+            }
+        )
+
+    )
+
+    branch (
+        name: Go to page 3
+        execution {
+            sequence: 10
+        }
+        behavior {
+            target: {
+                page: 3
+            }
+        }
+    )
+
+)
+

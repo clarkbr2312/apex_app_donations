@@ -1,0 +1,20 @@
+authentication oracle-apex-accounts (
+    name: Oracle APEX Accounts
+    type: oracleApexAccounts
+    source {
+        plsqlCode: "                            "
+    }
+    postLogout {
+        redirectTo: url
+        url: f?p=&APP_ID.:1:&SESSION.
+    }
+)
+
+authentication public (
+    name: public
+    type: noAuth
+    settings {
+        username: nobody
+    }
+)
+

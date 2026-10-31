@@ -1,0 +1,290 @@
+page 15 (
+    name: Add / Edit Gallery Photo
+    alias: ADD-EDIT-GALLERY-PHOTO
+    title: Add / Edit Gallery Photo
+    appearance {
+        pageMode: modalDialog
+        dialogTemplate: @/modal-dialog
+        templateOptions: #DEFAULT#
+    }
+    security {
+        authentication: public
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region buttons (
+        name: Buttons
+        type: staticContent
+        layout {
+            sequence: 20
+            slot: dialogFooter
+        }
+        appearance {
+            template: @/buttons-container
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region form (
+        name: Gallery Photo Details
+        type: staticContent
+        layout {
+            sequence: 10
+            slot: contentBody
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    pageItem P15_CAPTION (
+        type: textField
+        label {
+            label: Photo Caption
+        }
+        layout {
+            sequence: 50
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+            valuePlaceholder: e.g. Annual community food drive event
+        }
+        validation {
+            maxLength: 255
+        }
+    )
+
+    pageItem P15_CHARITY_ID (
+        type: hidden
+        layout {
+            sequence: 20
+            region: @form
+            slot: regionBody
+        }
+    )
+
+    pageItem P15_DISPLAY_ORDER (
+        type: numberField
+        label {
+            label: Display Order
+        }
+        layout {
+            sequence: 60
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+    )
+
+    pageItem P15_GALLERY_ID (
+        type: hidden
+        layout {
+            sequence: 10
+            region: @form
+            slot: regionBody
+        }
+    )
+
+    pageItem P15_IMAGE_FILE (
+        type: fileUpload
+        label {
+            label: Upload Photo Image
+        }
+        display {
+            displayAs: blockDropzone
+            dropzoneTitle: Drop photo image here
+            dropzoneDesc: or click to browse
+        }
+        storage {
+            type: appTempFiles
+            fileTypes: image/*
+        }
+        layout {
+            sequence: 30
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+        }
+    )
+
+    pageItem P15_IMAGE_URL (
+        type: textField
+        label {
+            label: Or Photo URL (External Link)
+        }
+        layout {
+            sequence: 40
+            region: @form
+            slot: regionBody
+        }
+        appearance {
+            template: @/optional-above
+            valuePlaceholder: https://...
+        }
+        validation {
+            maxLength: 500
+        }
+    )
+
+    button cancel (
+        buttonName: CANCEL
+        label: Cancel
+        layout {
+            sequence: 10
+            region: @buttons
+            slot: previous
+        }
+        appearance {
+            buttonTemplate: @/text
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            action: definedByDynamicAction
+        }
+    )
+
+    button save (
+        buttonName: SAVE
+        label: Save Photo
+        layout {
+            sequence: 20
+            region: @buttons
+            slot: next
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    dynamicAction cancel-dialog (
+        name: Cancel Dialog
+        execution {
+            sequence: 10
+        }
+        when {
+            event: click
+            selectionType: button
+            button: @cancel
+        }
+
+        action native-dialog-cancel (
+            action: cancelDialog
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+
+    )
+
+    process close-dialog (
+        name: Close Dialog
+        type: closeDialog
+        execution {
+            sequence: 20
+            point: afterSubmit
+        }
+        advanced {
+            executionMappingIdentifier: 41092373031288986
+        }
+        serverSideCondition {
+            whenButtonPressed: @save
+        }
+    )
+
+    process fetch-gallery-details (
+        name: Fetch Gallery Photo Details
+        type: executeCode
+        source {
+            plsqlCode:
+                ```plsql
+                BEGIN
+                    IF :P15_GALLERY_ID IS NOT NULL THEN
+                        SELECT image_url, caption, display_order
+                          INTO :P15_IMAGE_URL, :P15_CAPTION, :P15_DISPLAY_ORDER
+                          FROM dl_charity_gallery_images
+                         WHERE gallery_id = TO_NUMBER(:P15_GALLERY_ID);
+                    END IF;
+                EXCEPTION
+                    WHEN NO_DATA_FOUND THEN
+                        NULL;
+                END;
+                ```
+        }
+        execution {
+            sequence: 10
+            point: beforeHeader
+        }
+        advanced {
+            executionMappingIdentifier: 41092190129288986
+        }
+    )
+
+    process save-gallery-details (
+        name: Save Gallery Photo Details
+        type: executeCode
+        source {
+            plsqlCode:
+                ```plsql
+                DECLARE
+                    v_image_url VARCHAR2(500) := :P15_IMAGE_URL;
+                BEGIN
+                    -- Process staged image file if uploaded via APEX_APPLICATION_TEMP_FILES
+                    IF :P15_IMAGE_FILE IS NOT NULL THEN
+                        FOR r IN (
+                            SELECT filename, name 
+                              FROM apex_application_temp_files 
+                             WHERE name = :P15_IMAGE_FILE
+                        ) LOOP
+                            v_image_url := r.name;
+                        END LOOP;
+                    END IF;
+                
+                    IF :P15_GALLERY_ID IS NOT NULL THEN
+                        -- Update existing gallery photo
+                        UPDATE dl_charity_gallery_images
+                           SET image_url     = v_image_url,
+                               caption       = :P15_CAPTION,
+                               display_order = NVL(TO_NUMBER(:P15_DISPLAY_ORDER), 10)
+                         WHERE gallery_id    = TO_NUMBER(:P15_GALLERY_ID);
+                    ELSE
+                        -- Insert new gallery photo
+                        INSERT INTO dl_charity_gallery_images (
+                            charity_id,
+                            image_url,
+                            caption,
+                            display_order
+                        ) VALUES (
+                            TO_NUMBER(:P15_CHARITY_ID),
+                            v_image_url,
+                            :P15_CAPTION,
+                            NVL(TO_NUMBER(:P15_DISPLAY_ORDER), 10)
+                        );
+                    END IF;
+                END;
+                ```
+        }
+        execution {
+            sequence: 10
+            point: afterSubmit
+        }
+        advanced {
+            executionMappingIdentifier: 41092290659288986
+        }
+        serverSideCondition {
+            whenButtonPressed: @save
+        }
+    )
+
+)
+

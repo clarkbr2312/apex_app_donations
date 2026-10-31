@@ -1,0 +1,484 @@
+page 5 (
+    name: Donors
+    alias: DONORS
+    title: Donors
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region breadcrumb (
+        name: Breadcrumb
+        type: breadcrumb
+        source {
+            breadcrumb: @breadcrumb
+        }
+        layout {
+            sequence: 10
+            slot: breadcrumbBar
+        }
+        appearance {
+            template: @/title-bar
+            templateOptions: [
+                #DEFAULT#
+                t-BreadcrumbRegion--useBreadcrumbTitle
+            ]
+        }
+        componentAppearance {
+            breadcrumbTemplate: @/breadcrumb
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region registered-donors (
+        name: Registered Donors
+        type: interactiveGrid
+        source {
+            location: localDatabase
+            tableName: DL_DONORS
+        }
+        layout {
+            sequence: 10
+            slot: body
+        }
+        appearance {
+            template: @/interactive-report
+            templateOptions: [
+                #DEFAULT#
+                t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc
+            ]
+        }
+        toolbar {
+            controls: [
+                searchCol
+                searchField
+                actionsMenu
+                resetButton
+                saveButton
+            ]
+        }
+        download {
+            formats: [
+                csv
+                html
+                excel
+                pdf
+            ]
+        }
+        advanced {
+            savedReportMappingIdentifier: 19812530893012441
+        }
+
+        savedReport primary (
+            visibility: primary
+            view {
+                default: grid
+            }
+            singleRowView {
+                displayedColumns: true
+            }
+
+            displayColumn (
+                column: @DONOR_ID
+                layout {
+                    sequence: 1
+                }
+            )
+
+            displayColumn (
+                column: @DONOR_EMAIL
+                layout {
+                    sequence: 2
+                }
+            )
+
+            displayColumn (
+                column: @FIRST_NAME
+                layout {
+                    sequence: 4
+                }
+            )
+
+            displayColumn (
+                column: @LAST_NAME
+                layout {
+                    sequence: 3
+                }
+            )
+
+            displayColumn (
+                column: @STRIPE_CUSTOMER_ID
+                layout {
+                    show: false
+                    sequence: 5
+                }
+            )
+
+            displayColumn (
+                column: @BILLING_ADDRESS_LINE1
+                layout {
+                    sequence: 6
+                }
+            )
+
+            displayColumn (
+                column: @BILLING_CITY
+                layout {
+                    sequence: 7
+                }
+            )
+
+            displayColumn (
+                column: @BILLING_STATE_ID
+                layout {
+                    sequence: 8
+                }
+            )
+
+            displayColumn (
+                column: @BILLING_POSTAL_CODE
+                layout {
+                    sequence: 9
+                }
+            )
+
+            displayColumn (
+                column: @BILLING_COUNTRY
+                layout {
+                    sequence: 10
+                }
+            )
+
+            displayColumn (
+                column: @USER_ID
+                layout {
+                    show: false
+                    sequence: 11
+                }
+            )
+
+            displayColumn (
+                column: @CREATED_AT
+                layout {
+                    sequence: 12
+                }
+            )
+
+            displayColumn (
+                column: @LAST_LOGIN_DATE
+                layout {
+                    sequence: 13
+                }
+            )
+
+            sort (
+                column: @LAST_NAME
+                sort {
+                    nulls: last
+                    sequence: 1
+                }
+            )
+
+        )
+
+        column BILLING_ADDRESS_LINE1 (
+            type: textField
+            heading {
+                heading: Billing Address Line1
+            }
+            layout {
+                sequence: 60
+            }
+            validation {
+                maxLength: 200
+            }
+            source {
+                databaseColumn: BILLING_ADDRESS_LINE1
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column BILLING_CITY (
+            type: textField
+            heading {
+                heading: Billing City
+            }
+            layout {
+                sequence: 70
+            }
+            validation {
+                maxLength: 100
+            }
+            source {
+                databaseColumn: BILLING_CITY
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column BILLING_COUNTRY (
+            type: textField
+            heading {
+                heading: Billing Country
+            }
+            layout {
+                sequence: 100
+            }
+            validation {
+                maxLength: 2
+            }
+            source {
+                databaseColumn: BILLING_COUNTRY
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column BILLING_POSTAL_CODE (
+            type: textField
+            heading {
+                heading: Billing Postal Code
+            }
+            layout {
+                sequence: 90
+            }
+            validation {
+                maxLength: 20
+            }
+            source {
+                databaseColumn: BILLING_POSTAL_CODE
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column BILLING_STATE_ID (
+            type: numberField
+            heading {
+                heading: Billing State Id
+                alignment: end
+            }
+            layout {
+                sequence: 80
+                columnAlignment: end
+            }
+            source {
+                databaseColumn: BILLING_STATE_ID
+                dataType: number
+            }
+            columnFilter {
+                lovType: none
+            }
+        )
+
+        column CREATED_AT (
+            type: datePicker
+            heading {
+                heading: Created At
+            }
+            layout {
+                sequence: 120
+            }
+            validation {
+                valueRequired: true
+            }
+            source {
+                databaseColumn: CREATED_AT
+                dataType: date
+            }
+        )
+
+        column DONOR_EMAIL (
+            type: textField
+            heading {
+                heading: Donor Email
+            }
+            layout {
+                sequence: 20
+            }
+            validation {
+                valueRequired: true
+                maxLength: 150
+            }
+            source {
+                databaseColumn: DONOR_EMAIL
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column DONOR_ID (
+            type: hidden
+            layout {
+                sequence: 10
+            }
+            source {
+                databaseColumn: DONOR_ID
+                dataType: number
+                queryOnly: true
+                primaryKey: true
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column FIRST_NAME (
+            type: textField
+            heading {
+                heading: First Name
+            }
+            layout {
+                sequence: 30
+            }
+            validation {
+                maxLength: 100
+            }
+            source {
+                databaseColumn: FIRST_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column LAST_LOGIN_DATE (
+            type: datePicker
+            heading {
+                heading: Last Login Date
+            }
+            layout {
+                sequence: 130
+            }
+            source {
+                databaseColumn: LAST_LOGIN_DATE
+                dataType: date
+            }
+        )
+
+        column LAST_NAME (
+            type: textField
+            heading {
+                heading: Last Name
+            }
+            layout {
+                sequence: 40
+            }
+            validation {
+                maxLength: 100
+            }
+            source {
+                databaseColumn: LAST_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column STRIPE_CUSTOMER_ID (
+            type: textField
+            heading {
+                heading: Stripe Customer Id
+            }
+            layout {
+                sequence: 50
+            }
+            validation {
+                maxLength: 250
+            }
+            source {
+                databaseColumn: STRIPE_CUSTOMER_ID
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column USER_ID (
+            type: numberField
+            heading {
+                heading: User Id
+                alignment: end
+            }
+            layout {
+                sequence: 110
+                columnAlignment: end
+            }
+            source {
+                databaseColumn: USER_ID
+                dataType: number
+            }
+            columnFilter {
+                lovType: none
+            }
+        )
+
+        page {
+            borderWidth: 0.5
+            borderColor: #666666
+        }
+    )
+
+)
+
