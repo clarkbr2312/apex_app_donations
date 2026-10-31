@@ -1,0 +1,41 @@
+page 1 (
+    name: Reference Data
+    alias: REFERENCE_DATA
+    title: Reference & Master Data
+    css {
+        inline: #REFERENCE_DATA_CSS#
+    }
+    security {
+        authentication: public
+    }
+
+    region breadcrumb (
+        name: Breadcrumb
+        type: breadcrumb
+        source {
+            breadcrumb: @breadcrumb
+        }
+        layout {
+            sequence: 10
+            slot: breadcrumbBar
+        }
+        appearance {
+            template: @/title-bar
+            templateOptions: [
+                #DEFAULT#
+                t-BreadcrumbRegion--useBreadcrumbTitle
+            ]
+        }
+        componentAppearance {
+            breadcrumbTemplate: @/breadcrumb
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region reference-data-display-area (
+        name: Reference Data Display Area
+        cssClasses: ["referenceData"]
+    )
+
+)
+
