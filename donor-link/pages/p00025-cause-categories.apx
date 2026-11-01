@@ -1,0 +1,54 @@
+page 25 (
+    name: Cause     Categories
+    alias: CAUSE-CATEGORIES 
+    title: Cause Categories
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region breadcrumb (
+        name: Breadcrumb
+        type: breadcrumb
+        source {
+            breadcrumb: @breadcrumb
+        }
+        layout {
+            sequence: 10
+            slot: breadcrumbBar
+        }
+        appearance {
+            template: @/title-bar
+            templateOptions: [
+                #DEFAULT#
+                t-BreadcrumbRegion--useBreadcrumbTitle
+            ]
+        }
+        componentAppearance {
+            breadcrumbTemplate: @/breadcrumb
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region reference_data_media_list (
+  name: "Reference Data Media List"
+  type: list
+  layout {
+sequence: 10
+    slot: contentBody
+  }
+  source {
+    list: @reference-data
+  }
+  componentAppearance {
+    listTemplate: @/media-list
+  }
+)
+)

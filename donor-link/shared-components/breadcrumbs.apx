@@ -132,4 +132,21 @@ breadcrumb breadcrumb (
             }
         }
     )
+
+        entry cause-categories (
+        name: Cause Categories
+        pageNumber: 25
+        execution {
+            sequence: 10
+        }
+        appearance {
+            parentEntry: @reference-data
+        }
+        link {
+            target: {
+                page: 25
+            }
+        }
+    )
+)
 )

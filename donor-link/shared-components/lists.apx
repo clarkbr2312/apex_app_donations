@@ -43,6 +43,29 @@ list access-control (
 
 )
 
+list reference-data (
+    name: Reference Data
+    
+    entry cause-categories (
+label: Cause Categories
+        icon {
+            imageIconCssClasses: fa-heart
+        }
+        layout {
+            sequence:130
+        }
+        link {
+            target: {
+                page: 25
+                clearCache: 25
+            }
+        }
+        userDefinedAttributes {
+            1: View and create non-profit causes
+        }
+    )
+)
+
 list activity-reports (
     name: Activity Reports
     config {
