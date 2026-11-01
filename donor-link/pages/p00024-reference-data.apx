@@ -1,12 +1,17 @@
-page 1 (
+page 24 (
     name: Reference Data
-    alias: REFERENCE_DATA
-    title: Reference & Master Data
-    css {
-        inline: #REFERENCE_DATA_CSS#
+    alias: REFERENCE-DATA
+    title: Reference Data
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
     }
     security {
-        authentication: public
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
     }
 
     region breadcrumb (
@@ -30,11 +35,6 @@ page 1 (
             breadcrumbTemplate: @/breadcrumb
             templateOptions: #DEFAULT#
         }
-    )
-
-    region reference-data-display-area (
-        name: Reference Data Display Area
-        cssClasses: ["referenceData"]
     )
 
 )
