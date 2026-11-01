@@ -117,5 +117,19 @@ breadcrumb breadcrumb (
         }
     )
 
+    entry reference-data (
+        name: Reference Data
+        pageNumber: 24
+        execution {
+            sequence: 10
+        }
+        appearance {
+            parentEntry: @donor-link-dashboard
+        }
+        link {
+            target: {
+                page: 24
+            }
+        }
+    )
 )
-
