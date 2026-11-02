@@ -14,6 +14,22 @@ breadcrumb breadcrumb (
         }
     )
 
+    entry cause-categories (
+        name: Cause Categories
+        pageNumber: 25
+        execution {
+            sequence: 10
+        }
+        appearance {
+            parentEntry: @reference-data
+        }
+        link {
+            target: {
+                page: 25
+            }
+        }
+    )
+
     entry donor-link-dashboard (
         name: Donor Link Dashboard
         pageNumber: 3
@@ -101,22 +117,6 @@ breadcrumb breadcrumb (
         }
     )
 
-    entry stripe-payments (
-        name: Stripe Payments
-        pageNumber: 8
-        execution {
-            sequence: 10
-        }
-        appearance {
-            parentEntry: @donor-link-dashboard
-        }
-        link {
-            target: {
-                page: 8
-            }
-        }
-    )
-
     entry reference-data (
         name: Reference Data
         pageNumber: 24
@@ -133,20 +133,21 @@ breadcrumb breadcrumb (
         }
     )
 
-        entry cause-categories (
-        name: Cause Categories
-        pageNumber: 25
+    entry stripe-payments (
+        name: Stripe Payments
+        pageNumber: 8
         execution {
             sequence: 10
         }
         appearance {
-            parentEntry: @reference-data
+            parentEntry: @donor-link-dashboard
         }
         link {
             target: {
-                page: 25
+                page: 8
             }
         }
     )
+
 )
-)
+

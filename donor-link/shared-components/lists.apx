@@ -43,29 +43,6 @@ list access-control (
 
 )
 
-list reference-data (
-    name: Reference Data
-    
-    entry cause-categories (
-label: Cause Categories
-        icon {
-            imageIconCssClasses: fa-heart
-        }
-        layout {
-            sequence:130
-        }
-        link {
-            target: {
-                page: 25
-                clearCache: 25
-            }
-        }
-        userDefinedAttributes {
-            1: View and create non-profit causes
-        }
-    )
-)
-
 list activity-reports (
     name: Activity Reports
     config {
@@ -515,6 +492,21 @@ list navigation-menu (
         }
     )
 
+    entry reference-data (
+        label: Ref Reference Data
+        icon {
+            imageIconCssClasses: fa-wrench
+        }
+        layout {
+            sequence: 310
+        }
+        link {
+            target: {
+                page: 24
+            }
+        }
+    )
+
     entry stripe-payments (
         label: Stripe Payments
         icon {
@@ -529,20 +521,31 @@ list navigation-menu (
             }
         }
     )
-entry reference-data (
-        label: Ref Reference Data
+
+)
+
+list reference-data (
+    name: Reference Data
+
+    entry cause-categories (
+        label: Cause Categories
         icon {
-            imageIconCssClasses: fa-wrench
+            imageIconCssClasses: fa-heart
         }
         layout {
-            sequence: 310
+            sequence: 130
         }
         link {
             target: {
-                page: 24
+                page: 25
+                clearCache: 25
             }
         }
+        userDefinedAttributes {
+            1: View and create non-profit causes
+        }
     )
+
 )
 
 list register-a-non-profit (
@@ -585,3 +588,4 @@ list register-a-non-profit (
     )
 
 )
+

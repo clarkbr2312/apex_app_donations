@@ -37,18 +37,32 @@ page 24 (
         }
     )
 
-        region reference_data_media_list (
-  name: "Reference Data Media List"
-  type: list
-  layout {
-sequence: 10
-    slot: contentBody
-  }
-  source {
-    list: @reference-data
-  }
-  componentAppearance {
-    listTemplate: @/media-list
-  }
+    region reference_data_media_list (
+        name: Reference Data Media List
+        type: list
+        source {
+            list: @reference-data
+        }
+        layout {
+            sequence: 10
+            slot: body
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--removeHeader js-removeLandmark
+                t-Region--scrollBody
+            ]
+        }
+        componentAppearance {
+            listTemplate: @/media-list
+            templateOptions: [
+                t-MediaList--showIcons
+                t-MediaList--showDesc
+            ]
+        }
+    )
+
 )
-)
+
