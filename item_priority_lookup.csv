@@ -1,0 +1,5 @@
+"PRIORITY_ID","PRIORITY_CODE","PRIORITY_NAME","BADGE_COLOR","DISPLAY_ORDER","IS_ACTIVE"
+1,"CRITICAL","Urgent Need","u-danger",1,"Y"
+2,"HIGH","High Priority","u-warning",2,"Y"
+3,"STANDARD","Standard","u-info",3,"Y"
+4,"ONGOING","Ongoing Need","u-success",4,"Y"

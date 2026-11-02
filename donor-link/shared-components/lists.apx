@@ -556,12 +556,31 @@ list reference-data (
         }
         link {
             target: {
-                page: 25
-                clearCache: 25
+                page: 26
+                clearCache: 26
             }
         }
         userDefinedAttributes {
             1: View and create order fulfillment statuses
+        }
+    )
+
+    entry item-statuses (
+        label: Item Statuses
+        icon {
+            imageIconCssClasses: fa-tags
+        }
+        layout {
+            sequence: 150
+        }
+        link {
+            target: {
+                page: 27
+                clearCache: 27
+            }
+        }
+        userDefinedAttributes {
+            1: View and create wishlist item statuses
         }
     )
 
