@@ -546,6 +546,25 @@ list reference-data (
         }
     )
 
+    entry fulfillment-statuses (
+        label: Fulfillment Statuses
+        icon {
+            imageIconCssClasses: fa-truck
+        }
+        layout {
+            sequence: 140
+        }
+        link {
+            target: {
+                page: 25
+                clearCache: 25
+            }
+        }
+        userDefinedAttributes {
+            1: View and create order fulfillment statuses
+        }
+    )
+
 )
 
 list register-a-non-profit (
