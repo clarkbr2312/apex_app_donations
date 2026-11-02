@@ -37,18 +37,5 @@ page 25 (
         }
     )
 
-    region reference_data_media_list (
-  name: "Reference Data Media List"
-  type: list
-  layout {
-sequence: 10
-    slot: contentBody
-  }
-  source {
-    list: @reference-data
-  }
-  componentAppearance {
-    listTemplate: @/media-list
-  }
-)
-)
+
+)       
