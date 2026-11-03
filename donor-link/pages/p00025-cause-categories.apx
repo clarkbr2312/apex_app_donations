@@ -295,16 +295,12 @@ page 25 (
         )
 
         column SLUG (
-            type: textField
+            type: displayOnly
             heading {
                 heading: Slug
             }
             layout {
                 sequence: 50
-            }
-            validation {
-                valueRequired: true
-                maxLength: 100
             }
             source {
                 databaseColumn: SLUG

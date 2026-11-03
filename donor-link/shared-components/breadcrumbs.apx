@@ -117,7 +117,7 @@ breadcrumb breadcrumb (
         }
     )
 
-    entry non-profit-oranizations (
+    entry non-profit-oraterminalnizations (
         name: Non-profit Organizations
         pageNumber: 4
         execution {
@@ -145,6 +145,22 @@ breadcrumb breadcrumb (
         link {
             target: {
                 page: 21
+            }
+        }
+    )
+
+    entry payment-types (
+        name: Payment Types
+        pageNumber: 28
+        execution {
+            sequence: 10
+        }
+        appearance {
+            parentEntry: @reference-data
+        }
+        link {
+            target: {
+                page: 28
             }
         }
     )
