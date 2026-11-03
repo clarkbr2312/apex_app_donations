@@ -1,4 +1,4 @@
-app DONOR-LINK (
+sk      app DONOR-LINK (
     name: Donor Link
     logo {
         type: custom
@@ -84,4 +84,3 @@ app DONOR-LINK (
     )
 
 )
-
