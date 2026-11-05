@@ -1,0 +1,338 @@
+page 25 (
+    name: Cause     Categories
+    alias: CAUSE-CATEGORIES
+    title: Cause Categories
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region breadcrumb (
+        name: Breadcrumb
+        type: breadcrumb
+        source {
+            breadcrumb: @breadcrumb
+        }
+        layout {
+            sequence: 10
+            slot: breadcrumbBar
+        }
+        appearance {
+            template: @/title-bar
+            templateOptions: [
+                #DEFAULT#
+                t-BreadcrumbRegion--useBreadcrumbTitle
+            ]
+        }
+        componentAppearance {
+            breadcrumbTemplate: @/breadcrumb
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region cause-categories (
+        name: Cause Categories
+        type: interactiveGrid
+        source {
+            location: localDatabase
+            tableName: DL_CAUSE_CATEGORIES
+            orderByClause: category_name
+        }
+        layout {
+            sequence: 10
+            slot: body
+        }
+        appearance {
+            template: @/interactive-report
+            templateOptions: [
+                #DEFAULT#
+                t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc
+            ]
+        }
+        edit {
+            enabled: true
+            allowedOperations: [
+                add
+                update
+            ]
+        }
+        toolbar {
+            controls: [
+                searchCol
+                searchField
+                actionsMenu
+                resetButton
+                saveButton
+            ]
+        }
+        download {
+            formats: [
+                csv
+                html
+                excel
+                pdf
+            ]
+        }
+        advanced {
+            savedReportMappingIdentifier: 46069374160509502
+        }
+
+        savedReport primary (
+            visibility: primary
+            view {
+                default: grid
+            }
+            singleRowView {
+                displayedColumns: true
+            }
+
+            displayColumn (
+                column: @CATEGORY_ID
+                layout {
+                    sequence: 1
+                }
+            )
+
+            displayColumn (
+                column: @CATEGORY_NAME
+                layout {
+                    sequence: 2
+                }
+            )
+
+            displayColumn (
+                column: @SLUG
+                layout {
+                    sequence: 3
+                }
+            )
+
+            displayColumn (
+                column: @DESCRIPTION
+                layout {
+                    sequence: 4
+                }
+            )
+
+            displayColumn (
+                column: @DISPLAY_ORDER
+                layout {
+                    sequence: 5
+                }
+            )
+
+            displayColumn (
+                column: @Enabled
+                layout {
+                    sequence: 6
+                }
+            )
+
+            displayColumn (
+                column: @CREATED_AT
+                layout {
+                    sequence: 7
+                }
+            )
+
+            displayColumn (
+                column: @APEX$ROW_ACTION
+                layout {
+                    sequence: 0
+                }
+            )
+
+        )
+
+        column APEX$ROW_ACTION (
+            type: actionsMenu
+            layout {
+                sequence: 20
+            }
+        )
+
+        column APEX$ROW_SELECTOR (
+            type: rowSelector
+            layout {
+                sequence: 10
+            }
+        )
+
+        column CATEGORY_ID (
+            type: hidden
+            layout {
+                sequence: 30
+            }
+            source {
+                databaseColumn: CATEGORY_ID
+                dataType: number
+                queryOnly: true
+                primaryKey: true
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column CATEGORY_NAME (
+            type: textField
+            heading {
+                heading: Category Name
+            }
+            layout {
+                sequence: 40
+            }
+            validation {
+                valueRequired: true
+                maxLength: 100
+            }
+            source {
+                databaseColumn: CATEGORY_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column CREATED_AT (
+            type: datePicker
+            heading {
+                heading: Created
+            }
+            layout {
+                sequence: 90
+            }
+            appearance {
+                formatMask: dd-Mon-yyyy
+            }
+            source {
+                databaseColumn: CREATED_AT
+                dataType: timestamp
+            }
+        )
+
+        column DESCRIPTION (
+            type: textarea
+            heading {
+                heading: Description
+            }
+            layout {
+                sequence: 60
+            }
+            validation {
+                maxLength: 4000
+            }
+            source {
+                databaseColumn: DESCRIPTION
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+                lovType: none
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column DISPLAY_ORDER (
+            type: numberField
+            heading {
+                heading: Display Order
+                alignment: end
+            }
+            layout {
+                sequence: 70
+                columnAlignment: end
+            }
+            source {
+                databaseColumn: DISPLAY_ORDER
+                dataType: number
+            }
+            columnFilter {
+                lovType: none
+            }
+        )
+
+        column Enabled (
+            type: switch
+            heading {
+                heading: Is Active
+            }
+            layout {
+                sequence: 80
+            }
+            source {
+                databaseColumn: IS_ACTIVE
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column SLUG (
+            type: displayOnly
+            heading {
+                heading: Slug
+            }
+            layout {
+                sequence: 50
+            }
+            source {
+                databaseColumn: SLUG
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        page {
+            borderWidth: 0.5
+            borderColor: #666666
+        }
+    )
+
+    process cause-categories-save-interactive-grid-data (
+        name: Cause Categories - Save Interactive Grid Data
+        type: interactiveGridAutoRowProcessing
+        editableRegion: @cause-categories
+        execution {
+            sequence: 10
+        }
+        advanced {
+            executionMappingIdentifier: 46070308059509512
+        }
+    )
+
+)
+
