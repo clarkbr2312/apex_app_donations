@@ -165,6 +165,22 @@ breadcrumb breadcrumb (
         }
     )
 
+    entry profile-statuses (
+        name: Profile Statuses
+        pageNumber: 29
+        execution {
+            sequence: 10
+        }
+        appearance {
+            parentEntry: @reference-data
+        }
+        link {
+            target: {
+                page: 29
+            }
+        }
+    )
+
     entry reference-data (
         name: Reference Data
         pageNumber: 24

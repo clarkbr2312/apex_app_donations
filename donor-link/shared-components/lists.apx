@@ -583,7 +583,8 @@ list reference-data (
             1: View and create wishlist item statuses
         }
     )
-entry payment-types (
+
+    entry payment-types (
         label: Payment Types
         icon {
             imageIconCssClasses: fa-credit-card
@@ -601,6 +602,26 @@ entry payment-types (
             1: View and create order payment types
         }
     )
+
+    entry profile-statuses (
+        label: Profile Statuses
+        icon {
+            imageIconCssClasses: fa-user
+        }
+        layout {
+            sequence: 170
+        }
+        link {
+            target: {
+                page: 29
+                clearCache: 29
+            }
+        }
+        userDefinedAttributes {
+            1: View and create non-profit profile statuses
+        }
+    )
+
 )
 
 list register-a-non-profit (
@@ -643,3 +664,4 @@ list register-a-non-profit (
     )
 
 )
+
