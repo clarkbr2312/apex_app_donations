@@ -129,13 +129,13 @@ page 1 (
               border-radius: 4px;
             }
             
-            /* Sticky Hero Banner Styling */
+            /* Non-Sticky Hero Banner Styling */
             #home-hero-banner,
             .t-Body-top,
             .t-Region--banner {
-                position: sticky !important;
-                top: 0 !important;
-                z-index: 1000 !important;
+                position: static !important;
+                top: auto !important;
+                z-index: auto !important;
                 margin-bottom: 0 !important;
                 padding-bottom: 0 !important;
             }
@@ -399,7 +399,7 @@ page 1 (
         }
         layout {
             sequence: 10
-            slot: banner
+            slot: fullWidthContent
         }
         appearance {
             template: @/blank-with-attributes
