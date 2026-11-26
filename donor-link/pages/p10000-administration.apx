@@ -11,6 +11,7 @@ page 10000 (
         cursorFocus: doNotFocusCursor
     }
     security {
+        authorizationScheme: @administration-rights
         authentication: public
         deepLinking: false
         pageAccessProtection: argumentsMustHaveChecksum

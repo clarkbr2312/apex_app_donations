@@ -11,6 +11,7 @@ page 3 (
     }
     security {
         authorizationScheme: mustNotBePublicUser
+        deepLinking: true
         pageAccessProtection: argumentsMustHaveChecksum
         formAutoComplete: false
     }
