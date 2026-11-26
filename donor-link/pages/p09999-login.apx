@@ -3,7 +3,7 @@ page 9999 (
     alias: LOGIN
     title: Donor Link - Log In
     appearance {
-        pageTemplate: @/marquee
+        pageTemplate: @/minimal-no-navigation
         templateOptions: #DEFAULT#
     }
     navigationMenu {
@@ -341,9 +341,6 @@ page 9999 (
         }
         advanced {
             executionMappingIdentifier: 19003276999437306
-        }
-        serverSideCondition {
-            type: never
         }
 
         parameter p_password (

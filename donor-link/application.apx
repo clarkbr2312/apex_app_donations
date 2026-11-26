@@ -36,7 +36,8 @@ app DONOR-LINK (
         timestampTimeZone: DS
     }
     authentication {
-        scheme: @public
+        scheme: @oracle-apex-accounts
+        publicUser: " "
     }
     security {
         runtimeApiUsage: modifyThisApp

@@ -265,7 +265,7 @@ list navbar (
         }
         link {
             target: {
-                page: 3
+                page: 2
             }
         }
         serverSideCondition {
@@ -664,4 +664,3 @@ list register-a-non-profit (
     )
 
 )
-
