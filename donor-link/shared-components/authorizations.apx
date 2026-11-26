@@ -23,6 +23,28 @@ authorization contribution-rights (
     }
 )
 
+authorization donor-rights (
+    name: Donor Rights
+    type: isInRoleOrGroup
+    settings {
+        names: Donor
+    }
+    error {
+        errorMessage: Insufficient privileges, user is not a Donor
+    }
+)
+
+authorization nonprofit-rights (
+    name: Nonprofit Rights
+    type: isInRoleOrGroup
+    settings {
+        names: Nonprofit
+    }
+    error {
+        errorMessage: Insufficient privileges, user is not a Non-profit
+    }
+)
+
 authorization reader-rights (
     name: Reader Rights
     type: plSqlFunctionBody

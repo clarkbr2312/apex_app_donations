@@ -415,8 +415,8 @@ list navigation-menu (
             }
         }
         security {
-    authorizationScheme: @administration-rights
-  }
+            authorizationScheme: @administration-rights
+        }
     )
 
     entry audit-reports (
@@ -667,3 +667,4 @@ list register-a-non-profit (
     )
 
 )
+

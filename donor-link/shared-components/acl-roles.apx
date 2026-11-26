@@ -19,3 +19,11 @@ role READER (
     }
 )
 
+role donor (
+    name: Donor
+)
+
+role nonprofit (
+    name: Nonprofit
+)
+
