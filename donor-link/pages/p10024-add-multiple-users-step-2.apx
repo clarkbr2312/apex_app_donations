@@ -8,9 +8,6 @@ page 10024 (
         dialogTemplate: @/modal-dialog
         templateOptions: #DEFAULT#
     }
-    navigation {
-        cursorFocus: doNotFocusCursor
-    }
     css {
         inline:
             ```css
@@ -26,8 +23,6 @@ page 10024 (
     security {
         authorizationScheme: @administration-rights
         deepLinking: false
-        pageAccessProtection: argumentsMustHaveChecksum
-        formAutoComplete: false
     }
     config {
         buildOption: @feature-access-control
@@ -95,6 +90,9 @@ page 10024 (
                 t-Report--staticRowColors
                 t-Report--rowHighlightOff
             ]
+        }
+        pagination {
+            type: showAll
         }
         messages {
             whenNoDataFound: No data found.

@@ -10,13 +10,8 @@ page 18 (
             js-dialog-class-t-Drawer--lg
         ]
     }
-    navigation {
-        cursorFocus: doNotFocusCursor
-    }
     security {
         authentication: public
-        pageAccessProtection: argumentsMustHaveChecksum
-        formAutoComplete: false
     }
 
     region buttons-region (

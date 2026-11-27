@@ -13,6 +13,9 @@ page 1 (
         listTemplate: @/top-navigation-menu
         templateOptions: #DEFAULT#
     }
+    navigation {
+        cursorFocus: firstItemOnPage
+    }
     css {
         inline:
             ```css
@@ -200,8 +203,6 @@ page 1 (
     }
     security {
         authentication: public
-        pageAccessProtection: argumentsMustHaveChecksum
-        formAutoComplete: false
     }
 
     region description (

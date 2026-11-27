@@ -12,9 +12,6 @@ page 10030 (
         width: 480
         chained: false
     }
-    navigation {
-        cursorFocus: doNotFocusCursor
-    }
     css {
         inline:
             ```css
@@ -23,10 +20,6 @@ page 10030 (
             .feedback-neutral { color: var(--ut-feedback-neutral-text-color, var(--ut-palette-warning)); }
             .feedback-negative { color: var(--ut-feedback-negative-text-color, var(--ut-palette-danger)); }
             ```
-    }
-    security {
-        pageAccessProtection: argumentsMustHaveChecksum
-        formAutoComplete: false
     }
     config {
         buildOption: @feature-feedback

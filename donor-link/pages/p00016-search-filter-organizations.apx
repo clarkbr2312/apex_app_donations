@@ -7,13 +7,8 @@ page 16 (
         dialogTemplate: @/drawer
         templateOptions: js-dialog-class-t-Drawer--pullOutEnd
     }
-    navigation {
-        cursorFocus: doNotFocusCursor
-    }
     security {
         authentication: public
-        pageAccessProtection: argumentsMustHaveChecksum
-        formAutoComplete: false
     }
 
     region buttons-region (

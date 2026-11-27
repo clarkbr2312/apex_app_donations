@@ -11,9 +11,6 @@ page 2 (
             js-dialog-class-t-Drawer--sm
         ]
     }
-    navigation {
-        cursorFocus: doNotFocusCursor
-    }
     css {
         inline:
             ```css
@@ -33,8 +30,6 @@ page 2 (
     }
     security {
         authentication: public
-        pageAccessProtection: argumentsMustHaveChecksum
-        formAutoComplete: false
     }
 
     region featured (

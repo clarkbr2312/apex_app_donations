@@ -1,0 +1,12 @@
+page 30 (
+    name: User Management
+    alias: USER-MANAGEMENT
+    title: User Management
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    security {
+authorizationScheme: @administration-rights
+    }
+)

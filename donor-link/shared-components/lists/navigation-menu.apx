@@ -1,0 +1,129 @@
+list navigation-menu (
+    name: Navigation Menu
+
+    entry administration (
+        label: Administration
+        icon {
+            imageIconCssClasses: fa-user-wrench
+        }
+        layout {
+            sequence: 500000
+        }
+        link {
+            target: {
+                page: 10000
+            }
+        }
+        security {
+            authorizationScheme: @administration-rights
+        }
+    )
+
+    entry audit-reports (
+        label: Audit Reports
+        layout {
+            sequence: 200
+        }
+        link {
+            target: {
+                page: 3
+            }
+        }
+    )
+
+    entry donors (
+        label: Donors
+        icon {
+            imageIconCssClasses: "fa-handshake "
+        }
+        layout {
+            sequence: 100
+        }
+        link {
+            target: {
+                page: 5
+            }
+        }
+    )
+
+    entry home (
+        label: Home
+        icon {
+            imageIconCssClasses: fa-home
+        }
+        layout {
+            sequence: 10
+        }
+        link {
+            target: {
+                page: 3
+            }
+        }
+    )
+
+    entry non-profits (
+        label: Non-profits
+        icon {
+            attributes: fa-users
+        }
+        layout {
+            sequence: 50
+        }
+        link {
+            target: {
+                page: 4
+            }
+        }
+    )
+
+    entry order-fulfillment-tracking (
+        label: Order Fulfillment Tracking
+        icon {
+            imageIconCssClasses: fa-clipboard
+        }
+        layout {
+            sequence: 310
+        }
+        isCurrent {
+            type: pages
+            pages: 21
+        }
+        link {
+            target: {
+                page: 21
+            }
+        }
+    )
+
+    entry reference-data (
+        label: Ref Reference Data
+        icon {
+            imageIconCssClasses: fa-wrench
+        }
+        layout {
+            sequence: 310
+        }
+        link {
+            target: {
+                page: 24
+            }
+        }
+    )
+
+    entry stripe-payments (
+        label: Stripe Payments
+        icon {
+            imageIconCssClasses: fa-dollar
+        }
+        layout {
+            sequence: 300
+        }
+        link {
+            target: {
+                page: 8
+            }
+        }
+    )
+
+)
+

@@ -10,10 +10,11 @@ page 23 (
             js-dialog-class-t-Drawer--pullOutEnd
         ]
     }
+    navigation {
+        cursorFocus: firstItemOnPage
+    }
     security {
         authentication: public
-        pageAccessProtection: argumentsMustHaveChecksum
-        formAutoComplete: false
     }
 
     region audit-details (

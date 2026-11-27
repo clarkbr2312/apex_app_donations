@@ -13,6 +13,9 @@ page 7 (
         listTemplate: @/top-navigation-menu
         templateOptions: #DEFAULT#
     }
+    navigation {
+        cursorFocus: firstItemOnPage
+    }
     css {
         inline:
             ```css
@@ -159,8 +162,6 @@ page 7 (
     }
     security {
         authentication: public
-        pageAccessProtection: argumentsMustHaveChecksum
-        formAutoComplete: false
     }
 
     region about-and-gallery-tab (

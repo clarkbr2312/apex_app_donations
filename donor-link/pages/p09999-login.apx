@@ -10,6 +10,7 @@ page 9999 (
         overrideUserInterfaceLevel: true
     }
     navigation {
+        cursorFocus: firstItemOnPage
         warnOnUnsavedChanges: false
     }
     css {
@@ -31,8 +32,6 @@ page 9999 (
     }
     security {
         authentication: public
-        pageAccessProtection: argumentsMustHaveChecksum
-        formAutoComplete: false
     }
 
     region banner (

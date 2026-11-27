@@ -1,0 +1,100 @@
+list reference-data (
+    name: Reference Data
+
+    entry cause-categories (
+        label: Cause Categories
+        icon {
+            imageIconCssClasses: fa-heart
+        }
+        layout {
+            sequence: 130
+        }
+        link {
+            target: {
+                page: 25
+                clearCache: 25
+            }
+        }
+        userDefinedAttributes {
+            1: View and create non-profit causes
+        }
+    )
+
+    entry fulfillment-statuses (
+        label: Fulfillment Statuses
+        icon {
+            imageIconCssClasses: fa-truck
+        }
+        layout {
+            sequence: 140
+        }
+        link {
+            target: {
+                page: 26
+                clearCache: 26
+            }
+        }
+        userDefinedAttributes {
+            1: View and create order fulfillment statuses
+        }
+    )
+
+    entry item-statuses (
+        label: Item Statuses
+        icon {
+            imageIconCssClasses: fa-tags
+        }
+        layout {
+            sequence: 150
+        }
+        link {
+            target: {
+                page: 27
+                clearCache: 27
+            }
+        }
+        userDefinedAttributes {
+            1: View and create wishlist item statuses
+        }
+    )
+
+    entry payment-types (
+        label: Payment Types
+        icon {
+            imageIconCssClasses: fa-credit-card
+        }
+        layout {
+            sequence: 160
+        }
+        link {
+            target: {
+                page: 28
+                clearCache: 28
+            }
+        }
+        userDefinedAttributes {
+            1: View and create order payment types
+        }
+    )
+
+    entry profile-statuses (
+        label: Profile Statuses
+        icon {
+            imageIconCssClasses: fa-user
+        }
+        layout {
+            sequence: 170
+        }
+        link {
+            target: {
+                page: 29
+                clearCache: 29
+            }
+        }
+        userDefinedAttributes {
+            1: View and create non-profit profile statuses
+        }
+    )
+
+)
+

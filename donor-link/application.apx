@@ -40,10 +40,8 @@ app DONOR-LINK (
         publicUser: " "
     }
     security {
+        allowBotAccess: true
         runtimeApiUsage: modifyThisApp
-    }
-    sessionStateProtection {
-        checksumSalt: 4D89C681B2CD6227CD493D4E345CBBB2A58CC39DEE930577FB11181BA9E89269
     }
     runtime {
         allowFeedback: true

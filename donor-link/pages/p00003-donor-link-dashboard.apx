@@ -6,14 +6,9 @@ page 3 (
         pageTemplate: @/standard
         templateOptions: #DEFAULT#
     }
-    navigation {
-        cursorFocus: doNotFocusCursor
-    }
     security {
         authorizationScheme: mustNotBePublicUser
         deepLinking: true
-        pageAccessProtection: argumentsMustHaveChecksum
-        formAutoComplete: false
     }
 
     region breadcrumb (
@@ -168,6 +163,9 @@ page 3 (
                 t-Report--horizontalBorders
             ]
         }
+        pagination {
+            type: showAll
+        }
         messages {
             whenNoDataFound: No orders are currently pending fulfillment.
         }
@@ -275,6 +273,9 @@ page 3 (
                 t-Report--stretch
                 t-Report--horizontalBorders
             ]
+        }
+        pagination {
+            type: showAll
         }
         messages {
             whenNoDataFound: No non-profit organizations are currently pending verification.

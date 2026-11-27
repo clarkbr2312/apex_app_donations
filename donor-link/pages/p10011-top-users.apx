@@ -13,7 +13,6 @@ page 10011 (
         ]
     }
     navigation {
-        cursorFocus: doNotFocusCursor
         warnOnUnsavedChanges: false
     }
     css {
@@ -30,8 +29,6 @@ page 10011 (
     }
     security {
         authorizationScheme: @administration-rights
-        pageAccessProtection: argumentsMustHaveChecksum
-        formAutoComplete: false
     }
     help {
         helpText:
@@ -203,7 +200,7 @@ page 10011 (
                 formatMask: 999G999G999G999G999G999G990
             }
             source {
-                dataType: NUMBER
+                dataType: number
             }
             advanced {
                 endUserAlias: G
@@ -219,7 +216,7 @@ page 10011 (
                 sequence: 2
             }
             source {
-                dataType: STRING
+                dataType: varchar2
             }
             advanced {
                 endUserAlias: B
@@ -243,7 +240,7 @@ page 10011 (
                 formatMask: 999G999G999G999G999G999G990
             }
             source {
-                dataType: NUMBER
+                dataType: number
             }
             advanced {
                 endUserAlias: F
@@ -264,7 +261,7 @@ page 10011 (
                 formatMask: 999G999G999G999G999G990D0000
             }
             source {
-                dataType: NUMBER
+                dataType: number
             }
             advanced {
                 endUserAlias: D
@@ -283,7 +280,7 @@ page 10011 (
                 formatMask: SINCE
             }
             source {
-                dataType: DATE
+                dataType: date
             }
             advanced {
                 endUserAlias: H
@@ -304,7 +301,7 @@ page 10011 (
                 formatMask: 999G999G999G999G999G990
             }
             source {
-                dataType: NUMBER
+                dataType: number
             }
             advanced {
                 endUserAlias: C
@@ -325,7 +322,7 @@ page 10011 (
                 formatMask: 999G999G999G999G999G990
             }
             source {
-                dataType: NUMBER
+                dataType: number
             }
             advanced {
                 endUserAlias: E
@@ -341,7 +338,7 @@ page 10011 (
                 sequence: 1
             }
             source {
-                dataType: STRING
+                dataType: varchar2
             }
             advanced {
                 endUserAlias: A
@@ -413,13 +410,13 @@ page 10011 (
         chartLayout {
             height: 600
         }
+        performance {
+            lazyLoading: true
+        }
         value {
             pieChartOtherThreshold: 0.02
             format: decimal
             decimalPlaces: 0
-        }
-        animation {
-            onDisplay: none
         }
         legend {
             show: false
