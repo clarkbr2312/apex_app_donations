@@ -82,6 +82,7 @@ page 12 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -106,6 +107,7 @@ page 12 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -121,6 +123,7 @@ page 12 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
         }
         validation {
             maxLength: 1000
@@ -139,6 +142,7 @@ page 12 (
         }
         appearance {
             template: @/required-above
+            templateOptions: #DEFAULT#
             valuePlaceholder: e.g. Winter Coats for Children (Sizes 6-12)
         }
         validation {
@@ -159,6 +163,7 @@ page 12 (
         }
         appearance {
             template: @/required-above
+            templateOptions: #DEFAULT#
             valuePlaceholder: e.g. 35.00
         }
         validation {
@@ -178,6 +183,7 @@ page 12 (
         }
         appearance {
             template: @/required-above
+            templateOptions: #DEFAULT#
             valuePlaceholder: e.g. 50
         }
         validation {
@@ -200,6 +206,7 @@ page 12 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
             valuePlaceholder: Explain how this item directly impacts your beneficiaries...
         }
         validation {

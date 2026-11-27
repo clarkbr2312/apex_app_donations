@@ -154,6 +154,7 @@ page 16 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -169,6 +170,7 @@ page 16 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
             valuePlaceholder: e.g. Austin Youth, Shelter, Food, Rescue...
         }
     )
@@ -195,6 +197,7 @@ page 16 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
             valuePlaceholder: Select states...
         }
     )
@@ -211,6 +214,7 @@ page 16 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -226,6 +230,7 @@ page 16 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
         }
     )
 

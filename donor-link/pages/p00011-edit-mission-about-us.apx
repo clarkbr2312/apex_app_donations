@@ -56,6 +56,7 @@ page 11 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -83,6 +84,7 @@ page 11 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
             valuePlaceholder: Summarize your core mission in 2-3 sentences...
         }
         validation {

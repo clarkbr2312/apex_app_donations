@@ -155,6 +155,7 @@ page 10016 (
         }
         appearance {
             template: @/optional-floating
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -188,6 +189,7 @@ page 10016 (
         }
         appearance {
             template: @/optional-floating
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -206,6 +208,7 @@ page 10016 (
         }
         appearance {
             template: @/optional-floating
+            templateOptions: #DEFAULT#
         }
     )
 

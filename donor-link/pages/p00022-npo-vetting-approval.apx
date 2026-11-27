@@ -58,6 +58,7 @@ page 22 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
         }
         readOnly {
             type: always
@@ -76,6 +77,7 @@ page 22 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
         }
         readOnly {
             type: always
@@ -94,6 +96,7 @@ page 22 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
         }
         readOnly {
             type: always
@@ -112,6 +115,7 @@ page 22 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
         }
         readOnly {
             type: always
@@ -130,6 +134,7 @@ page 22 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
         }
         readOnly {
             type: always
@@ -148,6 +153,7 @@ page 22 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
         }
         readOnly {
             type: always
@@ -166,6 +172,7 @@ page 22 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
         }
         readOnly {
             type: always

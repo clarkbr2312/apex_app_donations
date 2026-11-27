@@ -7,7 +7,7 @@ page 32 (
         templateOptions: #DEFAULT#
     }
     security {
-authorizationScheme: @administration-rights
+        authorizationScheme: @administration-rights
     }
 
     region breadcrumb (
@@ -33,4 +33,172 @@ authorizationScheme: @administration-rights
         }
     )
 
+    region user-roles (
+        name: User Roles
+        title: User Roles
+        type: interactiveGrid
+        source {
+            location: localDatabase
+            tableName: DL_USER_ROLES
+        }
+        layout {
+            sequence: 10
+            slot: body
+        }
+        appearance {
+            template: @/interactive-report
+            templateOptions: [
+                #DEFAULT#
+                t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc
+            ]
+        }
+        edit {
+            enabled: true
+            allowedOperations: add
+        }
+        toolbar {
+            controls: [
+                searchCol
+                searchField
+                actionsMenu
+                resetButton
+                saveButton
+            ]
+        }
+        download {
+            formats: [
+                csv
+                html
+                excel
+                pdf
+            ]
+        }
+        advanced {
+            savedReportMappingIdentifier: 47835612662185634
+        }
+
+        savedReport primary (
+            visibility: primary
+            view {
+                default: grid
+            }
+            singleRowView {
+                displayedColumns: true
+            }
+
+            displayColumn (
+                column: @ID
+                layout {
+                    width: 100
+                    sequence: 2
+                }
+            )
+
+            displayColumn (
+                column: @NAME
+                layout {
+                    width: 120
+                    sequence: 3
+                }
+            )
+
+            displayColumn (
+                column: @APEX$ROW_ACTION
+                layout {
+                    frozen: true
+                    sequence: 1
+                }
+            )
+
+        )
+
+        column APEX$ROW_ACTION (
+            type: actionsMenu
+            layout {
+                sequence: 20
+            }
+        )
+
+        column APEX$ROW_SELECTOR (
+            type: rowSelector
+            layout {
+                sequence: 10
+            }
+        )
+
+        column ID (
+            type: displayOnly
+            heading {
+                heading: Role Number
+            }
+            layout {
+                sequence: 30
+            }
+            source {
+                databaseColumn: ID
+                dataType: number
+                queryOnly: true
+                primaryKey: true
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column NAME (
+            type: textField
+            heading {
+                heading: Name
+            }
+            layout {
+                sequence: 40
+            }
+            validation {
+                valueRequired: true
+                maxLength: 255
+            }
+            source {
+                databaseColumn: NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        page {
+            borderWidth: 0.5
+            borderColor: #666666
+        }
+        pageHeader {
+            pageHeaderText: User Roles
+        }
+    )
+
+    process user-roles-save-interactive-grid-data (
+        name: User Roles - Save Interactive Grid Data
+        type: interactiveGridAutoRowProcessing
+        editableRegion: @user-roles
+        execution {
+            sequence: 10
+        }
+        advanced {
+            executionMappingIdentifier: 47836180121185639
+        }
+    )
+
 )
+

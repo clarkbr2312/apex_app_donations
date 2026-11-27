@@ -7,7 +7,7 @@ page 24 (
         templateOptions: #DEFAULT#
     }
     security {
-authorizationScheme: @administration-rights
+        authorizationScheme: @administration-rights
     }
 
     region breadcrumb (
@@ -61,3 +61,4 @@ authorizationScheme: @administration-rights
     )
 
 )
+

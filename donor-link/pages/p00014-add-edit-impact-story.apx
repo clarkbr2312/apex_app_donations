@@ -61,6 +61,7 @@ page 14 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -76,6 +77,7 @@ page 14 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -91,6 +93,7 @@ page 14 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
             valuePlaceholder: e.g. 500 Families Sheltered, 1,200 Meals Served
         }
         validation {
@@ -119,6 +122,7 @@ page 14 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -134,6 +138,7 @@ page 14 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
         }
         validation {
             maxLength: 500
@@ -165,6 +170,7 @@ page 14 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -180,6 +186,7 @@ page 14 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
             valuePlaceholder: e.g. Winter Warmth Shelter Drive 2025
         }
         validation {

@@ -65,6 +65,10 @@ page 23 (
         }
         appearance {
             template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--scrollBody
+            ]
         }
     )
 
@@ -111,6 +115,7 @@ page 23 (
         }
         appearance {
             template: @/optional-floating
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -127,6 +132,7 @@ page 23 (
         }
         appearance {
             template: @/optional-floating
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -151,6 +157,7 @@ page 23 (
         }
         appearance {
             template: @/optional-floating
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -166,6 +173,7 @@ page 23 (
         }
         appearance {
             template: @/optional-floating
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -182,6 +190,7 @@ page 23 (
         }
         appearance {
             template: @/optional-floating
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -198,6 +207,7 @@ page 23 (
         }
         appearance {
             template: @/optional-floating
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -213,6 +223,7 @@ page 23 (
         }
         appearance {
             template: @/optional-floating
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -228,6 +239,7 @@ page 23 (
         }
         appearance {
             template: @/optional-floating
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -244,6 +256,7 @@ page 23 (
         }
         appearance {
             template: @/optional-floating
+            templateOptions: #DEFAULT#
         }
     )
 

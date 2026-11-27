@@ -61,6 +61,7 @@ page 19 (
         }
         appearance {
             template: @/required-floating
+            templateOptions: #DEFAULT#
             valuePlaceholder: sarah@example.com
         }
         validation {
@@ -81,6 +82,7 @@ page 19 (
         }
         appearance {
             template: @/required-floating
+            templateOptions: #DEFAULT#
             valuePlaceholder: e.g. Sarah
         }
         validation {
@@ -113,6 +115,7 @@ page 19 (
         }
         appearance {
             template: @/optional-floating
+            templateOptions: #DEFAULT#
             valuePlaceholder: Add a short note to your friend...
         }
         validation {
@@ -136,6 +139,7 @@ page 19 (
         }
         appearance {
             template: @/optional-floating
+            templateOptions: #DEFAULT#
             valuePlaceholder: alex@example.com
         }
         validation {
@@ -155,6 +159,7 @@ page 19 (
         }
         appearance {
             template: @/required-floating
+            templateOptions: #DEFAULT#
             valuePlaceholder: e.g. Alex
         }
         validation {

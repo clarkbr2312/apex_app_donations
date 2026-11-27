@@ -7,10 +7,10 @@ page 30 (
         templateOptions: #DEFAULT#
     }
     security {
-authorizationScheme: @administration-rights
+        authorizationScheme: @administration-rights
     }
 
-region breadcrumb (
+    region breadcrumb (
         name: Breadcrumb
         type: breadcrumb
         source {
@@ -34,3 +34,4 @@ region breadcrumb (
     )
 
 )
+

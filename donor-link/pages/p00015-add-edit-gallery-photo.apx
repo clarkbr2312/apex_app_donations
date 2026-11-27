@@ -52,6 +52,7 @@ page 15 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
             valuePlaceholder: e.g. Annual community food drive event
         }
         validation {
@@ -80,6 +81,7 @@ page 15 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -113,6 +115,7 @@ page 15 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -128,6 +131,7 @@ page 15 (
         }
         appearance {
             template: @/optional-above
+            templateOptions: #DEFAULT#
             valuePlaceholder: https://...
         }
         validation {

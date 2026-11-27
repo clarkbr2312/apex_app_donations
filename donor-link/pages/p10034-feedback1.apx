@@ -70,6 +70,7 @@ page 10034 (
         }
         appearance {
             template: @/optional-floating
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -93,6 +94,7 @@ page 10034 (
         }
         appearance {
             template: @/optional-floating
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -111,6 +113,7 @@ page 10034 (
         }
         appearance {
             template: @/optional-floating
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -140,6 +143,7 @@ page 10034 (
         }
         appearance {
             template: @/optional-floating
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -161,6 +165,7 @@ page 10034 (
         }
         appearance {
             template: @/optional-floating
+            templateOptions: #DEFAULT#
         }
     )
 
@@ -178,6 +183,7 @@ page 10034 (
         }
         appearance {
             template: @/optional-floating
+            templateOptions: #DEFAULT#
             width: 64
             height: 4
         }
@@ -200,6 +206,7 @@ page 10034 (
         }
         appearance {
             template: @/optional-floating
+            templateOptions: #DEFAULT#
         }
     )
 

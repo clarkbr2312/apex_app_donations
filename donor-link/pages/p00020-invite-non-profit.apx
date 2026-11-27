@@ -52,6 +52,7 @@ page 20 (
         }
         appearance {
             template: @/required-floating
+            templateOptions: #DEFAULT#
             valuePlaceholder: info@organization.org
         }
         validation {
@@ -72,6 +73,7 @@ page 20 (
         }
         appearance {
             template: @/required-floating
+            templateOptions: #DEFAULT#
             valuePlaceholder: e.g. Hope Community Food Bank
         }
         validation {
@@ -92,6 +94,7 @@ page 20 (
         }
         appearance {
             template: @/optional-floating
+            templateOptions: #DEFAULT#
             valuePlaceholder: e.g. organization.org
         }
         validation {
@@ -111,6 +114,7 @@ page 20 (
         }
         appearance {
             template: @/optional-floating
+            templateOptions: #DEFAULT#
             valuePlaceholder: e.g. Maria Director
         }
         validation {
@@ -133,6 +137,7 @@ page 20 (
         }
         appearance {
             template: @/optional-floating
+            templateOptions: #DEFAULT#
             valuePlaceholder: Add a short note to the organization...
         }
         validation {
@@ -156,6 +161,7 @@ page 20 (
         }
         appearance {
             template: @/optional-floating
+            templateOptions: #DEFAULT#
             valuePlaceholder: alex@example.com
         }
         validation {
@@ -175,6 +181,7 @@ page 20 (
         }
         appearance {
             template: @/required-floating
+            templateOptions: #DEFAULT#
             valuePlaceholder: e.g. Alex
         }
         validation {

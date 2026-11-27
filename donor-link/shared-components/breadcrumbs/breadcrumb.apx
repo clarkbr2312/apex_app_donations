@@ -213,22 +213,6 @@ breadcrumb breadcrumb (
         }
     )
 
-    entry user-management (
-        name: User Management
-        pageNumber: 30
-        execution {
-            sequence: 10
-        }
-        appearance {
-            parentEntry: @administration
-        }
-        link {
-            target: {
-                page: 30
-            }
-        }
-    )
-
     entry user-accounts (
         name: User Accounts
         pageNumber: 31
@@ -245,8 +229,23 @@ breadcrumb breadcrumb (
         }
     )
 
+    entry user-management (
+        name: User Management
+        pageNumber: 30
+        execution {
+            sequence: 10
+        }
+        appearance {
+            parentEntry: @administration
+        }
+        link {
+            target: {
+                page: 30
+            }
+        }
+    )
 
-entry user-roles (
+    entry user-roles (
         name: User Roles
         pageNumber: 32
         execution {
@@ -263,3 +262,4 @@ entry user-roles (
     )
 
 )
+

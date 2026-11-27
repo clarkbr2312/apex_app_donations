@@ -135,6 +135,7 @@ page 10022 (
         }
         appearance {
             template: @/required-floating
+            templateOptions: #DEFAULT#
         }
         validation {
             valueRequired: true
@@ -171,6 +172,7 @@ page 10022 (
         }
         appearance {
             template: @/required-floating
+            templateOptions: #DEFAULT#
             width: 60
         }
         validation {
@@ -225,6 +227,7 @@ page 10022 (
         appearance {
             buttonTemplate: @/text
             hot: true
+            templateOptions: #DEFAULT#
         }
         behavior {
             warnOnUnsavedChanges: doNotCheck
@@ -279,6 +282,7 @@ page 10022 (
         appearance {
             buttonTemplate: @/text
             hot: true
+            templateOptions: #DEFAULT#
         }
         behavior {
             warnOnUnsavedChanges: doNotCheck

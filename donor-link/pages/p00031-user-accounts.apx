@@ -7,7 +7,7 @@ page 31 (
         templateOptions: #DEFAULT#
     }
     security {
-authorizationScheme: @administration-rights
+        authorizationScheme: @administration-rights
     }
 
     region breadcrumb (
@@ -33,4 +33,564 @@ authorizationScheme: @administration-rights
         }
     )
 
+    region user-accounts (
+        name: User Accounts
+        title: User Accounts
+        type: interactiveGrid
+        source {
+            location: localDatabase
+            tableName: DL_USERS
+            orderByClause: LAST_NAME
+        }
+        layout {
+            sequence: 10
+            slot: body
+        }
+        appearance {
+            template: @/interactive-report
+            templateOptions: [
+                #DEFAULT#
+                t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc
+            ]
+        }
+        edit {
+            enabled: true
+            allowedOperations: update
+        }
+        toolbar {
+            controls: [
+                searchCol
+                searchField
+                actionsMenu
+                resetButton
+                saveButton
+            ]
+        }
+        download {
+            formats: [
+                csv
+                html
+                excel
+                pdf
+            ]
+        }
+        advanced {
+            savedReportMappingIdentifier: 47833557959185613
+        }
+
+        savedReport primary (
+            visibility: primary
+            view {
+                default: grid
+            }
+            singleRowView {
+                displayedColumns: true
+            }
+
+            displayColumn (
+                column: @USER_ID
+                layout {
+                    sequence: 2
+                }
+            )
+
+            displayColumn (
+                column: @USER_STATUS_ID
+                layout {
+                    sequence: 5
+                }
+            )
+
+            displayColumn (
+                column: @USER_TYPE_ID
+                layout {
+                    sequence: 6
+                }
+            )
+
+            displayColumn (
+                column: @USERNAME
+                layout {
+                    sequence: 7
+                }
+            )
+
+            displayColumn (
+                column: @EMAIL_ADDRESS
+                layout {
+                    sequence: 8
+                }
+            )
+
+            displayColumn (
+                column: @PASSWORD
+                layout {
+                    sequence: 9
+                }
+            )
+
+            displayColumn (
+                column: @USER_ROLE_ID
+                layout {
+                    sequence: 10
+                }
+            )
+
+            displayColumn (
+                column: @CHANGE_PASSWORD
+                layout {
+                    sequence: 11
+                }
+            )
+
+            displayColumn (
+                column: @OTP_NUMBER
+                layout {
+                    sequence: 12
+                }
+            )
+
+            displayColumn (
+                column: @OTP_EXPIRED
+                layout {
+                    sequence: 13
+                }
+            )
+
+            displayColumn (
+                column: @CREATION_DATE
+                layout {
+                    sequence: 14
+                }
+            )
+
+            displayColumn (
+                column: @CREATED_BY
+                layout {
+                    sequence: 15
+                }
+            )
+
+            displayColumn (
+                column: @LAST_UPDATED_DATE
+                layout {
+                    sequence: 16
+                }
+            )
+
+            displayColumn (
+                column: @LAST_UPDATED_BY
+                layout {
+                    sequence: 17
+                }
+            )
+
+            displayColumn (
+                column: @FIRST_NAME
+                layout {
+                    sequence: 4
+                }
+            )
+
+            displayColumn (
+                column: @LAST_NAME
+                layout {
+                    sequence: 3
+                }
+            )
+
+            displayColumn (
+                column: @APEX$ROW_ACTION
+                layout {
+                    frozen: true
+                    sequence: 1
+                }
+            )
+
+        )
+
+        column APEX$ROW_ACTION (
+            type: actionsMenu
+            layout {
+                sequence: 20
+            }
+        )
+
+        column APEX$ROW_SELECTOR (
+            type: rowSelector
+            layout {
+                sequence: 10
+            }
+        )
+
+        column CHANGE_PASSWORD (
+            type: textField
+            heading {
+                heading: Change Password
+            }
+            layout {
+                sequence: 100
+            }
+            validation {
+                valueRequired: true
+                maxLength: 1
+            }
+            source {
+                databaseColumn: CHANGE_PASSWORD
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column CREATED_BY (
+            type: displayOnly
+            heading {
+                heading: Created By
+            }
+            layout {
+                sequence: 140
+            }
+            source {
+                databaseColumn: CREATED_BY
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column CREATION_DATE (
+            type: displayOnly
+            heading {
+                heading: Creation Date
+            }
+            layout {
+                sequence: 130
+            }
+            source {
+                databaseColumn: CREATION_DATE
+                dataType: date
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column EMAIL_ADDRESS (
+            type: displayOnly
+            heading {
+                heading: Email Address
+            }
+            layout {
+                sequence: 70
+            }
+            source {
+                databaseColumn: EMAIL_ADDRESS
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column FIRST_NAME (
+            type: textField
+            heading {
+                heading: First Name
+            }
+            layout {
+                sequence: 170
+            }
+            validation {
+                valueRequired: true
+                maxLength: 100
+            }
+            source {
+                databaseColumn: FIRST_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column LAST_NAME (
+            type: textField
+            heading {
+                heading: Last Name
+            }
+            layout {
+                sequence: 180
+            }
+            validation {
+                valueRequired: true
+                maxLength: 100
+            }
+            source {
+                databaseColumn: LAST_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column LAST_UPDATED_BY (
+            type: displayOnly
+            heading {
+                heading: Last Updated By
+            }
+            layout {
+                sequence: 160
+            }
+            source {
+                databaseColumn: LAST_UPDATED_BY
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column LAST_UPDATED_DATE (
+            type: displayOnly
+            heading {
+                heading: Last Updated Date
+            }
+            layout {
+                sequence: 150
+            }
+            source {
+                databaseColumn: LAST_UPDATED_DATE
+                dataType: date
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column OTP_EXPIRED (
+            type: hidden
+            heading {
+                heading: Otp Expired
+            }
+            layout {
+                sequence: 120
+            }
+            source {
+                databaseColumn: OTP_EXPIRED
+                dataType: varchar2
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column OTP_NUMBER (
+            type: hidden
+            heading {
+                heading: Otp Number
+            }
+            layout {
+                sequence: 110
+            }
+            source {
+                databaseColumn: OTP_NUMBER
+                dataType: varchar2
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column PASSWORD (
+            type: hidden
+            heading {
+                heading: Password
+            }
+            layout {
+                sequence: 80
+            }
+            source {
+                databaseColumn: PASSWORD
+                dataType: varchar2
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column USERNAME (
+            type: displayOnly
+            heading {
+                heading: Username
+            }
+            layout {
+                sequence: 60
+            }
+            source {
+                databaseColumn: USERNAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column USER_ID (
+            type: hidden
+            layout {
+                sequence: 30
+            }
+            source {
+                databaseColumn: USER_ID
+                dataType: number
+                queryOnly: true
+                primaryKey: true
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column USER_ROLE_ID (
+            type: displayOnly
+            heading {
+                heading: User RolE
+            }
+            layout {
+                sequence: 90
+            }
+            source {
+                databaseColumn: USER_ROLE_ID
+                dataType: number
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+                lovType: none
+            }
+        )
+
+        column USER_STATUS_ID (
+            type: numberField
+            heading {
+                heading: User Status
+                alignment: end
+            }
+            layout {
+                sequence: 40
+                columnAlignment: end
+            }
+            source {
+                databaseColumn: USER_STATUS_ID
+                dataType: number
+            }
+            columnFilter {
+                lovType: none
+            }
+        )
+
+        column USER_TYPE_ID (
+            type: hidden
+            heading {
+                heading: User Type Id
+            }
+            layout {
+                sequence: 50
+            }
+            source {
+                databaseColumn: USER_TYPE_ID
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        page {
+            borderWidth: 0.5
+            borderColor: #666666
+        }
+        pageHeader {
+            pageHeaderText: User Accounts
+        }
+    )
+
+    process user-accounts-save-interactive-grid-data (
+        name: User Accounts - Save Interactive Grid Data
+        type: interactiveGridAutoRowProcessing
+        editableRegion: @user-accounts
+        execution {
+            sequence: 10
+        }
+        advanced {
+            executionMappingIdentifier: 47835436861185632
+        }
+    )
+
 )
+

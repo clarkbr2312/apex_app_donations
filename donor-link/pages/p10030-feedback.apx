@@ -83,6 +83,7 @@ page 10030 (
         }
         appearance {
             template: @/optional-floating
+            templateOptions: #DEFAULT#
             width: 64
             height: 4
         }
