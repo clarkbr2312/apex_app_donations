@@ -213,5 +213,20 @@ breadcrumb breadcrumb (
         }
     )
 
-)
+    entry user-management (
+        name: User Management
+        pageNumber: 30
+        execution {
+            sequence: 10
+        }
+        appearance {
+            parentEntry: @administration
+        }
+        link {
+            target: {
+                page: 30
+            }
+        }
+    )
 
+)

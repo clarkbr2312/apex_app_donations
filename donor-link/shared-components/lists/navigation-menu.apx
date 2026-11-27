@@ -19,6 +19,25 @@ list navigation-menu (
         }
     )
 
+entry user-management ( 
+        label: user-management
+        icon {
+            imageIconCssClasses: fa-users
+        }
+        layout {
+            sequence: 500010
+            parentEntry: @administration
+        }
+        link {
+            target: {
+                page: 30
+            }
+        }
+        security {
+            authorizationScheme: @administration-rights
+        }
+    )
+
     entry audit-reports (
         label: Audit Reports
         layout {
@@ -126,4 +145,3 @@ list navigation-menu (
     )
 
 )
-
