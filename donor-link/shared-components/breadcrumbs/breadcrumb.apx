@@ -229,4 +229,37 @@ breadcrumb breadcrumb (
         }
     )
 
+    entry user-accounts (
+        name: User Accounts
+        pageNumber: 31
+        execution {
+            sequence: 10
+        }
+        appearance {
+            parentEntry: @user-management
+        }
+        link {
+            target: {
+                page: 31
+            }
+        }
+    )
+
+
+entry user-roles (
+        name: User Roles
+        pageNumber: 32
+        execution {
+            sequence: 10
+        }
+        appearance {
+            parentEntry: @user-management
+        }
+        link {
+            target: {
+                page: 32
+            }
+        }
+    )
+
 )
